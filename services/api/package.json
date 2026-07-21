@@ -8,7 +8,7 @@
     "start": "node dist/main.js",
     "lint": "eslint \"{src,test,prisma}/**/*.{ts,tsx}\"",
     "test": "jest --runInBand",
-    "test:integration": "jest --config test/jest-integration.json --runInBand",
+    "test:integration": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --config test/jest-integration.json --runInBand",
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
