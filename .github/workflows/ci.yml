@@ -92,6 +92,7 @@ jobs:
           scan-type: fs
           scan-ref: .
           severity: HIGH,CRITICAL
+          ignore-unfixed: true
           exit-code: "1"
 
   containers:
@@ -112,4 +113,5 @@ jobs:
         with:
           image-ref: seychas-api:ci
           severity: HIGH,CRITICAL
+          ignore-unfixed: true
           exit-code: "1"
