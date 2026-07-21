@@ -105,6 +105,7 @@ jobs:
             context: .,
             file: services/api/Dockerfile,
             push: false,
+            load: true,
             tags: seychas-api:ci,
           }
       - uses: aquasecurity/trivy-action@v0.36.0
