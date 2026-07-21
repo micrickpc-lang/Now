@@ -29,7 +29,9 @@ describe("private social main flow (real PostGIS)", () => {
     prisma = app.get(PrismaService);
   });
 
-  afterAll(async () => app.close());
+  afterAll(async () => {
+    if (app) await app.close();
+  });
 
   async function register(phone: string, installationId: string) {
     await request(app.getHttpServer())
