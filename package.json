@@ -1,0 +1,47 @@
+{
+  "name": "seychas",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Privacy-first social coordination app for close friends",
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=11.0.0"
+  },
+  "workspaces": [
+    "apps/admin",
+    "services/api",
+    "services/worker",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "dev": "npm run dev --workspace=@seychas/api",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present && npm run test:mobile",
+    "test:mobile": "cd apps/mobile && flutter test",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "db:generate": "npm run db:generate --workspace=@seychas/api",
+    "db:migrate": "npm run db:migrate --workspace=@seychas/api",
+    "db:seed": "npm run db:seed --workspace=@seychas/api",
+    "security:maps": "node scripts/security/check-forbidden-map-dependencies.mjs",
+    "security:secrets": "node scripts/security/scan-secrets.mjs",
+    "maps:download": "node scripts/maps/download-region.mjs",
+    "maps:validate": "node scripts/maps/validate-map-style.mjs",
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build && npm run security:maps && npm run security:secrets"
+  },
+  "devDependencies": {
+    "prettier": "3.6.2"
+  },
+  "allowScripts": {
+    "argon2@0.44.0": true,
+    "prisma@7.9.0": true,
+    "@prisma/engines@7.9.0": true,
+    "esbuild@0.25.12": true,
+    "sharp@0.34.5": true,
+    "sharp@0.35.3": true,
+    "unrs-resolver@1.12.2": true,
+    "msgpackr-extract@3.0.4": true
+  }
+}

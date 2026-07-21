@@ -1,0 +1,8 @@
+{
+  "id": "monaco-demo",
+  "name": "Monaco demonstration extract",
+  "pbfUrl": "https://download.geofabrik.de/europe/monaco-latest.osm.pbf",
+  "sha256Url": "https://download.geofabrik.de/europe/monaco-latest.osm.pbf.md5",
+  "output": "infra/maps/data/region.osm.pbf",
+  "maxBytes": 10000000
+}

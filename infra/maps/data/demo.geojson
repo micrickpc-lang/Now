@@ -1,0 +1,7 @@
+{
+  "type": "FeatureCollection",
+  "name": "seychas-demo-region-marker",
+  "features": [
+    { "type": "Feature", "properties": { "name": "Pilot region", "attribution": "© OpenStreetMap contributors" }, "geometry": { "type": "Point", "coordinates": [7.4246, 43.7384] } }
+  ]
+}

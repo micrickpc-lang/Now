@@ -1,0 +1,36 @@
+{
+  "version": 8,
+  "name": "Seychas Aurora v1",
+  "metadata": {
+    "attribution": "© OpenStreetMap contributors",
+    "version": "1"
+  },
+  "sources": {
+    "seychas": {
+      "type": "vector",
+      "tiles": ["/api/v1/maps/tiles/{z}/{x}/{y}.pbf"],
+      "attribution": "© OpenStreetMap contributors"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": { "background-color": "#0D1020" }
+    },
+    {
+      "id": "water",
+      "type": "fill",
+      "source": "seychas",
+      "source-layer": "water",
+      "paint": { "fill-color": "#182E51" }
+    },
+    {
+      "id": "roads",
+      "type": "line",
+      "source": "seychas",
+      "source-layer": "transportation",
+      "paint": { "line-color": "#525A78" }
+    }
+  ]
+}

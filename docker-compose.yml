@@ -1,0 +1,214 @@
+name: seychas
+
+x-app-env: &app-env
+  NODE_ENV: development
+  DATABASE_URL: postgresql://seychas_app:local_app_password@postgres:5432/seychas?schema=public
+  REDIS_URL: redis://redis:6379/0
+  JWT_SECRET: development-only-change-to-at-least-32-bytes
+  TOKEN_HASH_SECRET: development-only-change-to-at-least-32-bytes
+  PHONE_HASH_SECRET: development-only-change-to-at-least-32-bytes
+  LOCATION_MASTER_KEY_BASE64: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+  ALLOW_DEV_OTP: "true"
+  DEV_OTP_CODE: "123456"
+  APP_ORIGINS: http://localhost:3001,http://localhost:8080
+  INTERNAL_MARTIN_URL: http://martin:3000
+  INTERNAL_NOMINATIM_URL: http://nominatim:8080
+  MAP_PUBLIC_BASE_URL: http://localhost:8080/api/v1/maps
+  ADMIN_SESSION_SECRET: development-admin-session-change-me
+  MINIO_ENDPOINT: minio
+  MINIO_PORT: "9000"
+  MINIO_ACCESS_KEY: local-minio
+  MINIO_SECRET_KEY: local-minio-change-me
+  MINIO_BUCKET: seychas-media
+  CLAMAV_HOST: clamav
+  CLAMAV_PORT: "3310"
+  ALLOW_UNSCANNED_UPLOADS: "false"
+
+services:
+  postgres:
+    image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_DB: seychas
+      POSTGRES_USER: seychas_owner
+      POSTGRES_PASSWORD: local_owner_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U seychas_owner -d seychas"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:8.2-alpine
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--maxmemory-policy",
+        "noeviction",
+      ]
+    volumes: ["redis-data:/data"]
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: server /data --console-address :9001
+    environment:
+      MINIO_ROOT_USER: local-minio
+      MINIO_ROOT_PASSWORD: local-minio-change-me
+    volumes: ["minio-data:/data"]
+    ports: ["9000:9000", "9001:9001"]
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  minio-init:
+    image: quay.io/minio/mc:RELEASE.2025-04-16T18-13-26Z
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      [
+        "mc alias set local http://minio:9000 local-minio local-minio-change-me && mc mb --ignore-existing local/seychas-media && mc anonymous set none local/seychas-media",
+      ]
+    depends_on: { minio: { condition: service_healthy } }
+    restart: "no"
+
+  clamav:
+    image: clamav/clamav:1.4
+    volumes: ["clamav-data:/var/lib/clamav"]
+    expose: ["3310"]
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 20
+
+  migrate:
+    build: { context: ., dockerfile: services/api/Dockerfile }
+    environment:
+      <<: *app-env
+      DATABASE_URL: postgresql://seychas_migrator:local_migrator_password@postgres:5432/seychas?schema=public
+    command: ["npx", "prisma", "migrate", "deploy"]
+    depends_on: { postgres: { condition: service_healthy } }
+    restart: "no"
+
+  api:
+    build: { context: ., dockerfile: services/api/Dockerfile }
+    environment: { <<: *app-env }
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      redis: { condition: service_healthy }
+      minio: { condition: service_healthy }
+      minio-init: { condition: service_completed_successfully }
+      clamav: { condition: service_healthy }
+    ports: ["3000:3000"]
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://localhost:3000/health').then(r=>{if(!r.ok)process.exit(1)})",
+        ]
+      interval: 10s
+      timeout: 4s
+      retries: 12
+    stop_grace_period: 20s
+
+  worker:
+    build: { context: ., dockerfile: services/worker/Dockerfile }
+    environment: { <<: *app-env }
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      redis: { condition: service_healthy }
+    stop_grace_period: 30s
+
+  admin:
+    build: { context: ., dockerfile: apps/admin/Dockerfile }
+    environment:
+      INTERNAL_API_URL: http://api:3000/api/v1
+      ADMIN_PUBLIC_ORIGIN: http://localhost:8080
+      ADMIN_ALLOWED_ORIGINS: localhost:8080
+    depends_on: { api: { condition: service_healthy } }
+    ports: ["3001:3001"]
+
+  nginx:
+    image: nginx:1.29-alpine
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infra/maps/assets:/srv/maps/assets:ro
+    ports: ["8080:8080"]
+    depends_on:
+      {
+        api: { condition: service_healthy },
+        admin: { condition: service_started },
+      }
+
+  martin:
+    image: ghcr.io/maplibre/martin:v0.18.1
+    profiles: ["maps"]
+    command: ["--config", "/config/config.yaml"]
+    volumes:
+      - ./infra/maps/martin.yaml:/config/config.yaml:ro
+      - ./infra/maps/data:/data:ro
+    expose: ["3000"]
+
+  nominatim:
+    image: mediagis/nominatim:4.5
+    profiles: ["maps"]
+    environment:
+      PBF_PATH: /nominatim/data/region.osm.pbf
+      REPLICATION_URL: ""
+      IMPORT_WIKIPEDIA: "false"
+      NOMINATIM_PASSWORD: local_nominatim_password
+    volumes:
+      - ./infra/maps/data:/nominatim/data:ro
+      - nominatim-data:/var/lib/postgresql/16/main
+    expose: ["8080"]
+    shm_size: 1gb
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    profiles: ["observability"]
+    volumes:
+      ["./infra/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
+    ports: ["9090:9090"]
+
+  grafana:
+    image: grafana/grafana:12.1.1
+    profiles: ["observability"]
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: local-grafana-change-me
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes: ["grafana-data:/var/lib/grafana"]
+    ports: ["3002:3000"]
+
+  api-integration-tests:
+    build: { context: ., dockerfile: services/api/Dockerfile, target: build }
+    profiles: ["test"]
+    working_dir: /workspace/services/api
+    environment:
+      <<: *app-env
+      NODE_ENV: development
+    command: ["npm", "run", "test:integration"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      redis: { condition: service_healthy }
+
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:
+  nominatim-data:
+  grafana-data:
+  clamav-data:

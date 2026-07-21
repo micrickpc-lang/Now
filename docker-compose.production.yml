@@ -1,0 +1,54 @@
+name: seychas-production
+services:
+  api:
+    image: ${API_IMAGE:?set API_IMAGE to an immutable digest}
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?from secret manager}
+      REDIS_URL: ${REDIS_URL:?from secret manager}
+      JWT_SECRET: ${JWT_SECRET:?from secret manager}
+      TOKEN_HASH_SECRET: ${TOKEN_HASH_SECRET:?from secret manager}
+      PHONE_HASH_SECRET: ${PHONE_HASH_SECRET:?from secret manager}
+      LOCATION_MASTER_KEY_BASE64: ${LOCATION_MASTER_KEY_BASE64:?from KMS-backed secret manager}
+      APP_ORIGINS: ${APP_ORIGINS:?HTTPS origins}
+      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:?from secret manager}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:?private object storage endpoint}
+      MINIO_PORT: ${MINIO_PORT:-9000}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:?from secret manager}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:?from secret manager}
+      MINIO_BUCKET: ${MINIO_BUCKET:?media bucket}
+      CLAMAV_HOST: ${CLAMAV_HOST:?private antivirus service}
+      CLAMAV_PORT: ${CLAMAV_PORT:-3310}
+      ALLOW_UNSCANNED_UPLOADS: "false"
+      INTERNAL_MARTIN_URL: http://martin:3000
+      INTERNAL_NOMINATIM_URL: http://nominatim:8080
+      MAP_PUBLIC_BASE_URL: ${MAP_PUBLIC_BASE_URL:?first-party HTTPS URL}
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    stop_grace_period: 30s
+  worker:
+    image: ${WORKER_IMAGE:?set WORKER_IMAGE to an immutable digest}
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?from secret manager}
+      REDIS_URL: ${REDIS_URL:?from secret manager}
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+  admin:
+    image: ${ADMIN_IMAGE:?set ADMIN_IMAGE to an immutable digest}
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    environment:
+      NODE_ENV: production
+      INTERNAL_API_URL: http://api:3000/api/v1
+      ADMIN_PUBLIC_ORIGIN: ${ADMIN_PUBLIC_ORIGIN:?HTTPS admin origin}
+      ADMIN_ALLOWED_ORIGINS: ${ADMIN_ALLOWED_ORIGINS:?admin hosts}
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]

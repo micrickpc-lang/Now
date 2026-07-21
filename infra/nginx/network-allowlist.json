@@ -1,0 +1,10 @@
+{
+  "productionMobileDomains": ["api.example.invalid", "maps.example.invalid"],
+  "mapResourcePaths": [
+    "/api/v1/maps/style.json",
+    "/api/v1/maps/tiles/",
+    "/api/v1/maps/search",
+    "/api/v1/maps/reverse"
+  ],
+  "requiresHttps": true
+}

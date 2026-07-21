@@ -1,0 +1,4 @@
+apps/mobile/**
+**/generated/**
+package-lock.json
+infra/maps/data/**

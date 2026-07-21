@@ -1,0 +1,647 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DELETING
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum CircleRole {
+  OWNER
+  MEMBER
+}
+
+enum SignalState {
+  DRAFT
+  ACTIVE
+  FULL
+  EXPIRED
+  CANCELLED
+  COMPLETED
+  MODERATED
+}
+
+enum SignalFormat {
+  ONLINE
+  OFFLINE
+}
+
+enum LocationMode {
+  NONE
+  CITY
+  DISTRICT
+  APPROXIMATE
+  EXACT_ROOM
+}
+
+enum JoinRequestState {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum RoomState {
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum ReportState {
+  OPEN
+  INVESTIGATING
+  ACTIONED
+  DISMISSED
+  APPEALED
+}
+
+enum AdminRole {
+  MODERATOR
+  TRUST_SAFETY
+  SUPERADMIN
+}
+
+model User {
+  id                 String               @id @default(uuid()) @db.Uuid
+  phoneHash          String               @unique @map("phone_hash")
+  phoneCiphertext    String               @map("phone_ciphertext")
+  birthDate          DateTime             @map("birth_date") @db.Date
+  limitedMode        Boolean              @default(false) @map("limited_mode")
+  status             UserStatus           @default(ACTIVE)
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime             @updatedAt @map("updated_at")
+  deletedAt          DateTime?            @map("deleted_at")
+  profile            UserProfile?
+  devices            Device[]
+  sessions           AuthSession[]
+  circlesOwned       Circle[]             @relation("CircleOwner")
+  circleMemberships  CircleMember[]
+  invitesCreated     FriendshipInvite[]   @relation("InviteCreator")
+  invitesConsumed    FriendshipInvite[]   @relation("InviteConsumer")
+  friendshipsA       Friendship[]         @relation("FriendA")
+  friendshipsB       Friendship[]         @relation("FriendB")
+  friendshipsAsked   Friendship[]         @relation("FriendRequester")
+  signals            Signal[]
+  joinRequests       SignalJoinRequest[]
+  signalParticipants SignalParticipant[]
+  roomsOwned         TemporaryRoom[]      @relation("RoomOwner")
+  roomMemberships    RoomMember[]
+  messages           RoomMessage[]
+  reactions          RoomReaction[]
+  pollVotes          RoomPollVote[]
+  locationShares     LocationShare[]
+  memories           Memory[]             @relation("MemoryOwner")
+  memoryParticipants MemoryParticipant[]
+  media              MediaFile[]
+  blocksCreated      Block[]              @relation("Blocker")
+  blocksReceived     Block[]              @relation("Blocked")
+  reportsCreated     Report[]             @relation("Reporter")
+  reportsReceived    Report[]             @relation("ReportedUser")
+  notificationTokens NotificationToken[]
+  consents           ConsentRecord[]
+  auditLogs          AuditLog[]
+  analyticsEvents    AnalyticsEvent[]
+  deletionReports    DeletionReport[]
+
+  @@map("users")
+}
+
+model UserProfile {
+  userId               String   @id @map("user_id") @db.Uuid
+  displayName          String   @map("display_name") @db.VarChar(40)
+  emoji                String?  @db.VarChar(16)
+  avatarMediaId        String?  @unique @map("avatar_media_id") @db.Uuid
+  bio                   String?  @db.VarChar(160)
+  showRecentActivity   Boolean  @default(false) @map("show_recent_activity")
+  notificationSettings Json     @default("{}") @map("notification_settings")
+  privacySettings      Json     @default("{}") @map("privacy_settings")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  avatar                MediaFile? @relation("ProfileAvatar", fields: [avatarMediaId], references: [id], onDelete: SetNull)
+
+  @@map("user_profiles")
+}
+
+model Device {
+  id          String        @id @default(uuid()) @db.Uuid
+  userId      String        @map("user_id") @db.Uuid
+  installationId String     @map("installation_id") @db.VarChar(128)
+  platform    String        @db.VarChar(16)
+  label       String?       @db.VarChar(80)
+  lastSeenAt  DateTime      @default(now()) @map("last_seen_at")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions    AuthSession[]
+
+  @@unique([userId, installationId])
+  @@index([userId, lastSeenAt])
+  @@map("devices")
+}
+
+model AuthSession {
+  id               String    @id @default(uuid()) @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
+  deviceId         String?   @map("device_id") @db.Uuid
+  refreshTokenHash String    @map("refresh_token_hash")
+  rotationCounter  Int       @default(0) @map("rotation_counter")
+  ipHash           String?   @map("ip_hash")
+  userAgent        String?   @map("user_agent") @db.VarChar(255)
+  expiresAt        DateTime  @map("expires_at")
+  lastUsedAt       DateTime  @default(now()) @map("last_used_at")
+  revokedAt        DateTime? @map("revoked_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device           Device?   @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+
+  @@index([userId, revokedAt])
+  @@index([expiresAt])
+  @@map("auth_sessions")
+}
+
+model OtpChallenge {
+  id            String    @id @default(uuid()) @db.Uuid
+  phoneHash     String    @map("phone_hash")
+  codeHash      String    @map("code_hash")
+  requestIpHash String    @map("request_ip_hash")
+  attemptCount  Int       @default(0) @map("attempt_count")
+  expiresAt     DateTime  @map("expires_at")
+  consumedAt    DateTime? @map("consumed_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@index([phoneHash, createdAt])
+  @@index([requestIpHash, createdAt])
+  @@index([expiresAt])
+  @@map("otp_challenges")
+}
+
+model Friendship {
+  id            String           @id @default(uuid()) @db.Uuid
+  userAId       String           @map("user_a_id") @db.Uuid
+  userBId       String           @map("user_b_id") @db.Uuid
+  requestedById String           @map("requested_by_id") @db.Uuid
+  status        FriendshipStatus @default(PENDING)
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+  userA         User             @relation("FriendA", fields: [userAId], references: [id], onDelete: Cascade)
+  userB         User             @relation("FriendB", fields: [userBId], references: [id], onDelete: Cascade)
+  requestedBy   User             @relation("FriendRequester", fields: [requestedById], references: [id], onDelete: Cascade)
+
+  @@unique([userAId, userBId])
+  @@index([userAId, status])
+  @@index([userBId, status])
+  @@map("friendships")
+}
+
+model FriendshipInvite {
+  id           String    @id @default(uuid()) @db.Uuid
+  creatorId    String    @map("creator_id") @db.Uuid
+  tokenHash    String    @unique @map("token_hash")
+  shortCode    String    @unique @map("short_code") @db.VarChar(10)
+  expiresAt    DateTime  @map("expires_at")
+  consumedAt   DateTime? @map("consumed_at")
+  consumedById String?   @map("consumed_by_id") @db.Uuid
+  createdAt    DateTime  @default(now()) @map("created_at")
+  creator      User      @relation("InviteCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  consumedBy   User?     @relation("InviteConsumer", fields: [consumedById], references: [id], onDelete: SetNull)
+
+  @@index([creatorId, createdAt])
+  @@index([expiresAt])
+  @@map("friendship_invites")
+}
+
+model Circle {
+  id        String         @id @default(uuid()) @db.Uuid
+  ownerId   String         @map("owner_id") @db.Uuid
+  name      String         @db.VarChar(60)
+  emoji     String?        @db.VarChar(16)
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+  owner     User           @relation("CircleOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members   CircleMember[]
+  visibility SignalVisibility[]
+
+  @@index([ownerId])
+  @@map("circles")
+}
+
+model CircleMember {
+  circleId String     @map("circle_id") @db.Uuid
+  userId   String     @map("user_id") @db.Uuid
+  role     CircleRole @default(MEMBER)
+  joinedAt DateTime   @default(now()) @map("joined_at")
+  circle   Circle     @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([circleId, userId])
+  @@index([userId])
+  @@map("circle_members")
+}
+
+model Signal {
+  id              String              @id @default(uuid()) @db.Uuid
+  authorId        String              @map("author_id") @db.Uuid
+  category        String              @db.VarChar(40)
+  text            String?             @db.VarChar(180)
+  emoji           String?             @db.VarChar(16)
+  startsAt        DateTime            @map("starts_at")
+  expiresAt       DateTime            @map("expires_at")
+  format          SignalFormat
+  locationMode    LocationMode        @default(NONE) @map("location_mode")
+  cityLabel       String?             @map("city_label") @db.VarChar(100)
+  districtLabel   String?             @map("district_label") @db.VarChar(100)
+  approximatePoint Unsupported("geography(Point, 4326)")? @map("approximate_point")
+  maxParticipants Int                 @default(4) @map("max_participants")
+  state           SignalState         @default(ACTIVE)
+  extendedAt      DateTime?           @map("extended_at")
+  createdAt       DateTime            @default(now()) @map("created_at")
+  updatedAt       DateTime            @updatedAt @map("updated_at")
+  author          User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  visibility      SignalVisibility[]
+  joinRequests    SignalJoinRequest[]
+  participants    SignalParticipant[]
+  room            TemporaryRoom?
+  reports         Report[]
+
+  @@index([authorId, state])
+  @@index([state, expiresAt])
+  @@map("signals")
+}
+
+model SignalVisibility {
+  id       String  @id @default(uuid()) @db.Uuid
+  signalId String  @map("signal_id") @db.Uuid
+  circleId String? @map("circle_id") @db.Uuid
+  userId   String? @map("user_id") @db.Uuid
+  signal   Signal  @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  circle   Circle? @relation(fields: [circleId], references: [id], onDelete: Cascade)
+
+  @@unique([signalId, circleId])
+  @@unique([signalId, userId])
+  @@index([circleId])
+  @@index([userId])
+  @@map("signal_visibility")
+}
+
+model SignalJoinRequest {
+  id        String           @id @default(uuid()) @db.Uuid
+  signalId  String           @map("signal_id") @db.Uuid
+  userId    String           @map("user_id") @db.Uuid
+  state     JoinRequestState @default(PENDING)
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+  signal    Signal           @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([signalId, userId])
+  @@index([userId, state])
+  @@map("signal_join_requests")
+}
+
+model SignalParticipant {
+  signalId String   @map("signal_id") @db.Uuid
+  userId   String   @map("user_id") @db.Uuid
+  joinedAt DateTime @default(now()) @map("joined_at")
+  signal   Signal   @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([signalId, userId])
+  @@index([userId])
+  @@map("signal_participants")
+}
+
+model TemporaryRoom {
+  id          String       @id @default(uuid()) @db.Uuid
+  signalId    String       @unique @map("signal_id") @db.Uuid
+  ownerId     String       @map("owner_id") @db.Uuid
+  title       String       @db.VarChar(100)
+  state       RoomState    @default(ACTIVE)
+  scheduledAt DateTime?    @map("scheduled_at")
+  expiresAt   DateTime     @map("expires_at")
+  completedAt DateTime?    @map("completed_at")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  signal      Signal       @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  owner       User         @relation("RoomOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members     RoomMember[]
+  messages    RoomMessage[]
+  polls       RoomPoll[]
+  locationShares LocationShare[]
+
+  @@index([state, expiresAt])
+  @@map("temporary_rooms")
+}
+
+model RoomMember {
+  roomId   String    @map("room_id") @db.Uuid
+  userId   String    @map("user_id") @db.Uuid
+  joinedAt DateTime  @default(now()) @map("joined_at")
+  leftAt   DateTime? @map("left_at")
+  mutedUntil DateTime? @map("muted_until")
+  room     TemporaryRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([roomId, userId])
+  @@index([userId, leftAt])
+  @@map("room_members")
+}
+
+model RoomMessage {
+  id        String        @id @default(uuid()) @db.Uuid
+  roomId    String        @map("room_id") @db.Uuid
+  authorId  String?       @map("author_id") @db.Uuid
+  body      String        @db.VarChar(1000)
+  system    Boolean       @default(false)
+  createdAt DateTime      @default(now()) @map("created_at")
+  deletedAt DateTime?     @map("deleted_at")
+  room      TemporaryRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  author    User?         @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  reactions RoomReaction[]
+  reports   Report[]
+
+  @@index([roomId, createdAt])
+  @@map("room_messages")
+}
+
+model RoomReaction {
+  messageId String      @map("message_id") @db.Uuid
+  userId    String      @map("user_id") @db.Uuid
+  emoji     String      @db.VarChar(16)
+  createdAt DateTime    @default(now()) @map("created_at")
+  message   RoomMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([messageId, userId, emoji])
+  @@map("room_reactions")
+}
+
+model RoomPoll {
+  id        String           @id @default(uuid()) @db.Uuid
+  roomId    String           @map("room_id") @db.Uuid
+  question  String           @db.VarChar(200)
+  closesAt  DateTime?        @map("closes_at")
+  createdAt DateTime         @default(now()) @map("created_at")
+  room      TemporaryRoom    @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  options   RoomPollOption[]
+
+  @@index([roomId])
+  @@map("room_polls")
+}
+
+model RoomPollOption {
+  id       String         @id @default(uuid()) @db.Uuid
+  pollId   String         @map("poll_id") @db.Uuid
+  label    String         @db.VarChar(100)
+  position Int
+  poll     RoomPoll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes    RoomPollVote[]
+
+  @@unique([pollId, position])
+  @@map("room_poll_options")
+}
+
+model RoomPollVote {
+  pollOptionId String         @map("poll_option_id") @db.Uuid
+  userId      String         @map("user_id") @db.Uuid
+  createdAt   DateTime       @default(now()) @map("created_at")
+  option      RoomPollOption @relation(fields: [pollOptionId], references: [id], onDelete: Cascade)
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([pollOptionId, userId])
+  @@map("room_poll_votes")
+}
+
+model LocationShare {
+  id               String        @id @default(uuid()) @db.Uuid
+  roomId           String        @map("room_id") @db.Uuid
+  ownerId          String        @map("owner_id") @db.Uuid
+  ciphertext       String
+  iv               String
+  authTag          String        @map("auth_tag")
+  encryptedDataKey String        @map("encrypted_data_key")
+  keyIv            String        @map("key_iv")
+  keyAuthTag       String        @map("key_auth_tag")
+  expiresAt        DateTime      @map("expires_at")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  room             TemporaryRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  owner            User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, ownerId])
+  @@index([expiresAt])
+  @@map("location_shares")
+}
+
+model Memory {
+  id          String              @id @default(uuid()) @db.Uuid
+  ownerId     String              @map("owner_id") @db.Uuid
+  title       String              @db.VarChar(80)
+  category    String              @db.VarChar(40)
+  occurredAt  DateTime            @map("occurred_at")
+  durationMin Int?                @map("duration_min")
+  theme       String              @default("aurora") @db.VarChar(32)
+  private     Boolean             @default(true)
+  mediaId     String?             @unique @map("media_id") @db.Uuid
+  createdAt   DateTime            @default(now()) @map("created_at")
+  owner       User                @relation("MemoryOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  media       MediaFile?          @relation("MemoryMedia", fields: [mediaId], references: [id], onDelete: SetNull)
+  participants MemoryParticipant[]
+
+  @@index([ownerId, occurredAt])
+  @@map("memories")
+}
+
+model MemoryParticipant {
+  memoryId String @map("memory_id") @db.Uuid
+  userId   String @map("user_id") @db.Uuid
+  memory   Memory @relation(fields: [memoryId], references: [id], onDelete: Cascade)
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([memoryId, userId])
+  @@map("memory_participants")
+}
+
+model MediaFile {
+  id           String       @id @default(uuid()) @db.Uuid
+  ownerId      String       @map("owner_id") @db.Uuid
+  objectKey    String       @unique @map("object_key")
+  thumbnailKey String?      @unique @map("thumbnail_key")
+  mimeType     String       @map("mime_type") @db.VarChar(80)
+  byteSize     Int          @map("byte_size")
+  sha256       String
+  scanStatus   String       @default("pending") @map("scan_status") @db.VarChar(20)
+  createdAt    DateTime     @default(now()) @map("created_at")
+  owner        User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  profileAvatar UserProfile? @relation("ProfileAvatar")
+  memoryMedia   Memory?      @relation("MemoryMedia")
+
+  @@index([ownerId])
+  @@map("media_files")
+}
+
+model Block {
+  blockerId String   @map("blocker_id") @db.Uuid
+  blockedId String   @map("blocked_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  blocker   User     @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked   User     @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@id([blockerId, blockedId])
+  @@index([blockedId])
+  @@map("blocks")
+}
+
+model Report {
+  id              String      @id @default(uuid()) @db.Uuid
+  reporterId      String?     @map("reporter_id") @db.Uuid
+  reportedUserId  String?     @map("reported_user_id") @db.Uuid
+  signalId        String?     @map("signal_id") @db.Uuid
+  messageId       String?     @map("message_id") @db.Uuid
+  category        String      @db.VarChar(40)
+  details         String?     @db.VarChar(1000)
+  state           ReportState @default(OPEN)
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  reporter        User?       @relation("Reporter", fields: [reporterId], references: [id], onDelete: SetNull)
+  reportedUser    User?       @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: SetNull)
+  signal          Signal?     @relation(fields: [signalId], references: [id], onDelete: SetNull)
+  message         RoomMessage? @relation(fields: [messageId], references: [id], onDelete: SetNull)
+  actions         ModerationAction[]
+
+  @@index([state, createdAt])
+  @@index([reportedUserId])
+  @@map("reports")
+}
+
+model AdminUser {
+  id           String             @id @default(uuid()) @db.Uuid
+  email        String             @unique
+  passwordHash String             @map("password_hash")
+  role         AdminRole          @default(MODERATOR)
+  active       Boolean            @default(true)
+  createdAt    DateTime           @default(now()) @map("created_at")
+  updatedAt    DateTime           @updatedAt @map("updated_at")
+  actions      ModerationAction[]
+
+  @@map("admin_users")
+}
+
+model ModerationAction {
+  id          String    @id @default(uuid()) @db.Uuid
+  reportId    String?   @map("report_id") @db.Uuid
+  adminId     String    @map("admin_id") @db.Uuid
+  action      String    @db.VarChar(60)
+  reason      String    @db.VarChar(500)
+  metadata    Json      @default("{}")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  report      Report?   @relation(fields: [reportId], references: [id], onDelete: SetNull)
+  admin       AdminUser @relation(fields: [adminId], references: [id], onDelete: Restrict)
+
+  @@index([reportId])
+  @@index([adminId, createdAt])
+  @@map("moderation_actions")
+}
+
+model NotificationToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  tokenHash String   @unique @map("token_hash")
+  encryptedToken String @map("encrypted_token")
+  platform  String   @db.VarChar(16)
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, enabled])
+  @@map("notification_tokens")
+}
+
+model ConsentRecord {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  type        String   @db.VarChar(60)
+  version     String   @db.VarChar(32)
+  granted     Boolean
+  evidenceRef String?  @map("evidence_ref")
+  createdAt   DateTime @default(now()) @map("created_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+  @@map("consent_records")
+}
+
+model AuditLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  actorUserId  String?  @map("actor_user_id") @db.Uuid
+  actorAdminId String?  @map("actor_admin_id") @db.Uuid
+  action       String   @db.VarChar(100)
+  resourceType String   @map("resource_type") @db.VarChar(60)
+  resourceId   String?  @map("resource_id") @db.Uuid
+  result       String   @db.VarChar(30)
+  ipHash       String?  @map("ip_hash")
+  metadata     Json     @default("{}")
+  createdAt    DateTime @default(now()) @map("created_at")
+  actorUser    User?    @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([resourceType, resourceId, createdAt])
+  @@index([actorUserId, createdAt])
+  @@map("audit_logs")
+}
+
+model FeatureFlag {
+  key         String   @id @db.VarChar(80)
+  enabled     Boolean  @default(false)
+  payload     Json     @default("{}")
+  minVersion  String?  @map("min_version") @db.VarChar(30)
+  forceUpdate Boolean  @default(false) @map("force_update")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("feature_flags")
+}
+
+model ForbiddenWord {
+  id        String   @id @default(uuid()) @db.Uuid
+  pattern   String   @unique @db.VarChar(160)
+  category  String   @db.VarChar(40)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("forbidden_words")
+}
+
+model AnalyticsEvent {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String?  @map("user_id") @db.Uuid
+  pseudonym    String   @db.VarChar(64)
+  name         String   @db.VarChar(60)
+  properties   Json     @default("{}")
+  occurredAt   DateTime @default(now()) @map("occurred_at")
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([name, occurredAt])
+  @@map("analytics_events")
+}
+
+model DeletionReport {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String?  @map("user_id") @db.Uuid
+  requestRef    String   @unique @map("request_ref")
+  categories    Json
+  completedAt   DateTime @default(now()) @map("completed_at")
+  retainedBasis Json     @default("{}") @map("retained_basis")
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("deletion_reports")
+}
