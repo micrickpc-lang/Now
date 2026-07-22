@@ -1,6 +1,6 @@
 # Сейчас
 
-«Сейчас» — privacy-first мобильное приложение для координации встреч и онлайн-активностей внутри взаимного круга друзей. В продукте нет публичной ленты, поиска незнакомцев и фонового отслеживания: сигнал живёт ограниченное время, а точная геопозиция доступна только подтверждённым участникам временной комнаты и удаляется по TTL.
+«Сейчас» — privacy-first мессенджер и приложение для координации встреч внутри взаимного круга друзей. Постоянные личные и закрытые групповые чаты отделены от временных комнат встреч. В продукте нет публичных групп, поиска незнакомцев и фонового отслеживания: сигнал живёт ограниченное время, а точная геопозиция доступна только подтверждённым участникам временной комнаты и удаляется по TTL.
 
 ## Состав репозитория
 
@@ -22,8 +22,8 @@ cp .env.example .env
 npm ci
 npm run db:generate
 docker compose up -d postgres redis minio
-docker compose run --rm api npm run db:migrate
-docker compose run --rm api npm run db:seed
+docker compose run --rm migrate
+docker compose run --rm migrate npm run db:seed --workspace=@seychas/api
 docker compose up --build api worker admin nginx
 ```
 
@@ -39,13 +39,21 @@ flutter pub get
 flutter run --dart-define=APP_ENV=development --dart-define=API_BASE_URL=http://10.0.2.2:3000/api/v1 --dart-define=WS_BASE_URL=http://10.0.2.2:3000
 ```
 
-Автономная UI-демонстрация на телефоне без backend, Docker и WSL:
+Автономная демонстрация на телефоне без backend, Docker и WSL:
 
 ```bash
 flutter run --dart-define=APP_ENV=development --dart-define=DEMO_MODE=true
 ```
 
-В этом режиме OTP `123456`, а данные существуют только в памяти приложения. Production-конфигурация отклоняет `DEMO_MODE` при запуске.
+В этом режиме OTP `123456`, а список чатов, история сообщений, черновики и очередь отправки сохраняются локально и переживают перезапуск приложения. Выбранный Demo Mode также сохраняется на устройстве. Production-конфигурация отклоняет `DEMO_MODE` при запуске.
+
+Для проверки с реальным API на физическом Android используй LAN-адрес компьютера с Windows (телефон и компьютер должны быть в одной доверенной Wi-Fi-сети). `10.0.2.2` работает только в Android Emulator:
+
+```powershell
+flutter run --dart-define=APP_ENV=development --dart-define=API_BASE_URL=http://192.168.1.10:3000/api/v1 --dart-define=WS_BASE_URL=http://192.168.1.10:3000
+```
+
+Замени `192.168.1.10` на IPv4-адрес компьютера. Не публикуй development API в интернет; для внешней сети нужен HTTPS reverse proxy и production-настройки безопасности.
 
 Android release:
 

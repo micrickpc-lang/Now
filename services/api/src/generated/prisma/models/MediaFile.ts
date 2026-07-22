@@ -251,6 +251,8 @@ export type MediaFileWhereInput = {
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   profileAvatar?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
   memoryMedia?: Prisma.XOR<Prisma.MemoryNullableScalarRelationFilter, Prisma.MemoryWhereInput> | null
+  conversationAvatars?: Prisma.ConversationListRelationFilter
+  messageAttachments?: Prisma.MessageAttachmentListRelationFilter
 }
 
 export type MediaFileOrderByWithRelationInput = {
@@ -266,6 +268,8 @@ export type MediaFileOrderByWithRelationInput = {
   owner?: Prisma.UserOrderByWithRelationInput
   profileAvatar?: Prisma.UserProfileOrderByWithRelationInput
   memoryMedia?: Prisma.MemoryOrderByWithRelationInput
+  conversationAvatars?: Prisma.ConversationOrderByRelationAggregateInput
+  messageAttachments?: Prisma.MessageAttachmentOrderByRelationAggregateInput
 }
 
 export type MediaFileWhereUniqueInput = Prisma.AtLeast<{
@@ -284,6 +288,8 @@ export type MediaFileWhereUniqueInput = Prisma.AtLeast<{
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   profileAvatar?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
   memoryMedia?: Prisma.XOR<Prisma.MemoryNullableScalarRelationFilter, Prisma.MemoryWhereInput> | null
+  conversationAvatars?: Prisma.ConversationListRelationFilter
+  messageAttachments?: Prisma.MessageAttachmentListRelationFilter
 }, "id" | "objectKey" | "thumbnailKey">
 
 export type MediaFileOrderByWithAggregationInput = {
@@ -330,6 +336,8 @@ export type MediaFileCreateInput = {
   owner: Prisma.UserCreateNestedOneWithoutMediaInput
   profileAvatar?: Prisma.UserProfileCreateNestedOneWithoutAvatarInput
   memoryMedia?: Prisma.MemoryCreateNestedOneWithoutMediaInput
+  conversationAvatars?: Prisma.ConversationCreateNestedManyWithoutAvatarInput
+  messageAttachments?: Prisma.MessageAttachmentCreateNestedManyWithoutMediaInput
 }
 
 export type MediaFileUncheckedCreateInput = {
@@ -344,6 +352,8 @@ export type MediaFileUncheckedCreateInput = {
   createdAt?: Date | string
   profileAvatar?: Prisma.UserProfileUncheckedCreateNestedOneWithoutAvatarInput
   memoryMedia?: Prisma.MemoryUncheckedCreateNestedOneWithoutMediaInput
+  conversationAvatars?: Prisma.ConversationUncheckedCreateNestedManyWithoutAvatarInput
+  messageAttachments?: Prisma.MessageAttachmentUncheckedCreateNestedManyWithoutMediaInput
 }
 
 export type MediaFileUpdateInput = {
@@ -358,6 +368,8 @@ export type MediaFileUpdateInput = {
   owner?: Prisma.UserUpdateOneRequiredWithoutMediaNestedInput
   profileAvatar?: Prisma.UserProfileUpdateOneWithoutAvatarNestedInput
   memoryMedia?: Prisma.MemoryUpdateOneWithoutMediaNestedInput
+  conversationAvatars?: Prisma.ConversationUpdateManyWithoutAvatarNestedInput
+  messageAttachments?: Prisma.MessageAttachmentUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaFileUncheckedUpdateInput = {
@@ -372,6 +384,8 @@ export type MediaFileUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profileAvatar?: Prisma.UserProfileUncheckedUpdateOneWithoutAvatarNestedInput
   memoryMedia?: Prisma.MemoryUncheckedUpdateOneWithoutMediaNestedInput
+  conversationAvatars?: Prisma.ConversationUncheckedUpdateManyWithoutAvatarNestedInput
+  messageAttachments?: Prisma.MessageAttachmentUncheckedUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaFileCreateManyInput = {
@@ -422,6 +436,11 @@ export type MediaFileOrderByRelationAggregateInput = {
 export type MediaFileNullableScalarRelationFilter = {
   is?: Prisma.MediaFileWhereInput | null
   isNot?: Prisma.MediaFileWhereInput | null
+}
+
+export type MediaFileScalarRelationFilter = {
+  is?: Prisma.MediaFileWhereInput
+  isNot?: Prisma.MediaFileWhereInput
 }
 
 export type MediaFileCountOrderByAggregateInput = {
@@ -526,6 +545,36 @@ export type MediaFileUpdateOneWithoutProfileAvatarNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MediaFileUpdateToOneWithWhereWithoutProfileAvatarInput, Prisma.MediaFileUpdateWithoutProfileAvatarInput>, Prisma.MediaFileUncheckedUpdateWithoutProfileAvatarInput>
 }
 
+export type MediaFileCreateNestedOneWithoutConversationAvatarsInput = {
+  create?: Prisma.XOR<Prisma.MediaFileCreateWithoutConversationAvatarsInput, Prisma.MediaFileUncheckedCreateWithoutConversationAvatarsInput>
+  connectOrCreate?: Prisma.MediaFileCreateOrConnectWithoutConversationAvatarsInput
+  connect?: Prisma.MediaFileWhereUniqueInput
+}
+
+export type MediaFileUpdateOneWithoutConversationAvatarsNestedInput = {
+  create?: Prisma.XOR<Prisma.MediaFileCreateWithoutConversationAvatarsInput, Prisma.MediaFileUncheckedCreateWithoutConversationAvatarsInput>
+  connectOrCreate?: Prisma.MediaFileCreateOrConnectWithoutConversationAvatarsInput
+  upsert?: Prisma.MediaFileUpsertWithoutConversationAvatarsInput
+  disconnect?: Prisma.MediaFileWhereInput | boolean
+  delete?: Prisma.MediaFileWhereInput | boolean
+  connect?: Prisma.MediaFileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MediaFileUpdateToOneWithWhereWithoutConversationAvatarsInput, Prisma.MediaFileUpdateWithoutConversationAvatarsInput>, Prisma.MediaFileUncheckedUpdateWithoutConversationAvatarsInput>
+}
+
+export type MediaFileCreateNestedOneWithoutMessageAttachmentsInput = {
+  create?: Prisma.XOR<Prisma.MediaFileCreateWithoutMessageAttachmentsInput, Prisma.MediaFileUncheckedCreateWithoutMessageAttachmentsInput>
+  connectOrCreate?: Prisma.MediaFileCreateOrConnectWithoutMessageAttachmentsInput
+  connect?: Prisma.MediaFileWhereUniqueInput
+}
+
+export type MediaFileUpdateOneRequiredWithoutMessageAttachmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.MediaFileCreateWithoutMessageAttachmentsInput, Prisma.MediaFileUncheckedCreateWithoutMessageAttachmentsInput>
+  connectOrCreate?: Prisma.MediaFileCreateOrConnectWithoutMessageAttachmentsInput
+  upsert?: Prisma.MediaFileUpsertWithoutMessageAttachmentsInput
+  connect?: Prisma.MediaFileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MediaFileUpdateToOneWithWhereWithoutMessageAttachmentsInput, Prisma.MediaFileUpdateWithoutMessageAttachmentsInput>, Prisma.MediaFileUncheckedUpdateWithoutMessageAttachmentsInput>
+}
+
 export type MediaFileCreateNestedOneWithoutMemoryMediaInput = {
   create?: Prisma.XOR<Prisma.MediaFileCreateWithoutMemoryMediaInput, Prisma.MediaFileUncheckedCreateWithoutMemoryMediaInput>
   connectOrCreate?: Prisma.MediaFileCreateOrConnectWithoutMemoryMediaInput
@@ -553,6 +602,8 @@ export type MediaFileCreateWithoutOwnerInput = {
   createdAt?: Date | string
   profileAvatar?: Prisma.UserProfileCreateNestedOneWithoutAvatarInput
   memoryMedia?: Prisma.MemoryCreateNestedOneWithoutMediaInput
+  conversationAvatars?: Prisma.ConversationCreateNestedManyWithoutAvatarInput
+  messageAttachments?: Prisma.MessageAttachmentCreateNestedManyWithoutMediaInput
 }
 
 export type MediaFileUncheckedCreateWithoutOwnerInput = {
@@ -566,6 +617,8 @@ export type MediaFileUncheckedCreateWithoutOwnerInput = {
   createdAt?: Date | string
   profileAvatar?: Prisma.UserProfileUncheckedCreateNestedOneWithoutAvatarInput
   memoryMedia?: Prisma.MemoryUncheckedCreateNestedOneWithoutMediaInput
+  conversationAvatars?: Prisma.ConversationUncheckedCreateNestedManyWithoutAvatarInput
+  messageAttachments?: Prisma.MessageAttachmentUncheckedCreateNestedManyWithoutMediaInput
 }
 
 export type MediaFileCreateOrConnectWithoutOwnerInput = {
@@ -620,6 +673,8 @@ export type MediaFileCreateWithoutProfileAvatarInput = {
   createdAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutMediaInput
   memoryMedia?: Prisma.MemoryCreateNestedOneWithoutMediaInput
+  conversationAvatars?: Prisma.ConversationCreateNestedManyWithoutAvatarInput
+  messageAttachments?: Prisma.MessageAttachmentCreateNestedManyWithoutMediaInput
 }
 
 export type MediaFileUncheckedCreateWithoutProfileAvatarInput = {
@@ -633,6 +688,8 @@ export type MediaFileUncheckedCreateWithoutProfileAvatarInput = {
   scanStatus?: string
   createdAt?: Date | string
   memoryMedia?: Prisma.MemoryUncheckedCreateNestedOneWithoutMediaInput
+  conversationAvatars?: Prisma.ConversationUncheckedCreateNestedManyWithoutAvatarInput
+  messageAttachments?: Prisma.MessageAttachmentUncheckedCreateNestedManyWithoutMediaInput
 }
 
 export type MediaFileCreateOrConnectWithoutProfileAvatarInput = {
@@ -662,6 +719,8 @@ export type MediaFileUpdateWithoutProfileAvatarInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutMediaNestedInput
   memoryMedia?: Prisma.MemoryUpdateOneWithoutMediaNestedInput
+  conversationAvatars?: Prisma.ConversationUpdateManyWithoutAvatarNestedInput
+  messageAttachments?: Prisma.MessageAttachmentUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaFileUncheckedUpdateWithoutProfileAvatarInput = {
@@ -675,6 +734,160 @@ export type MediaFileUncheckedUpdateWithoutProfileAvatarInput = {
   scanStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memoryMedia?: Prisma.MemoryUncheckedUpdateOneWithoutMediaNestedInput
+  conversationAvatars?: Prisma.ConversationUncheckedUpdateManyWithoutAvatarNestedInput
+  messageAttachments?: Prisma.MessageAttachmentUncheckedUpdateManyWithoutMediaNestedInput
+}
+
+export type MediaFileCreateWithoutConversationAvatarsInput = {
+  id?: string
+  objectKey: string
+  thumbnailKey?: string | null
+  mimeType: string
+  byteSize: number
+  sha256: string
+  scanStatus?: string
+  createdAt?: Date | string
+  owner: Prisma.UserCreateNestedOneWithoutMediaInput
+  profileAvatar?: Prisma.UserProfileCreateNestedOneWithoutAvatarInput
+  memoryMedia?: Prisma.MemoryCreateNestedOneWithoutMediaInput
+  messageAttachments?: Prisma.MessageAttachmentCreateNestedManyWithoutMediaInput
+}
+
+export type MediaFileUncheckedCreateWithoutConversationAvatarsInput = {
+  id?: string
+  ownerId: string
+  objectKey: string
+  thumbnailKey?: string | null
+  mimeType: string
+  byteSize: number
+  sha256: string
+  scanStatus?: string
+  createdAt?: Date | string
+  profileAvatar?: Prisma.UserProfileUncheckedCreateNestedOneWithoutAvatarInput
+  memoryMedia?: Prisma.MemoryUncheckedCreateNestedOneWithoutMediaInput
+  messageAttachments?: Prisma.MessageAttachmentUncheckedCreateNestedManyWithoutMediaInput
+}
+
+export type MediaFileCreateOrConnectWithoutConversationAvatarsInput = {
+  where: Prisma.MediaFileWhereUniqueInput
+  create: Prisma.XOR<Prisma.MediaFileCreateWithoutConversationAvatarsInput, Prisma.MediaFileUncheckedCreateWithoutConversationAvatarsInput>
+}
+
+export type MediaFileUpsertWithoutConversationAvatarsInput = {
+  update: Prisma.XOR<Prisma.MediaFileUpdateWithoutConversationAvatarsInput, Prisma.MediaFileUncheckedUpdateWithoutConversationAvatarsInput>
+  create: Prisma.XOR<Prisma.MediaFileCreateWithoutConversationAvatarsInput, Prisma.MediaFileUncheckedCreateWithoutConversationAvatarsInput>
+  where?: Prisma.MediaFileWhereInput
+}
+
+export type MediaFileUpdateToOneWithWhereWithoutConversationAvatarsInput = {
+  where?: Prisma.MediaFileWhereInput
+  data: Prisma.XOR<Prisma.MediaFileUpdateWithoutConversationAvatarsInput, Prisma.MediaFileUncheckedUpdateWithoutConversationAvatarsInput>
+}
+
+export type MediaFileUpdateWithoutConversationAvatarsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  objectKey?: Prisma.StringFieldUpdateOperationsInput | string
+  thumbnailKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  byteSize?: Prisma.IntFieldUpdateOperationsInput | number
+  sha256?: Prisma.StringFieldUpdateOperationsInput | string
+  scanStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owner?: Prisma.UserUpdateOneRequiredWithoutMediaNestedInput
+  profileAvatar?: Prisma.UserProfileUpdateOneWithoutAvatarNestedInput
+  memoryMedia?: Prisma.MemoryUpdateOneWithoutMediaNestedInput
+  messageAttachments?: Prisma.MessageAttachmentUpdateManyWithoutMediaNestedInput
+}
+
+export type MediaFileUncheckedUpdateWithoutConversationAvatarsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  objectKey?: Prisma.StringFieldUpdateOperationsInput | string
+  thumbnailKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  byteSize?: Prisma.IntFieldUpdateOperationsInput | number
+  sha256?: Prisma.StringFieldUpdateOperationsInput | string
+  scanStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profileAvatar?: Prisma.UserProfileUncheckedUpdateOneWithoutAvatarNestedInput
+  memoryMedia?: Prisma.MemoryUncheckedUpdateOneWithoutMediaNestedInput
+  messageAttachments?: Prisma.MessageAttachmentUncheckedUpdateManyWithoutMediaNestedInput
+}
+
+export type MediaFileCreateWithoutMessageAttachmentsInput = {
+  id?: string
+  objectKey: string
+  thumbnailKey?: string | null
+  mimeType: string
+  byteSize: number
+  sha256: string
+  scanStatus?: string
+  createdAt?: Date | string
+  owner: Prisma.UserCreateNestedOneWithoutMediaInput
+  profileAvatar?: Prisma.UserProfileCreateNestedOneWithoutAvatarInput
+  memoryMedia?: Prisma.MemoryCreateNestedOneWithoutMediaInput
+  conversationAvatars?: Prisma.ConversationCreateNestedManyWithoutAvatarInput
+}
+
+export type MediaFileUncheckedCreateWithoutMessageAttachmentsInput = {
+  id?: string
+  ownerId: string
+  objectKey: string
+  thumbnailKey?: string | null
+  mimeType: string
+  byteSize: number
+  sha256: string
+  scanStatus?: string
+  createdAt?: Date | string
+  profileAvatar?: Prisma.UserProfileUncheckedCreateNestedOneWithoutAvatarInput
+  memoryMedia?: Prisma.MemoryUncheckedCreateNestedOneWithoutMediaInput
+  conversationAvatars?: Prisma.ConversationUncheckedCreateNestedManyWithoutAvatarInput
+}
+
+export type MediaFileCreateOrConnectWithoutMessageAttachmentsInput = {
+  where: Prisma.MediaFileWhereUniqueInput
+  create: Prisma.XOR<Prisma.MediaFileCreateWithoutMessageAttachmentsInput, Prisma.MediaFileUncheckedCreateWithoutMessageAttachmentsInput>
+}
+
+export type MediaFileUpsertWithoutMessageAttachmentsInput = {
+  update: Prisma.XOR<Prisma.MediaFileUpdateWithoutMessageAttachmentsInput, Prisma.MediaFileUncheckedUpdateWithoutMessageAttachmentsInput>
+  create: Prisma.XOR<Prisma.MediaFileCreateWithoutMessageAttachmentsInput, Prisma.MediaFileUncheckedCreateWithoutMessageAttachmentsInput>
+  where?: Prisma.MediaFileWhereInput
+}
+
+export type MediaFileUpdateToOneWithWhereWithoutMessageAttachmentsInput = {
+  where?: Prisma.MediaFileWhereInput
+  data: Prisma.XOR<Prisma.MediaFileUpdateWithoutMessageAttachmentsInput, Prisma.MediaFileUncheckedUpdateWithoutMessageAttachmentsInput>
+}
+
+export type MediaFileUpdateWithoutMessageAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  objectKey?: Prisma.StringFieldUpdateOperationsInput | string
+  thumbnailKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  byteSize?: Prisma.IntFieldUpdateOperationsInput | number
+  sha256?: Prisma.StringFieldUpdateOperationsInput | string
+  scanStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owner?: Prisma.UserUpdateOneRequiredWithoutMediaNestedInput
+  profileAvatar?: Prisma.UserProfileUpdateOneWithoutAvatarNestedInput
+  memoryMedia?: Prisma.MemoryUpdateOneWithoutMediaNestedInput
+  conversationAvatars?: Prisma.ConversationUpdateManyWithoutAvatarNestedInput
+}
+
+export type MediaFileUncheckedUpdateWithoutMessageAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  objectKey?: Prisma.StringFieldUpdateOperationsInput | string
+  thumbnailKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  byteSize?: Prisma.IntFieldUpdateOperationsInput | number
+  sha256?: Prisma.StringFieldUpdateOperationsInput | string
+  scanStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profileAvatar?: Prisma.UserProfileUncheckedUpdateOneWithoutAvatarNestedInput
+  memoryMedia?: Prisma.MemoryUncheckedUpdateOneWithoutMediaNestedInput
+  conversationAvatars?: Prisma.ConversationUncheckedUpdateManyWithoutAvatarNestedInput
 }
 
 export type MediaFileCreateWithoutMemoryMediaInput = {
@@ -688,6 +901,8 @@ export type MediaFileCreateWithoutMemoryMediaInput = {
   createdAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutMediaInput
   profileAvatar?: Prisma.UserProfileCreateNestedOneWithoutAvatarInput
+  conversationAvatars?: Prisma.ConversationCreateNestedManyWithoutAvatarInput
+  messageAttachments?: Prisma.MessageAttachmentCreateNestedManyWithoutMediaInput
 }
 
 export type MediaFileUncheckedCreateWithoutMemoryMediaInput = {
@@ -701,6 +916,8 @@ export type MediaFileUncheckedCreateWithoutMemoryMediaInput = {
   scanStatus?: string
   createdAt?: Date | string
   profileAvatar?: Prisma.UserProfileUncheckedCreateNestedOneWithoutAvatarInput
+  conversationAvatars?: Prisma.ConversationUncheckedCreateNestedManyWithoutAvatarInput
+  messageAttachments?: Prisma.MessageAttachmentUncheckedCreateNestedManyWithoutMediaInput
 }
 
 export type MediaFileCreateOrConnectWithoutMemoryMediaInput = {
@@ -730,6 +947,8 @@ export type MediaFileUpdateWithoutMemoryMediaInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutMediaNestedInput
   profileAvatar?: Prisma.UserProfileUpdateOneWithoutAvatarNestedInput
+  conversationAvatars?: Prisma.ConversationUpdateManyWithoutAvatarNestedInput
+  messageAttachments?: Prisma.MessageAttachmentUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaFileUncheckedUpdateWithoutMemoryMediaInput = {
@@ -743,6 +962,8 @@ export type MediaFileUncheckedUpdateWithoutMemoryMediaInput = {
   scanStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profileAvatar?: Prisma.UserProfileUncheckedUpdateOneWithoutAvatarNestedInput
+  conversationAvatars?: Prisma.ConversationUncheckedUpdateManyWithoutAvatarNestedInput
+  messageAttachments?: Prisma.MessageAttachmentUncheckedUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaFileCreateManyOwnerInput = {
@@ -767,6 +988,8 @@ export type MediaFileUpdateWithoutOwnerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profileAvatar?: Prisma.UserProfileUpdateOneWithoutAvatarNestedInput
   memoryMedia?: Prisma.MemoryUpdateOneWithoutMediaNestedInput
+  conversationAvatars?: Prisma.ConversationUpdateManyWithoutAvatarNestedInput
+  messageAttachments?: Prisma.MessageAttachmentUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaFileUncheckedUpdateWithoutOwnerInput = {
@@ -780,6 +1003,8 @@ export type MediaFileUncheckedUpdateWithoutOwnerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profileAvatar?: Prisma.UserProfileUncheckedUpdateOneWithoutAvatarNestedInput
   memoryMedia?: Prisma.MemoryUncheckedUpdateOneWithoutMediaNestedInput
+  conversationAvatars?: Prisma.ConversationUncheckedUpdateManyWithoutAvatarNestedInput
+  messageAttachments?: Prisma.MessageAttachmentUncheckedUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaFileUncheckedUpdateManyWithoutOwnerInput = {
@@ -793,6 +1018,44 @@ export type MediaFileUncheckedUpdateManyWithoutOwnerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type MediaFileCountOutputType
+ */
+
+export type MediaFileCountOutputType = {
+  conversationAvatars: number
+  messageAttachments: number
+}
+
+export type MediaFileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  conversationAvatars?: boolean | MediaFileCountOutputTypeCountConversationAvatarsArgs
+  messageAttachments?: boolean | MediaFileCountOutputTypeCountMessageAttachmentsArgs
+}
+
+/**
+ * MediaFileCountOutputType without action
+ */
+export type MediaFileCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MediaFileCountOutputType
+   */
+  select?: Prisma.MediaFileCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * MediaFileCountOutputType without action
+ */
+export type MediaFileCountOutputTypeCountConversationAvatarsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ConversationWhereInput
+}
+
+/**
+ * MediaFileCountOutputType without action
+ */
+export type MediaFileCountOutputTypeCountMessageAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MessageAttachmentWhereInput
+}
 
 
 export type MediaFileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -808,6 +1071,9 @@ export type MediaFileSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   profileAvatar?: boolean | Prisma.MediaFile$profileAvatarArgs<ExtArgs>
   memoryMedia?: boolean | Prisma.MediaFile$memoryMediaArgs<ExtArgs>
+  conversationAvatars?: boolean | Prisma.MediaFile$conversationAvatarsArgs<ExtArgs>
+  messageAttachments?: boolean | Prisma.MediaFile$messageAttachmentsArgs<ExtArgs>
+  _count?: boolean | Prisma.MediaFileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mediaFile"]>
 
 export type MediaFileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -853,6 +1119,9 @@ export type MediaFileInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   profileAvatar?: boolean | Prisma.MediaFile$profileAvatarArgs<ExtArgs>
   memoryMedia?: boolean | Prisma.MediaFile$memoryMediaArgs<ExtArgs>
+  conversationAvatars?: boolean | Prisma.MediaFile$conversationAvatarsArgs<ExtArgs>
+  messageAttachments?: boolean | Prisma.MediaFile$messageAttachmentsArgs<ExtArgs>
+  _count?: boolean | Prisma.MediaFileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MediaFileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -867,6 +1136,8 @@ export type $MediaFilePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     owner: Prisma.$UserPayload<ExtArgs>
     profileAvatar: Prisma.$UserProfilePayload<ExtArgs> | null
     memoryMedia: Prisma.$MemoryPayload<ExtArgs> | null
+    conversationAvatars: Prisma.$ConversationPayload<ExtArgs>[]
+    messageAttachments: Prisma.$MessageAttachmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1275,6 +1546,8 @@ export interface Prisma__MediaFileClient<T, Null = never, ExtArgs extends runtim
   owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   profileAvatar<T extends Prisma.MediaFile$profileAvatarArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MediaFile$profileAvatarArgs<ExtArgs>>): Prisma.Prisma__UserProfileClient<runtime.Types.Result.GetResult<Prisma.$UserProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   memoryMedia<T extends Prisma.MediaFile$memoryMediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MediaFile$memoryMediaArgs<ExtArgs>>): Prisma.Prisma__MemoryClient<runtime.Types.Result.GetResult<Prisma.$MemoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  conversationAvatars<T extends Prisma.MediaFile$conversationAvatarsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MediaFile$conversationAvatarsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  messageAttachments<T extends Prisma.MediaFile$messageAttachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MediaFile$messageAttachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1749,6 +2022,54 @@ export type MediaFile$memoryMediaArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   include?: Prisma.MemoryInclude<ExtArgs> | null
   where?: Prisma.MemoryWhereInput
+}
+
+/**
+ * MediaFile.conversationAvatars
+ */
+export type MediaFile$conversationAvatarsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Conversation
+   */
+  select?: Prisma.ConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Conversation
+   */
+  omit?: Prisma.ConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ConversationInclude<ExtArgs> | null
+  where?: Prisma.ConversationWhereInput
+  orderBy?: Prisma.ConversationOrderByWithRelationInput | Prisma.ConversationOrderByWithRelationInput[]
+  cursor?: Prisma.ConversationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ConversationScalarFieldEnum | Prisma.ConversationScalarFieldEnum[]
+}
+
+/**
+ * MediaFile.messageAttachments
+ */
+export type MediaFile$messageAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MessageAttachment
+   */
+  select?: Prisma.MessageAttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MessageAttachment
+   */
+  omit?: Prisma.MessageAttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageAttachmentInclude<ExtArgs> | null
+  where?: Prisma.MessageAttachmentWhereInput
+  orderBy?: Prisma.MessageAttachmentOrderByWithRelationInput | Prisma.MessageAttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.MessageAttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MessageAttachmentScalarFieldEnum | Prisma.MessageAttachmentScalarFieldEnum[]
 }
 
 /**

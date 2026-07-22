@@ -32,6 +32,10 @@ export class CreateReportDto {
   @IsUUID()
   messageId?: string;
 
+  @IsOptional()
+  @IsUUID()
+  chatMessageId?: string;
+
   @IsIn(categories)
   category!: string;
 

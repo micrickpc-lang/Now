@@ -4,12 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../chats/data/chats_repository.dart';
 import '../../social/data/social_repository.dart';
 import '../data/signals_repository.dart';
 import '../domain/signal.dart';
 
 class SignalComposerScreen extends ConsumerStatefulWidget {
-  const SignalComposerScreen({super.key});
+  const SignalComposerScreen({this.conversationId, super.key});
+
+  final String? conversationId;
   @override
   ConsumerState<SignalComposerScreen> createState() =>
       _SignalComposerScreenState();
@@ -33,16 +36,34 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
   Future<void> _publish() async {
     final circles = ref.read(circlesProvider).value ?? const <CircleModel>[];
     final friends = ref.read(friendsProvider).value ?? const <FriendModel>[];
-    final selected =
-        _circleId ?? (circles.isNotEmpty ? circles.first.id : null);
-    if (selected == null && friends.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Сначала добавь друга или создай круг')),
-      );
-      return;
-    }
     setState(() => _publishing = true);
     try {
+      final selected =
+          _circleId ?? (circles.isNotEmpty ? circles.first.id : null);
+      var circleIds = selected == null ? <String>[] : <String>[selected];
+      var userIds = selected == null
+          ? friends.take(20).map((friend) => friend.id).toList()
+          : <String>[];
+      if (widget.conversationId != null) {
+        final conversation = await ref.read(
+          conversationProvider(widget.conversationId!).future,
+        );
+        final currentUserId = await ref.read(currentUserIdProvider.future);
+        userIds = conversation.members
+            .where((member) => member.userId != currentUserId)
+            .map((member) => member.userId)
+            .toSet()
+            .toList();
+        circleIds = <String>[];
+        if (userIds.length > 50) {
+          throw StateError(
+            'Сигнал можно отправить максимум 50 участникам чата.',
+          );
+        }
+      }
+      if (circleIds.isEmpty && userIds.isEmpty) {
+        throw StateError('Сначала добавь друга или создай круг');
+      }
       final payload = <String, dynamic>{
         'category': _category,
         'text': _text.text.trim().isEmpty ? null : _text.text.trim(),
@@ -53,11 +74,11 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
             ? 'ONLINE'
             : 'OFFLINE',
         'locationMode': _location,
-        'maxParticipants': 4,
-        'circleIds': selected == null ? <String>[] : [selected],
-        'userIds': selected == null
-            ? friends.take(20).map((friend) => friend.id).toList()
-            : <String>[],
+        'maxParticipants': widget.conversationId == null
+            ? 4
+            : (userIds.length + 1).clamp(2, 20),
+        'circleIds': circleIds,
+        'userIds': userIds,
       };
       if (_location == 'APPROXIMATE') {
         if (_latitude == null || _longitude == null) {
@@ -66,9 +87,9 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
         payload['latitude'] = _latitude;
         payload['longitude'] = _longitude;
       }
-      await ref.read(signalsRepositoryProvider).create(payload);
+      final signal = await ref.read(signalsRepositoryProvider).create(payload);
       await HapticFeedback.mediumImpact();
-      if (mounted) context.pop(true);
+      if (mounted) context.pop(signal);
     } on DioException catch (error) {
       if (mounted)
         ScaffoldMessenger.of(context).showSnackBar(
@@ -158,27 +179,37 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
           const SizedBox(height: 22),
           Text('Кому показать?', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 10),
-          circles.when(
-            data: (items) => DropdownButtonFormField<String>(
-              initialValue:
-                  _circleId ?? (items.isNotEmpty ? items.first.id : null),
-              decoration: const InputDecoration(labelText: 'Закрытый круг'),
-              items: items
-                  .map(
-                    (circle) => DropdownMenuItem(
-                      value: circle.id,
-                      child: Text(
-                        '${circle.emoji ?? '✨'} ${circle.name} · ${circle.memberCount}',
+          if (widget.conversationId != null)
+            const ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.forum_outlined),
+              title: Text('Участникам этого чата'),
+              subtitle: Text(
+                'После публикации сигнал появится отдельной карточкой в переписке.',
+              ),
+            )
+          else
+            circles.when(
+              data: (items) => DropdownButtonFormField<String>(
+                initialValue:
+                    _circleId ?? (items.isNotEmpty ? items.first.id : null),
+                decoration: const InputDecoration(labelText: 'Закрытый круг'),
+                items: items
+                    .map(
+                      (circle) => DropdownMenuItem(
+                        value: circle.id,
+                        child: Text(
+                          '${circle.emoji ?? '✨'} ${circle.name} · ${circle.memberCount}',
+                        ),
                       ),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) => setState(() => _circleId = value),
+                    )
+                    .toList(),
+                onChanged: (value) => setState(() => _circleId = value),
+              ),
+              loading: () => const LinearProgressIndicator(),
+              error: (_, __) =>
+                  const Text('Круги недоступны — выберем друзей напрямую'),
             ),
-            loading: () => const LinearProgressIndicator(),
-            error: (_, __) =>
-                const Text('Круги недоступны — выберем друзей напрямую'),
-          ),
           const SizedBox(height: 22),
           Text('Место', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 10),

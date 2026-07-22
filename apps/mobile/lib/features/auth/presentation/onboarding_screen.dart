@@ -20,7 +20,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     super.initState();
     Future<void>.delayed(const Duration(milliseconds: 700), () async {
       final active = await ref.read(sessionProvider.future);
-      if (mounted) context.go(active ? '/' : '/onboarding');
+      if (mounted) context.go(active ? '/chats' : '/onboarding');
     });
   }
 
@@ -136,7 +136,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               displayName: _name.text.trim(),
             );
         await ref.read(sessionProvider.notifier).signedIn();
-        if (mounted) context.go('/');
+        if (mounted) context.go('/chats');
         return;
       }
       _step += 1;
@@ -163,168 +163,222 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                if (_step > 0)
-                  IconButton(
-                    onPressed: _busy
-                        ? null
-                        : () {
-                            _step -= 1;
-                            _page.animateToPage(
-                              _step,
-                              duration: AppDuration.normal,
-                              curve: Curves.easeOut,
-                            );
-                            setState(() {});
-                          },
-                    icon: const Icon(Icons.arrow_back_rounded),
-                    tooltip: 'Назад',
-                  )
-                else
-                  const SizedBox(width: 48),
-                Expanded(
-                  child: LinearProgressIndicator(
-                    value: (_step + 1) / 6,
-                    borderRadius: BorderRadius.circular(20),
-                    minHeight: 5,
-                  ),
-                ),
-                const SizedBox(width: 48),
-              ],
-            ),
-            Expanded(
-              child: PageView(
-                controller: _page,
-                physics: const NeverScrollableScrollPhysics(),
+  Widget build(BuildContext context) {
+    final config = ref.watch(appConfigProvider);
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Column(
+            children: [
+              Row(
                 children: [
-                  _Step(
-                    icon: Icons.waving_hand_rounded,
-                    title: 'Ближе — прямо сейчас',
-                    text:
-                        'Только друзья, которых ты знаешь. Без публичной ленты и случайных людей.',
-                    child: TextField(
-                      controller: _phone,
-                      keyboardType: TextInputType.phone,
-                      autofillHints: const [AutofillHints.telephoneNumber],
-                      decoration: const InputDecoration(
-                        labelText: 'Номер телефона',
-                        hintText: '+7 900 000-00-00',
-                      ),
+                  if (_step > 0)
+                    IconButton(
+                      onPressed: _busy
+                          ? null
+                          : () {
+                              _step -= 1;
+                              _page.animateToPage(
+                                _step,
+                                duration: AppDuration.normal,
+                                curve: Curves.easeOut,
+                              );
+                              setState(() {});
+                            },
+                      icon: const Icon(Icons.arrow_back_rounded),
+                      tooltip: 'Назад',
+                    )
+                  else
+                    const SizedBox(width: 48),
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: (_step + 1) / 6,
+                      borderRadius: BorderRadius.circular(20),
+                      minHeight: 5,
                     ),
                   ),
-                  const _Step(
-                    icon: Icons.lock_outline_rounded,
-                    title: 'Твоё пространство закрыто',
-                    text:
-                        'Сигналы видят только взаимные друзья и выбранные закрытые круги. Номер никому не показываем.',
-                    child: _PrivacyBullets(),
-                  ),
-                  _Step(
-                    icon: Icons.cake_outlined,
-                    title: 'Сколько тебе лет?',
-                    text:
-                        'Минимальный возраст — 14 лет. Для пользователей младше 18 включается усиленный режим приватности.',
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        final value = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime.now().subtract(
-                            const Duration(days: 14 * 365),
-                          ),
-                          initialDate: DateTime(2006),
-                        );
-                        if (value != null) setState(() => _birthDate = value);
-                      },
-                      icon: const Icon(Icons.calendar_month_rounded),
-                      label: Text(
-                        _birthDate == null
-                            ? 'Выбрать дату рождения'
-                            : '${_birthDate!.day}.${_birthDate!.month}.${_birthDate!.year}',
-                      ),
-                    ),
-                  ),
-                  _Step(
-                    icon: Icons.auto_awesome_rounded,
-                    title: 'Как тебя зовут?',
-                    text:
-                        'Имя увидят только твои друзья. Публичного профиля здесь нет.',
-                    child: TextField(
-                      controller: _name,
-                      textCapitalization: TextCapitalization.words,
-                      maxLength: 40,
-                      decoration: const InputDecoration(labelText: 'Имя'),
-                    ),
-                  ),
-                  const _Step(
-                    icon: Icons.tune_rounded,
-                    title: 'Разрешения — по делу',
-                    text:
-                        'Контакты нужны только для поиска уже знакомых людей и остаются необязательными. Геолокацию запросим один раз при выборе места — фонового доступа нет.',
-                    child: _PermissionCards(),
-                  ),
-                  _Step(
-                    icon: Icons.sms_outlined,
-                    title: 'Последний шаг',
-                    text:
-                        'Введи код из SMS. В development используется код из локальной конфигурации.',
-                    child: TextField(
-                      controller: _otp,
-                      keyboardType: TextInputType.number,
-                      autofillHints: const [AutofillHints.oneTimeCode],
-                      maxLength: 6,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 30,
-                        letterSpacing: 12,
-                        fontWeight: FontWeight.w800,
-                      ),
-                      decoration: const InputDecoration(labelText: 'Код'),
-                    ),
-                  ),
+                  const SizedBox(width: 48),
                 ],
               ),
-            ),
-            if (_error != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Semantics(
-                  liveRegion: true,
-                  child: Text(
-                    _error!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
+              Expanded(
+                child: PageView(
+                  controller: _page,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    _Step(
+                      icon: Icons.waving_hand_rounded,
+                      title: 'Ближе — прямо сейчас',
+                      text:
+                          'Только друзья, которых ты знаешь. Без публичной ленты и случайных людей.',
+                      child: Column(
+                        children: [
+                          TextField(
+                            controller: _phone,
+                            keyboardType: TextInputType.phone,
+                            autofillHints: const [
+                              AutofillHints.telephoneNumber,
+                            ],
+                            decoration: const InputDecoration(
+                              labelText: 'Номер телефона',
+                              hintText: '+7 900 000-00-00',
+                            ),
+                          ),
+                          if (config.environment !=
+                              AppEnvironment.production) ...[
+                            const SizedBox(height: 12),
+                            if (config.demoMode)
+                              Column(
+                                children: [
+                                  const ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    leading: Icon(
+                                      Icons.offline_bolt_rounded,
+                                      color: AppColors.mint,
+                                    ),
+                                    title: Text('Демо работает без сервера'),
+                                    subtitle: Text(
+                                      'Режим и история чатов сохранятся после перезапуска',
+                                    ),
+                                  ),
+                                  TextButton.icon(
+                                    onPressed: () async {
+                                      await ref
+                                          .read(demoModeProvider.notifier)
+                                          .setEnabled(false);
+                                      _phone.clear();
+                                    },
+                                    icon: const Icon(Icons.cloud_outlined),
+                                    label: const Text(
+                                      'Перейти к обычному входу',
+                                    ),
+                                  ),
+                                ],
+                              )
+                            else
+                              OutlinedButton.icon(
+                                onPressed: () async {
+                                  await ref
+                                      .read(demoModeProvider.notifier)
+                                      .setEnabled(true);
+                                  _phone.text = '+7 999 000-00-00';
+                                },
+                                icon: const Icon(Icons.offline_bolt_outlined),
+                                label: const Text(
+                                  'Использовать демо без сервера',
+                                ),
+                              ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const _Step(
+                      icon: Icons.lock_outline_rounded,
+                      title: 'Твоё пространство закрыто',
+                      text:
+                          'Сигналы видят только взаимные друзья и выбранные закрытые круги. Номер никому не показываем.',
+                      child: _PrivacyBullets(),
+                    ),
+                    _Step(
+                      icon: Icons.cake_outlined,
+                      title: 'Сколько тебе лет?',
+                      text:
+                          'Минимальный возраст — 14 лет. Для пользователей младше 18 включается усиленный режим приватности.',
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          final value = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now().subtract(
+                              const Duration(days: 14 * 365),
+                            ),
+                            initialDate: DateTime(2006),
+                          );
+                          if (value != null) setState(() => _birthDate = value);
+                        },
+                        icon: const Icon(Icons.calendar_month_rounded),
+                        label: Text(
+                          _birthDate == null
+                              ? 'Выбрать дату рождения'
+                              : '${_birthDate!.day}.${_birthDate!.month}.${_birthDate!.year}',
+                        ),
+                      ),
+                    ),
+                    _Step(
+                      icon: Icons.auto_awesome_rounded,
+                      title: 'Как тебя зовут?',
+                      text:
+                          'Имя увидят только твои друзья. Публичного профиля здесь нет.',
+                      child: TextField(
+                        controller: _name,
+                        textCapitalization: TextCapitalization.words,
+                        maxLength: 40,
+                        decoration: const InputDecoration(labelText: 'Имя'),
+                      ),
+                    ),
+                    const _Step(
+                      icon: Icons.tune_rounded,
+                      title: 'Разрешения — по делу',
+                      text:
+                          'Контакты нужны только для поиска уже знакомых людей и остаются необязательными. Геолокацию запросим один раз при выборе места — фонового доступа нет.',
+                      child: _PermissionCards(),
+                    ),
+                    _Step(
+                      icon: Icons.sms_outlined,
+                      title: 'Последний шаг',
+                      text:
+                          'Введи код из SMS. В development используется код из локальной конфигурации.',
+                      child: TextField(
+                        controller: _otp,
+                        keyboardType: TextInputType.number,
+                        autofillHints: const [AutofillHints.oneTimeCode],
+                        maxLength: 6,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 30,
+                          letterSpacing: 12,
+                          fontWeight: FontWeight.w800,
+                        ),
+                        decoration: const InputDecoration(labelText: 'Код'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (_error != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Semantics(
+                    liveRegion: true,
+                    child: Text(
+                      _error!,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            FilledButton(
-              onPressed: _busy ? null : _next,
-              child: SizedBox(
-                width: double.infinity,
-                child: Center(
-                  child: _busy
-                      ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Text(_step == 5 ? 'Войти в свой круг' : 'Продолжить'),
+              FilledButton(
+                onPressed: _busy ? null : _next,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Center(
+                    child: _busy
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text(_step == 5 ? 'Войти в свой круг' : 'Продолжить'),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class _Step extends StatelessWidget {

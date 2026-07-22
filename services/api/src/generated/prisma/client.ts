@@ -145,6 +145,71 @@ export type RoomPollVote = Prisma.RoomPollVoteModel
  */
 export type LocationShare = Prisma.LocationShareModel
 /**
+ * Model Conversation
+ * 
+ */
+export type Conversation = Prisma.ConversationModel
+/**
+ * Model ConversationMember
+ * 
+ */
+export type ConversationMember = Prisma.ConversationMemberModel
+/**
+ * Model ConversationInvite
+ * 
+ */
+export type ConversationInvite = Prisma.ConversationInviteModel
+/**
+ * Model Message
+ * 
+ */
+export type Message = Prisma.MessageModel
+/**
+ * Model MessageEdit
+ * 
+ */
+export type MessageEdit = Prisma.MessageEditModel
+/**
+ * Model MessageAttachment
+ * 
+ */
+export type MessageAttachment = Prisma.MessageAttachmentModel
+/**
+ * Model MessageReaction
+ * 
+ */
+export type MessageReaction = Prisma.MessageReactionModel
+/**
+ * Model MessageReadReceipt
+ * 
+ */
+export type MessageReadReceipt = Prisma.MessageReadReceiptModel
+/**
+ * Model MessageDelivery
+ * 
+ */
+export type MessageDelivery = Prisma.MessageDeliveryModel
+/**
+ * Model PinnedMessage
+ * 
+ */
+export type PinnedMessage = Prisma.PinnedMessageModel
+/**
+ * Model ConversationDraft
+ * 
+ */
+export type ConversationDraft = Prisma.ConversationDraftModel
+/**
+ * Model ChatMute
+ * 
+ */
+export type ChatMute = Prisma.ChatMuteModel
+/**
+ * Model ChatAuditEvent
+ * 
+ */
+export type ChatAuditEvent = Prisma.ChatAuditEventModel
+/**
  * Model Memory
  * 
  */

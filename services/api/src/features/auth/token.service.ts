@@ -7,6 +7,7 @@ export interface AccessPayload {
   sub: string;
   sid: string;
   typ: "access";
+  exp: number;
 }
 
 @Injectable()
@@ -37,7 +38,8 @@ export class TokenService {
         typeof payload === "string" ||
         payload.typ !== "access" ||
         !payload.sub ||
-        typeof payload.sid !== "string"
+        typeof payload.sid !== "string" ||
+        typeof payload.exp !== "number"
       ) {
         throw new Error("Invalid access token");
       }

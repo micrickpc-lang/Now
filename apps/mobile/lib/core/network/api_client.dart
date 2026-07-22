@@ -11,6 +11,9 @@ class ApiClient {
   final Dio dio;
   final TokenStore _tokens;
   Completer<void>? _refreshing;
+  final _sessionRefreshes = StreamController<void>.broadcast();
+
+  Stream<void> get sessionRefreshes => _sessionRefreshes.stream;
 
   Future<void> refreshSession() async {
     if (_refreshing case final active?) return active.future;
@@ -28,6 +31,7 @@ class ApiClient {
         accessToken: response.data!['accessToken'] as String,
         refreshToken: response.data!['refreshToken'] as String,
       );
+      _sessionRefreshes.add(null);
       completer.complete();
     } catch (error, stack) {
       await _tokens.clear();
@@ -36,6 +40,11 @@ class ApiClient {
     } finally {
       _refreshing = null;
     }
+  }
+
+  Future<void> dispose() async {
+    dio.close(force: true);
+    await _sessionRefreshes.close();
   }
 }
 
@@ -88,5 +97,6 @@ final apiClientProvider = Provider<ApiClient>((ref) {
     ),
   );
   client = ApiClient(dio, tokens);
+  ref.onDispose(() => unawaited(client.dispose()));
   return client;
 });

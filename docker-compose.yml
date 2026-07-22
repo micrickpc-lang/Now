@@ -94,11 +94,14 @@ services:
       retries: 20
 
   migrate:
-    build: { context: ., dockerfile: services/api/Dockerfile }
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+      target: build
     environment:
       <<: *app-env
       DATABASE_URL: postgresql://seychas_migrator:local_migrator_password@postgres:5432/seychas?schema=public
-    command: ["npx", "prisma", "migrate", "deploy"]
+    command: ["npm", "run", "db:migrate", "--workspace=@seychas/api"]
     depends_on: { postgres: { condition: service_healthy } }
     restart: "no"
 

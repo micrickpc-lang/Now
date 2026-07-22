@@ -20,21 +20,23 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   final _message = TextEditingController();
   Future<Map<String, dynamic>>? _room;
   Future<List<Map<String, dynamic>>>? _messages;
-  StreamSubscription<Map<String, dynamic>>? _events;
+  StreamSubscription<RealtimeEvent>? _events;
+  RealtimeLease? _roomLease;
 
   @override
   void initState() {
     super.initState();
     _reload();
     Future.microtask(() {
-      final realtime = ref.read(realtimeClientProvider);
-      realtime.subscribeRoom(widget.roomId);
+      final realtime = ref.read(realtimeCoordinatorProvider);
+      _roomLease = realtime.subscribeRoom(widget.roomId);
       _events = realtime.events
           .where((event) {
-            final type = event['type'];
-            return type == 'room.message.created' ||
-                type == 'location.share.updated' ||
-                type == 'location.share.revoked';
+            final roomId = event.payload['roomId']?.toString();
+            return (roomId == null || roomId == widget.roomId) &&
+                (event.type == 'room.message.created' ||
+                    event.type == 'location.share.updated' ||
+                    event.type == 'location.share.revoked');
           })
           .listen((_) {
             if (mounted) _reload();
@@ -50,6 +52,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   @override
   void dispose() {
     _events?.cancel();
+    _roomLease?.close();
     _message.dispose();
     SecureScreen.disable();
     super.dispose();
@@ -120,7 +123,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
           onSelected: (value) async {
             if (value == 'leave') {
               await ref.read(roomsRepositoryProvider).leave(widget.roomId);
-              if (context.mounted) context.go('/');
+              if (context.mounted) context.go('/now');
             } else if (value == 'report') {
               context.push('/report');
             }

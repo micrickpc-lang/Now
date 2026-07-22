@@ -1,0 +1,15 @@
+.git
+.github
+.env
+.env.*
+!.env.example
+**/node_modules
+**/.next
+**/.dart_tool
+**/build
+**/coverage
+**/*.log
+apps/mobile/.flutter-plugins*
+apps/mobile/android/.gradle
+apps/mobile/ios/Pods
+docs

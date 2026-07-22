@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -75,78 +75,136 @@ enum AdminRole {
   SUPERADMIN
 }
 
+enum ConversationType {
+  DIRECT
+  GROUP
+}
+
+enum ChatRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum ConversationInviteState {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  VIDEO
+  VOICE
+  FILE
+  LOCATION
+  SYSTEM
+  SIGNAL
+  CALL
+  POLL
+  STORY_REPLY
+}
+
+enum MessageDeleteMode {
+  NONE
+  SELF
+  EVERYONE
+}
+
+enum MessageDeliveryState {
+  PENDING
+  DELIVERED
+  FAILED
+}
+
 model User {
-  id                 String               @id @default(uuid()) @db.Uuid
-  phoneHash          String               @unique @map("phone_hash")
-  phoneCiphertext    String               @map("phone_ciphertext")
-  birthDate          DateTime             @map("birth_date") @db.Date
-  limitedMode        Boolean              @default(false) @map("limited_mode")
-  status             UserStatus           @default(ACTIVE)
-  createdAt          DateTime             @default(now()) @map("created_at")
-  updatedAt          DateTime             @updatedAt @map("updated_at")
-  deletedAt          DateTime?            @map("deleted_at")
-  profile            UserProfile?
-  devices            Device[]
-  sessions           AuthSession[]
-  circlesOwned       Circle[]             @relation("CircleOwner")
-  circleMemberships  CircleMember[]
-  invitesCreated     FriendshipInvite[]   @relation("InviteCreator")
-  invitesConsumed    FriendshipInvite[]   @relation("InviteConsumer")
-  friendshipsA       Friendship[]         @relation("FriendA")
-  friendshipsB       Friendship[]         @relation("FriendB")
-  friendshipsAsked   Friendship[]         @relation("FriendRequester")
-  signals            Signal[]
-  joinRequests       SignalJoinRequest[]
-  signalParticipants SignalParticipant[]
-  roomsOwned         TemporaryRoom[]      @relation("RoomOwner")
-  roomMemberships    RoomMember[]
-  messages           RoomMessage[]
-  reactions          RoomReaction[]
-  pollVotes          RoomPollVote[]
-  locationShares     LocationShare[]
-  memories           Memory[]             @relation("MemoryOwner")
-  memoryParticipants MemoryParticipant[]
-  media              MediaFile[]
-  blocksCreated      Block[]              @relation("Blocker")
-  blocksReceived     Block[]              @relation("Blocked")
-  reportsCreated     Report[]             @relation("Reporter")
-  reportsReceived    Report[]             @relation("ReportedUser")
-  notificationTokens NotificationToken[]
-  consents           ConsentRecord[]
-  auditLogs          AuditLog[]
-  analyticsEvents    AnalyticsEvent[]
-  deletionReports    DeletionReport[]
+  id                          String               @id @default(uuid()) @db.Uuid
+  phoneHash                   String               @unique @map("phone_hash")
+  phoneCiphertext             String               @map("phone_ciphertext")
+  birthDate                   DateTime             @map("birth_date") @db.Date
+  limitedMode                 Boolean              @default(false) @map("limited_mode")
+  status                      UserStatus           @default(ACTIVE)
+  createdAt                   DateTime             @default(now()) @map("created_at")
+  updatedAt                   DateTime             @updatedAt @map("updated_at")
+  deletedAt                   DateTime?            @map("deleted_at")
+  profile                     UserProfile?
+  devices                     Device[]
+  sessions                    AuthSession[]
+  circlesOwned                Circle[]             @relation("CircleOwner")
+  circleMemberships           CircleMember[]
+  invitesCreated              FriendshipInvite[]   @relation("InviteCreator")
+  invitesConsumed             FriendshipInvite[]   @relation("InviteConsumer")
+  friendshipsA                Friendship[]         @relation("FriendA")
+  friendshipsB                Friendship[]         @relation("FriendB")
+  friendshipsAsked            Friendship[]         @relation("FriendRequester")
+  signals                     Signal[]
+  joinRequests                SignalJoinRequest[]
+  signalParticipants          SignalParticipant[]
+  roomsOwned                  TemporaryRoom[]      @relation("RoomOwner")
+  roomMemberships             RoomMember[]
+  messages                    RoomMessage[]
+  reactions                   RoomReaction[]
+  pollVotes                   RoomPollVote[]
+  locationShares              LocationShare[]
+  memories                    Memory[]             @relation("MemoryOwner")
+  memoryParticipants          MemoryParticipant[]
+  media                       MediaFile[]
+  blocksCreated               Block[]              @relation("Blocker")
+  blocksReceived              Block[]              @relation("Blocked")
+  reportsCreated              Report[]             @relation("Reporter")
+  reportsReceived             Report[]             @relation("ReportedUser")
+  notificationTokens          NotificationToken[]
+  consents                    ConsentRecord[]
+  auditLogs                   AuditLog[]
+  analyticsEvents             AnalyticsEvent[]
+  deletionReports             DeletionReport[]
+  conversationsOwned          Conversation[]       @relation("ConversationOwner")
+  conversationMemberships     ConversationMember[]
+  conversationInvitesCreated  ConversationInvite[] @relation("ConversationInviter")
+  conversationInvitesReceived ConversationInvite[] @relation("ConversationInvitee")
+  chatMessages                Message[]            @relation("ChatMessageSender")
+  messageEdits                MessageEdit[]
+  messageReactions            MessageReaction[]
+  messageReadReceipts         MessageReadReceipt[]
+  messageDeliveries           MessageDelivery[]
+  pinnedMessages              PinnedMessage[]
+  conversationDrafts          ConversationDraft[]
+  chatMutes                   ChatMute[]
+  chatAuditEvents             ChatAuditEvent[]     @relation("ChatAuditActor")
+  chatAuditTargets            ChatAuditEvent[]     @relation("ChatAuditTarget")
 
   @@map("users")
 }
 
 model UserProfile {
-  userId               String   @id @map("user_id") @db.Uuid
-  displayName          String   @map("display_name") @db.VarChar(40)
-  emoji                String?  @db.VarChar(16)
-  avatarMediaId        String?  @unique @map("avatar_media_id") @db.Uuid
-  bio                   String?  @db.VarChar(160)
-  showRecentActivity   Boolean  @default(false) @map("show_recent_activity")
-  notificationSettings Json     @default("{}") @map("notification_settings")
-  privacySettings      Json     @default("{}") @map("privacy_settings")
-  createdAt            DateTime @default(now()) @map("created_at")
-  updatedAt            DateTime @updatedAt @map("updated_at")
-  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  avatar                MediaFile? @relation("ProfileAvatar", fields: [avatarMediaId], references: [id], onDelete: SetNull)
+  userId               String     @id @map("user_id") @db.Uuid
+  displayName          String     @map("display_name") @db.VarChar(40)
+  emoji                String?    @db.VarChar(16)
+  avatarMediaId        String?    @unique @map("avatar_media_id") @db.Uuid
+  bio                  String?    @db.VarChar(160)
+  showRecentActivity   Boolean    @default(false) @map("show_recent_activity")
+  notificationSettings Json       @default("{}") @map("notification_settings")
+  privacySettings      Json       @default("{}") @map("privacy_settings")
+  createdAt            DateTime   @default(now()) @map("created_at")
+  updatedAt            DateTime   @updatedAt @map("updated_at")
+  user                 User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  avatar               MediaFile? @relation("ProfileAvatar", fields: [avatarMediaId], references: [id], onDelete: SetNull)
 
   @@map("user_profiles")
 }
 
 model Device {
-  id          String        @id @default(uuid()) @db.Uuid
-  userId      String        @map("user_id") @db.Uuid
-  installationId String     @map("installation_id") @db.VarChar(128)
-  platform    String        @db.VarChar(16)
-  label       String?       @db.VarChar(80)
-  lastSeenAt  DateTime      @default(now()) @map("last_seen_at")
-  createdAt   DateTime      @default(now()) @map("created_at")
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sessions    AuthSession[]
+  id             String        @id @default(uuid()) @db.Uuid
+  userId         String        @map("user_id") @db.Uuid
+  installationId String        @map("installation_id") @db.VarChar(128)
+  platform       String        @db.VarChar(16)
+  label          String?       @db.VarChar(80)
+  lastSeenAt     DateTime      @default(now()) @map("last_seen_at")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions       AuthSession[]
 
   @@unique([userId, installationId])
   @@index([userId, lastSeenAt])
@@ -225,14 +283,14 @@ model FriendshipInvite {
 }
 
 model Circle {
-  id        String         @id @default(uuid()) @db.Uuid
-  ownerId   String         @map("owner_id") @db.Uuid
-  name      String         @db.VarChar(60)
-  emoji     String?        @db.VarChar(16)
-  createdAt DateTime       @default(now()) @map("created_at")
-  updatedAt DateTime       @updatedAt @map("updated_at")
-  owner     User           @relation("CircleOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  members   CircleMember[]
+  id         String             @id @default(uuid()) @db.Uuid
+  ownerId    String             @map("owner_id") @db.Uuid
+  name       String             @db.VarChar(60)
+  emoji      String?            @db.VarChar(16)
+  createdAt  DateTime           @default(now()) @map("created_at")
+  updatedAt  DateTime           @updatedAt @map("updated_at")
+  owner      User               @relation("CircleOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members    CircleMember[]
   visibility SignalVisibility[]
 
   @@index([ownerId])
@@ -253,29 +311,29 @@ model CircleMember {
 }
 
 model Signal {
-  id              String              @id @default(uuid()) @db.Uuid
-  authorId        String              @map("author_id") @db.Uuid
-  category        String              @db.VarChar(40)
-  text            String?             @db.VarChar(180)
-  emoji           String?             @db.VarChar(16)
-  startsAt        DateTime            @map("starts_at")
-  expiresAt       DateTime            @map("expires_at")
-  format          SignalFormat
-  locationMode    LocationMode        @default(NONE) @map("location_mode")
-  cityLabel       String?             @map("city_label") @db.VarChar(100)
-  districtLabel   String?             @map("district_label") @db.VarChar(100)
+  id               String                                 @id @default(uuid()) @db.Uuid
+  authorId         String                                 @map("author_id") @db.Uuid
+  category         String                                 @db.VarChar(40)
+  text             String?                                @db.VarChar(180)
+  emoji            String?                                @db.VarChar(16)
+  startsAt         DateTime                               @map("starts_at")
+  expiresAt        DateTime                               @map("expires_at")
+  format           SignalFormat
+  locationMode     LocationMode                           @default(NONE) @map("location_mode")
+  cityLabel        String?                                @map("city_label") @db.VarChar(100)
+  districtLabel    String?                                @map("district_label") @db.VarChar(100)
   approximatePoint Unsupported("geography(Point, 4326)")? @map("approximate_point")
-  maxParticipants Int                 @default(4) @map("max_participants")
-  state           SignalState         @default(ACTIVE)
-  extendedAt      DateTime?           @map("extended_at")
-  createdAt       DateTime            @default(now()) @map("created_at")
-  updatedAt       DateTime            @updatedAt @map("updated_at")
-  author          User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  visibility      SignalVisibility[]
-  joinRequests    SignalJoinRequest[]
-  participants    SignalParticipant[]
-  room            TemporaryRoom?
-  reports         Report[]
+  maxParticipants  Int                                    @default(4) @map("max_participants")
+  state            SignalState                            @default(ACTIVE)
+  extendedAt       DateTime?                              @map("extended_at")
+  createdAt        DateTime                               @default(now()) @map("created_at")
+  updatedAt        DateTime                               @updatedAt @map("updated_at")
+  author           User                                   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  visibility       SignalVisibility[]
+  joinRequests     SignalJoinRequest[]
+  participants     SignalParticipant[]
+  room             TemporaryRoom?
+  reports          Report[]
 
   @@index([authorId, state])
   @@index([state, expiresAt])
@@ -325,20 +383,20 @@ model SignalParticipant {
 }
 
 model TemporaryRoom {
-  id          String       @id @default(uuid()) @db.Uuid
-  signalId    String       @unique @map("signal_id") @db.Uuid
-  ownerId     String       @map("owner_id") @db.Uuid
-  title       String       @db.VarChar(100)
-  state       RoomState    @default(ACTIVE)
-  scheduledAt DateTime?    @map("scheduled_at")
-  expiresAt   DateTime     @map("expires_at")
-  completedAt DateTime?    @map("completed_at")
-  createdAt   DateTime     @default(now()) @map("created_at")
-  signal      Signal       @relation(fields: [signalId], references: [id], onDelete: Cascade)
-  owner       User         @relation("RoomOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  members     RoomMember[]
-  messages    RoomMessage[]
-  polls       RoomPoll[]
+  id             String          @id @default(uuid()) @db.Uuid
+  signalId       String          @unique @map("signal_id") @db.Uuid
+  ownerId        String          @map("owner_id") @db.Uuid
+  title          String          @db.VarChar(100)
+  state          RoomState       @default(ACTIVE)
+  scheduledAt    DateTime?       @map("scheduled_at")
+  expiresAt      DateTime        @map("expires_at")
+  completedAt    DateTime?       @map("completed_at")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  signal         Signal          @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  owner          User            @relation("RoomOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members        RoomMember[]
+  messages       RoomMessage[]
+  polls          RoomPoll[]
   locationShares LocationShare[]
 
   @@index([state, expiresAt])
@@ -346,13 +404,13 @@ model TemporaryRoom {
 }
 
 model RoomMember {
-  roomId   String    @map("room_id") @db.Uuid
-  userId   String    @map("user_id") @db.Uuid
-  joinedAt DateTime  @default(now()) @map("joined_at")
-  leftAt   DateTime? @map("left_at")
-  mutedUntil DateTime? @map("muted_until")
-  room     TemporaryRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roomId     String        @map("room_id") @db.Uuid
+  userId     String        @map("user_id") @db.Uuid
+  joinedAt   DateTime      @default(now()) @map("joined_at")
+  leftAt     DateTime?     @map("left_at")
+  mutedUntil DateTime?     @map("muted_until")
+  room       TemporaryRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([roomId, userId])
   @@index([userId, leftAt])
@@ -360,15 +418,15 @@ model RoomMember {
 }
 
 model RoomMessage {
-  id        String        @id @default(uuid()) @db.Uuid
-  roomId    String        @map("room_id") @db.Uuid
-  authorId  String?       @map("author_id") @db.Uuid
-  body      String        @db.VarChar(1000)
-  system    Boolean       @default(false)
-  createdAt DateTime      @default(now()) @map("created_at")
-  deletedAt DateTime?     @map("deleted_at")
-  room      TemporaryRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  author    User?         @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  id        String         @id @default(uuid()) @db.Uuid
+  roomId    String         @map("room_id") @db.Uuid
+  authorId  String?        @map("author_id") @db.Uuid
+  body      String         @db.VarChar(1000)
+  system    Boolean        @default(false)
+  createdAt DateTime       @default(now()) @map("created_at")
+  deletedAt DateTime?      @map("deleted_at")
+  room      TemporaryRoom  @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  author    User?          @relation(fields: [authorId], references: [id], onDelete: SetNull)
   reactions RoomReaction[]
   reports   Report[]
 
@@ -415,10 +473,10 @@ model RoomPollOption {
 
 model RoomPollVote {
   pollOptionId String         @map("poll_option_id") @db.Uuid
-  userId      String         @map("user_id") @db.Uuid
-  createdAt   DateTime       @default(now()) @map("created_at")
-  option      RoomPollOption @relation(fields: [pollOptionId], references: [id], onDelete: Cascade)
-  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String         @map("user_id") @db.Uuid
+  createdAt    DateTime       @default(now()) @map("created_at")
+  option       RoomPollOption @relation(fields: [pollOptionId], references: [id], onDelete: Cascade)
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([pollOptionId, userId])
   @@map("room_poll_votes")
@@ -444,19 +502,240 @@ model LocationShare {
   @@map("location_shares")
 }
 
+model Conversation {
+  id             String               @id @default(uuid()) @db.Uuid
+  type           ConversationType
+  directPairKey  String?              @unique @map("direct_pair_key") @db.VarChar(80)
+  title          String?              @db.VarChar(100)
+  avatarMediaId  String?              @map("avatar_media_id") @db.Uuid
+  ownerId        String?              @map("owner_id") @db.Uuid
+  lastMessageAt  DateTime?            @map("last_message_at")
+  deletedAt      DateTime?            @map("deleted_at")
+  createdAt      DateTime             @default(now()) @map("created_at")
+  updatedAt      DateTime             @updatedAt @map("updated_at")
+  avatar         MediaFile?           @relation("ConversationAvatar", fields: [avatarMediaId], references: [id], onDelete: SetNull)
+  owner          User?                @relation("ConversationOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  members        ConversationMember[]
+  invites        ConversationInvite[]
+  messages       Message[]
+  pinnedMessages PinnedMessage[]
+  drafts         ConversationDraft[]
+  mutes          ChatMute[]
+  auditEvents    ChatAuditEvent[]
+
+  @@index([updatedAt, id])
+  @@index([lastMessageAt, id])
+  @@map("conversations")
+}
+
+model ConversationMember {
+  conversationId String       @map("conversation_id") @db.Uuid
+  userId         String       @map("user_id") @db.Uuid
+  role           ChatRole     @default(MEMBER)
+  joinedAt       DateTime     @default(now()) @map("joined_at")
+  leftAt         DateTime?    @map("left_at")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, userId])
+  @@index([userId, leftAt, conversationId])
+  @@map("conversation_members")
+}
+
+model ConversationInvite {
+  id             String                  @id @default(uuid()) @db.Uuid
+  conversationId String                  @map("conversation_id") @db.Uuid
+  inviterId      String                  @map("inviter_id") @db.Uuid
+  inviteeId      String                  @map("invitee_id") @db.Uuid
+  tokenHash      String                  @unique @map("token_hash")
+  state          ConversationInviteState @default(PENDING)
+  expiresAt      DateTime                @map("expires_at")
+  acceptedAt     DateTime?               @map("accepted_at")
+  createdAt      DateTime                @default(now()) @map("created_at")
+  conversation   Conversation            @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  inviter        User                    @relation("ConversationInviter", fields: [inviterId], references: [id], onDelete: Cascade)
+  invitee        User                    @relation("ConversationInvitee", fields: [inviteeId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, state])
+  @@index([inviteeId, state, expiresAt])
+  @@map("conversation_invites")
+}
+
+model Message {
+  id                     String               @id @default(uuid()) @db.Uuid
+  conversationId         String               @map("conversation_id") @db.Uuid
+  senderId               String?              @map("sender_id") @db.Uuid
+  clientMessageId        String?              @map("client_message_id") @db.Uuid
+  replyToMessageId       String?              @map("reply_to_message_id") @db.Uuid
+  forwardedFromMessageId String?              @map("forwarded_from_message_id") @db.Uuid
+  type                   MessageType          @default(TEXT)
+  text                   String?              @db.VarChar(4000)
+  metadata               Json                 @default("{}")
+  protectionMode         String               @default("SERVER_MANAGED") @map("protection_mode") @db.VarChar(32)
+  payloadVersion         Int                  @default(1) @map("payload_version")
+  createdAt              DateTime             @default(now()) @map("created_at")
+  editedAt               DateTime?            @map("edited_at")
+  deletedAt              DateTime?            @map("deleted_at")
+  deleteMode             MessageDeleteMode    @default(NONE) @map("delete_mode")
+  conversation           Conversation         @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender                 User?                @relation("ChatMessageSender", fields: [senderId], references: [id], onDelete: SetNull)
+  replyTo                Message?             @relation("MessageReplies", fields: [replyToMessageId], references: [id], onDelete: SetNull)
+  replies                Message[]            @relation("MessageReplies")
+  forwardedFrom          Message?             @relation("MessageForwards", fields: [forwardedFromMessageId], references: [id], onDelete: SetNull)
+  forwards               Message[]            @relation("MessageForwards")
+  edits                  MessageEdit[]
+  attachments            MessageAttachment[]
+  reactions              MessageReaction[]
+  readReceipts           MessageReadReceipt[]
+  deliveries             MessageDelivery[]
+  pins                   PinnedMessage[]
+  reports                Report[]             @relation("ChatMessageReports")
+
+  @@unique([senderId, clientMessageId])
+  @@index([conversationId, createdAt, id])
+  @@index([conversationId, senderId, createdAt])
+  @@map("messages")
+}
+
+model MessageEdit {
+  id           String   @id @default(uuid()) @db.Uuid
+  messageId    String   @map("message_id") @db.Uuid
+  editorId     String   @map("editor_id") @db.Uuid
+  previousText String?  @map("previous_text") @db.VarChar(4000)
+  newText      String   @map("new_text") @db.VarChar(4000)
+  createdAt    DateTime @default(now()) @map("created_at")
+  message      Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  editor       User     @relation(fields: [editorId], references: [id], onDelete: Cascade)
+
+  @@index([messageId, createdAt])
+  @@map("message_edits")
+}
+
+model MessageAttachment {
+  id        String    @id @default(uuid()) @db.Uuid
+  messageId String    @map("message_id") @db.Uuid
+  mediaId   String    @map("media_id") @db.Uuid
+  position  Int       @default(0)
+  createdAt DateTime  @default(now()) @map("created_at")
+  message   Message   @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  media     MediaFile @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+
+  @@unique([messageId, position])
+  @@unique([messageId, mediaId])
+  @@index([mediaId])
+  @@map("message_attachments")
+}
+
+model MessageReaction {
+  messageId String   @map("message_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  reaction  String   @db.VarChar(32)
+  createdAt DateTime @default(now()) @map("created_at")
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([messageId, userId, reaction])
+  @@index([userId, createdAt])
+  @@map("message_reactions")
+}
+
+model MessageReadReceipt {
+  messageId String   @map("message_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  readAt    DateTime @default(now()) @map("read_at")
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([messageId, userId])
+  @@index([userId, readAt])
+  @@map("message_read_receipts")
+}
+
+model MessageDelivery {
+  messageId   String               @map("message_id") @db.Uuid
+  userId      String               @map("user_id") @db.Uuid
+  state       MessageDeliveryState @default(PENDING)
+  deliveredAt DateTime?            @map("delivered_at")
+  failedAt    DateTime?            @map("failed_at")
+  updatedAt   DateTime             @updatedAt @map("updated_at")
+  message     Message              @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([messageId, userId])
+  @@index([userId, state, updatedAt])
+  @@map("message_deliveries")
+}
+
+model PinnedMessage {
+  conversationId String       @map("conversation_id") @db.Uuid
+  messageId      String       @map("message_id") @db.Uuid
+  pinnedById     String       @map("pinned_by_id") @db.Uuid
+  pinnedAt       DateTime     @default(now()) @map("pinned_at")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  message        Message      @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  pinnedBy       User         @relation(fields: [pinnedById], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, messageId])
+  @@index([conversationId, pinnedAt])
+  @@map("pinned_messages")
+}
+
+model ConversationDraft {
+  conversationId String       @map("conversation_id") @db.Uuid
+  userId         String       @map("user_id") @db.Uuid
+  text           String       @db.VarChar(4000)
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, userId])
+  @@index([userId, updatedAt])
+  @@map("conversation_drafts")
+}
+
+model ChatMute {
+  conversationId String       @map("conversation_id") @db.Uuid
+  userId         String       @map("user_id") @db.Uuid
+  mutedUntil     DateTime?    @map("muted_until")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, userId])
+  @@index([userId, mutedUntil])
+  @@map("chat_mutes")
+}
+
+model ChatAuditEvent {
+  id             String       @id @default(uuid()) @db.Uuid
+  conversationId String       @map("conversation_id") @db.Uuid
+  actorUserId    String?      @map("actor_user_id") @db.Uuid
+  targetUserId   String?      @map("target_user_id") @db.Uuid
+  action         String       @db.VarChar(80)
+  metadata       Json         @default("{}")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  actor          User?        @relation("ChatAuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  target         User?        @relation("ChatAuditTarget", fields: [targetUserId], references: [id], onDelete: SetNull)
+
+  @@index([conversationId, createdAt])
+  @@map("chat_audit_events")
+}
+
 model Memory {
-  id          String              @id @default(uuid()) @db.Uuid
-  ownerId     String              @map("owner_id") @db.Uuid
-  title       String              @db.VarChar(80)
-  category    String              @db.VarChar(40)
-  occurredAt  DateTime            @map("occurred_at")
-  durationMin Int?                @map("duration_min")
-  theme       String              @default("aurora") @db.VarChar(32)
-  private     Boolean             @default(true)
-  mediaId     String?             @unique @map("media_id") @db.Uuid
-  createdAt   DateTime            @default(now()) @map("created_at")
-  owner       User                @relation("MemoryOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  media       MediaFile?          @relation("MemoryMedia", fields: [mediaId], references: [id], onDelete: SetNull)
+  id           String              @id @default(uuid()) @db.Uuid
+  ownerId      String              @map("owner_id") @db.Uuid
+  title        String              @db.VarChar(80)
+  category     String              @db.VarChar(40)
+  occurredAt   DateTime            @map("occurred_at")
+  durationMin  Int?                @map("duration_min")
+  theme        String              @default("aurora") @db.VarChar(32)
+  private      Boolean             @default(true)
+  mediaId      String?             @unique @map("media_id") @db.Uuid
+  createdAt    DateTime            @default(now()) @map("created_at")
+  owner        User                @relation("MemoryOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  media        MediaFile?          @relation("MemoryMedia", fields: [mediaId], references: [id], onDelete: SetNull)
   participants MemoryParticipant[]
 
   @@index([ownerId, occurredAt])
@@ -474,18 +753,20 @@ model MemoryParticipant {
 }
 
 model MediaFile {
-  id           String       @id @default(uuid()) @db.Uuid
-  ownerId      String       @map("owner_id") @db.Uuid
-  objectKey    String       @unique @map("object_key")
-  thumbnailKey String?      @unique @map("thumbnail_key")
-  mimeType     String       @map("mime_type") @db.VarChar(80)
-  byteSize     Int          @map("byte_size")
-  sha256       String
-  scanStatus   String       @default("pending") @map("scan_status") @db.VarChar(20)
-  createdAt    DateTime     @default(now()) @map("created_at")
-  owner        User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  profileAvatar UserProfile? @relation("ProfileAvatar")
-  memoryMedia   Memory?      @relation("MemoryMedia")
+  id                  String              @id @default(uuid()) @db.Uuid
+  ownerId             String              @map("owner_id") @db.Uuid
+  objectKey           String              @unique @map("object_key")
+  thumbnailKey        String?             @unique @map("thumbnail_key")
+  mimeType            String              @map("mime_type") @db.VarChar(80)
+  byteSize            Int                 @map("byte_size")
+  sha256              String
+  scanStatus          String              @default("pending") @map("scan_status") @db.VarChar(20)
+  createdAt           DateTime            @default(now()) @map("created_at")
+  owner               User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  profileAvatar       UserProfile?        @relation("ProfileAvatar")
+  memoryMedia         Memory?             @relation("MemoryMedia")
+  conversationAvatars Conversation[]      @relation("ConversationAvatar")
+  messageAttachments  MessageAttachment[]
 
   @@index([ownerId])
   @@map("media_files")
@@ -504,24 +785,27 @@ model Block {
 }
 
 model Report {
-  id              String      @id @default(uuid()) @db.Uuid
-  reporterId      String?     @map("reporter_id") @db.Uuid
-  reportedUserId  String?     @map("reported_user_id") @db.Uuid
-  signalId        String?     @map("signal_id") @db.Uuid
-  messageId       String?     @map("message_id") @db.Uuid
-  category        String      @db.VarChar(40)
-  details         String?     @db.VarChar(1000)
-  state           ReportState @default(OPEN)
-  createdAt       DateTime    @default(now()) @map("created_at")
-  updatedAt       DateTime    @updatedAt @map("updated_at")
-  reporter        User?       @relation("Reporter", fields: [reporterId], references: [id], onDelete: SetNull)
-  reportedUser    User?       @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: SetNull)
-  signal          Signal?     @relation(fields: [signalId], references: [id], onDelete: SetNull)
-  message         RoomMessage? @relation(fields: [messageId], references: [id], onDelete: SetNull)
-  actions         ModerationAction[]
+  id             String             @id @default(uuid()) @db.Uuid
+  reporterId     String?            @map("reporter_id") @db.Uuid
+  reportedUserId String?            @map("reported_user_id") @db.Uuid
+  signalId       String?            @map("signal_id") @db.Uuid
+  messageId      String?            @map("message_id") @db.Uuid
+  chatMessageId  String?            @map("chat_message_id") @db.Uuid
+  category       String             @db.VarChar(40)
+  details        String?            @db.VarChar(1000)
+  state          ReportState        @default(OPEN)
+  createdAt      DateTime           @default(now()) @map("created_at")
+  updatedAt      DateTime           @updatedAt @map("updated_at")
+  reporter       User?              @relation("Reporter", fields: [reporterId], references: [id], onDelete: SetNull)
+  reportedUser   User?              @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: SetNull)
+  signal         Signal?            @relation(fields: [signalId], references: [id], onDelete: SetNull)
+  message        RoomMessage?       @relation(fields: [messageId], references: [id], onDelete: SetNull)
+  chatMessage    Message?           @relation("ChatMessageReports", fields: [chatMessageId], references: [id], onDelete: SetNull)
+  actions        ModerationAction[]
 
   @@index([state, createdAt])
   @@index([reportedUserId])
+  @@index([chatMessageId])
   @@map("reports")
 }
 
@@ -539,15 +823,15 @@ model AdminUser {
 }
 
 model ModerationAction {
-  id          String    @id @default(uuid()) @db.Uuid
-  reportId    String?   @map("report_id") @db.Uuid
-  adminId     String    @map("admin_id") @db.Uuid
-  action      String    @db.VarChar(60)
-  reason      String    @db.VarChar(500)
-  metadata    Json      @default("{}")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  report      Report?   @relation(fields: [reportId], references: [id], onDelete: SetNull)
-  admin       AdminUser @relation(fields: [adminId], references: [id], onDelete: Restrict)
+  id        String    @id @default(uuid()) @db.Uuid
+  reportId  String?   @map("report_id") @db.Uuid
+  adminId   String    @map("admin_id") @db.Uuid
+  action    String    @db.VarChar(60)
+  reason    String    @db.VarChar(500)
+  metadata  Json      @default("{}")
+  createdAt DateTime  @default(now()) @map("created_at")
+  report    Report?   @relation(fields: [reportId], references: [id], onDelete: SetNull)
+  admin     AdminUser @relation(fields: [adminId], references: [id], onDelete: Restrict)
 
   @@index([reportId])
   @@index([adminId, createdAt])
@@ -555,15 +839,15 @@ model ModerationAction {
 }
 
 model NotificationToken {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @map("user_id") @db.Uuid
-  tokenHash String   @unique @map("token_hash")
-  encryptedToken String @map("encrypted_token")
-  platform  String   @db.VarChar(16)
-  enabled   Boolean  @default(true)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @map("user_id") @db.Uuid
+  tokenHash      String   @unique @map("token_hash")
+  encryptedToken String   @map("encrypted_token")
+  platform       String   @db.VarChar(16)
+  enabled        Boolean  @default(true)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, enabled])
   @@map("notification_tokens")
@@ -623,13 +907,13 @@ model ForbiddenWord {
 }
 
 model AnalyticsEvent {
-  id           String   @id @default(uuid()) @db.Uuid
-  userId       String?  @map("user_id") @db.Uuid
-  pseudonym    String   @db.VarChar(64)
-  name         String   @db.VarChar(60)
-  properties   Json     @default("{}")
-  occurredAt   DateTime @default(now()) @map("occurred_at")
-  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String?  @map("user_id") @db.Uuid
+  pseudonym  String   @db.VarChar(64)
+  name       String   @db.VarChar(60)
+  properties Json     @default("{}")
+  occurredAt DateTime @default(now()) @map("occurred_at")
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([name, occurredAt])
   @@map("analytics_events")

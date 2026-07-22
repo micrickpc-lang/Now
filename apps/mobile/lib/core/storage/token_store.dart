@@ -20,7 +20,10 @@ class TokenStore {
     await _storage.write(key: _refreshKey, value: refreshToken);
   }
 
-  Future<void> clear() => _storage.deleteAll();
+  Future<void> clear() async {
+    await _storage.delete(key: _accessKey);
+    await _storage.delete(key: _refreshKey);
+  }
 
   Future<String?> installationId() => _storage.read(key: _installationKey);
   Future<void> writeInstallationId(String value) =>

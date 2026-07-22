@@ -8,15 +8,34 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
-  await prisma.featureFlag.upsert({
-    where: { key: "exact_room_location" },
-    create: {
+  for (const flag of [
+    {
       key: "exact_room_location",
       enabled: true,
       payload: { default: false },
     },
-    update: {},
-  });
+    {
+      key: "persistent_messaging",
+      enabled: true,
+      payload: { direct: true, groups: true, text: true },
+    },
+    {
+      key: "conversation_typing",
+      enabled: true,
+      payload: { ttlSeconds: 8 },
+    },
+    {
+      key: "chat_media",
+      enabled: false,
+      payload: { reason: "phase_3" },
+    },
+  ]) {
+    await prisma.featureFlag.upsert({
+      where: { key: flag.key },
+      create: flag,
+      update: { enabled: flag.enabled, payload: flag.payload },
+    });
+  }
   await prisma.featureFlag.upsert({
     where: { key: "minimum_supported_version" },
     create: {

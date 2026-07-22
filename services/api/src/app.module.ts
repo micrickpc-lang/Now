@@ -6,6 +6,7 @@ import { AccessTokenGuard } from "./common/auth.guard";
 import { CommonModule } from "./common/common.module";
 import { validateEnvironment } from "./config/environment";
 import { AuthModule } from "./features/auth/auth.module";
+import { ConversationsModule } from "./features/conversations/conversations.module";
 import { MapsModule } from "./features/maps/maps.module";
 import { MemoriesModule } from "./features/memories/memories.module";
 import { MediaModule } from "./features/media/media.module";
@@ -24,6 +25,7 @@ import { RealtimeModule } from "./realtime/realtime.module";
     ThrottlerModule.forRoot([{ name: "default", ttl: 60_000, limit: 120 }]),
     CommonModule,
     AuthModule,
+    ConversationsModule,
     UsersModule,
     SocialModule,
     SignalsModule,

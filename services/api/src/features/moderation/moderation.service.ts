@@ -15,11 +15,27 @@ export class ModerationService {
   ) {}
 
   async report(userId: string, dto: CreateReportDto) {
-    const subjects = [dto.reportedUserId, dto.signalId, dto.messageId].filter(
-      Boolean,
-    );
+    const subjects = [
+      dto.reportedUserId,
+      dto.signalId,
+      dto.messageId,
+      dto.chatMessageId,
+    ].filter(Boolean);
     if (subjects.length !== 1)
       throw new BadRequestException("Выберите один объект жалобы");
+    if (dto.chatMessageId) {
+      const visible = await this.prisma.message.findFirst({
+        where: {
+          id: dto.chatMessageId,
+          conversation: {
+            deletedAt: null,
+            members: { some: { userId, leftAt: null } },
+          },
+        },
+        select: { id: true },
+      });
+      if (!visible) throw new NotFoundException("Message not found");
+    }
     const report = await this.prisma.report.create({
       data: { reporterId: userId, ...dto },
       select: { id: true, category: true, state: true, createdAt: true },
@@ -60,6 +76,7 @@ export class ModerationService {
         reportedUserId: true,
         signalId: true,
         messageId: true,
+        chatMessageId: true,
         createdAt: true,
         actions: {
           select: { action: true, reason: true, createdAt: true },

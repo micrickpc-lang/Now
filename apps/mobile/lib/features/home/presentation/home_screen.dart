@@ -19,17 +19,17 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _listMode = false;
-  StreamSubscription<Map<String, dynamic>>? _events;
+  StreamSubscription<RealtimeEvent>? _events;
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(() async {
-      final realtime = ref.read(realtimeClientProvider);
-      await realtime.connect();
+    Future.microtask(() {
+      final realtime = ref.read(realtimeCoordinatorProvider);
       _events = realtime.events.listen((event) {
-        if (event['type'].toString().startsWith('signal.'))
+        if (event.type.startsWith('signal.')) {
           ref.read(signalFeedProvider.notifier).refresh();
+        }
       });
     });
   }
@@ -37,7 +37,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void dispose() {
     _events?.cancel();
-    ref.read(realtimeClientProvider).disconnect();
     super.dispose();
   }
 

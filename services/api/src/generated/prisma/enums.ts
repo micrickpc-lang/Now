@@ -104,3 +104,65 @@ export const AdminRole = {
 } as const
 
 export type AdminRole = (typeof AdminRole)[keyof typeof AdminRole]
+
+
+export const ConversationType = {
+  DIRECT: 'DIRECT',
+  GROUP: 'GROUP'
+} as const
+
+export type ConversationType = (typeof ConversationType)[keyof typeof ConversationType]
+
+
+export const ChatRole = {
+  OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
+  MEMBER: 'MEMBER'
+} as const
+
+export type ChatRole = (typeof ChatRole)[keyof typeof ChatRole]
+
+
+export const ConversationInviteState = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REVOKED: 'REVOKED',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type ConversationInviteState = (typeof ConversationInviteState)[keyof typeof ConversationInviteState]
+
+
+export const MessageType = {
+  TEXT: 'TEXT',
+  IMAGE: 'IMAGE',
+  VIDEO: 'VIDEO',
+  VOICE: 'VOICE',
+  FILE: 'FILE',
+  LOCATION: 'LOCATION',
+  SYSTEM: 'SYSTEM',
+  SIGNAL: 'SIGNAL',
+  CALL: 'CALL',
+  POLL: 'POLL',
+  STORY_REPLY: 'STORY_REPLY'
+} as const
+
+export type MessageType = (typeof MessageType)[keyof typeof MessageType]
+
+
+export const MessageDeleteMode = {
+  NONE: 'NONE',
+  SELF: 'SELF',
+  EVERYONE: 'EVERYONE'
+} as const
+
+export type MessageDeleteMode = (typeof MessageDeleteMode)[keyof typeof MessageDeleteMode]
+
+
+export const MessageDeliveryState = {
+  PENDING: 'PENDING',
+  DELIVERED: 'DELIVERED',
+  FAILED: 'FAILED'
+} as const
+
+export type MessageDeliveryState = (typeof MessageDeliveryState)[keyof typeof MessageDeliveryState]

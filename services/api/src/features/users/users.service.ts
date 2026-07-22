@@ -108,6 +108,53 @@ export class UsersService {
         where: { authorId: userId },
         data: { authorId: null, body: "[сообщение удалено]" },
       });
+      await tx.message.updateMany({
+        where: { senderId: userId },
+        data: {
+          senderId: null,
+          clientMessageId: null,
+          text: "[сообщение удалено]",
+          metadata: {},
+          deleteMode: "EVERYONE",
+          deletedAt: new Date(),
+        },
+      });
+      const ownedGroups = await tx.conversation.findMany({
+        where: { type: "GROUP", ownerId: userId },
+        select: {
+          id: true,
+          members: {
+            where: {
+              userId: { not: userId },
+              leftAt: null,
+              role: { in: ["ADMIN", "MEMBER"] },
+            },
+            orderBy: [{ role: "asc" }, { joinedAt: "asc" }, { userId: "asc" }],
+            take: 1,
+            select: { userId: true },
+          },
+        },
+      });
+      for (const group of ownedGroups) {
+        const successor = group.members[0];
+        if (!successor) {
+          await tx.conversation.delete({ where: { id: group.id } });
+          continue;
+        }
+        await tx.conversationMember.update({
+          where: {
+            conversationId_userId: {
+              conversationId: group.id,
+              userId: successor.userId,
+            },
+          },
+          data: { role: "OWNER" },
+        });
+        await tx.conversation.update({
+          where: { id: group.id },
+          data: { ownerId: successor.userId },
+        });
+      }
       await tx.report.updateMany({
         where: { reporterId: userId },
         data: { reporterId: null },

@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../storage/app_mode_store.dart';
+
 enum AppEnvironment { development, staging, production }
 
 class AppConfig {
@@ -65,8 +67,47 @@ class AppConfig {
   final String wsBaseUrl;
   final Set<String> firstPartyDomains;
   final bool demoMode;
+
+  AppConfig copyWith({bool? demoMode}) => AppConfig(
+    environment: environment,
+    apiBaseUrl: apiBaseUrl,
+    wsBaseUrl: wsBaseUrl,
+    firstPartyDomains: firstPartyDomains,
+    demoMode: demoMode ?? this.demoMode,
+  );
 }
 
-final appConfigProvider = Provider<AppConfig>(
-  (_) => throw UnimplementedError('AppConfig override required'),
+final baseAppConfigProvider = Provider<AppConfig>(
+  (_) => AppConfig.fromEnvironment(),
 );
+
+final initialDemoModeProvider = Provider<bool>(
+  (ref) => ref.watch(baseAppConfigProvider).demoMode,
+);
+
+class DemoModeController extends Notifier<bool> {
+  @override
+  bool build() {
+    final config = ref.watch(baseAppConfigProvider);
+    if (config.environment == AppEnvironment.production) return false;
+    return ref.watch(initialDemoModeProvider);
+  }
+
+  Future<void> setEnabled(bool enabled) async {
+    final config = ref.read(baseAppConfigProvider);
+    if (config.environment == AppEnvironment.production && enabled) {
+      throw StateError('DEMO_MODE is forbidden in production');
+    }
+    await ref.read(appModeStoreProvider).writeDemoMode(enabled);
+    state = enabled;
+  }
+}
+
+final demoModeProvider = NotifierProvider<DemoModeController, bool>(
+  DemoModeController.new,
+);
+
+final appConfigProvider = Provider<AppConfig>((ref) {
+  final config = ref.watch(baseAppConfigProvider);
+  return config.copyWith(demoMode: ref.watch(demoModeProvider));
+});

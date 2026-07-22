@@ -72,6 +72,19 @@ export const ModelName = {
   RoomPollOption: 'RoomPollOption',
   RoomPollVote: 'RoomPollVote',
   LocationShare: 'LocationShare',
+  Conversation: 'Conversation',
+  ConversationMember: 'ConversationMember',
+  ConversationInvite: 'ConversationInvite',
+  Message: 'Message',
+  MessageEdit: 'MessageEdit',
+  MessageAttachment: 'MessageAttachment',
+  MessageReaction: 'MessageReaction',
+  MessageReadReceipt: 'MessageReadReceipt',
+  MessageDelivery: 'MessageDelivery',
+  PinnedMessage: 'PinnedMessage',
+  ConversationDraft: 'ConversationDraft',
+  ChatMute: 'ChatMute',
+  ChatAuditEvent: 'ChatAuditEvent',
   Memory: 'Memory',
   MemoryParticipant: 'MemoryParticipant',
   MediaFile: 'MediaFile',
@@ -377,6 +390,167 @@ export const LocationShareScalarFieldEnum = {
 export type LocationShareScalarFieldEnum = (typeof LocationShareScalarFieldEnum)[keyof typeof LocationShareScalarFieldEnum]
 
 
+export const ConversationScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  directPairKey: 'directPairKey',
+  title: 'title',
+  avatarMediaId: 'avatarMediaId',
+  ownerId: 'ownerId',
+  lastMessageAt: 'lastMessageAt',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ConversationScalarFieldEnum = (typeof ConversationScalarFieldEnum)[keyof typeof ConversationScalarFieldEnum]
+
+
+export const ConversationMemberScalarFieldEnum = {
+  conversationId: 'conversationId',
+  userId: 'userId',
+  role: 'role',
+  joinedAt: 'joinedAt',
+  leftAt: 'leftAt'
+} as const
+
+export type ConversationMemberScalarFieldEnum = (typeof ConversationMemberScalarFieldEnum)[keyof typeof ConversationMemberScalarFieldEnum]
+
+
+export const ConversationInviteScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  inviterId: 'inviterId',
+  inviteeId: 'inviteeId',
+  tokenHash: 'tokenHash',
+  state: 'state',
+  expiresAt: 'expiresAt',
+  acceptedAt: 'acceptedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ConversationInviteScalarFieldEnum = (typeof ConversationInviteScalarFieldEnum)[keyof typeof ConversationInviteScalarFieldEnum]
+
+
+export const MessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderId: 'senderId',
+  clientMessageId: 'clientMessageId',
+  replyToMessageId: 'replyToMessageId',
+  forwardedFromMessageId: 'forwardedFromMessageId',
+  type: 'type',
+  text: 'text',
+  metadata: 'metadata',
+  protectionMode: 'protectionMode',
+  payloadVersion: 'payloadVersion',
+  createdAt: 'createdAt',
+  editedAt: 'editedAt',
+  deletedAt: 'deletedAt',
+  deleteMode: 'deleteMode'
+} as const
+
+export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const MessageEditScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  editorId: 'editorId',
+  previousText: 'previousText',
+  newText: 'newText',
+  createdAt: 'createdAt'
+} as const
+
+export type MessageEditScalarFieldEnum = (typeof MessageEditScalarFieldEnum)[keyof typeof MessageEditScalarFieldEnum]
+
+
+export const MessageAttachmentScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  mediaId: 'mediaId',
+  position: 'position',
+  createdAt: 'createdAt'
+} as const
+
+export type MessageAttachmentScalarFieldEnum = (typeof MessageAttachmentScalarFieldEnum)[keyof typeof MessageAttachmentScalarFieldEnum]
+
+
+export const MessageReactionScalarFieldEnum = {
+  messageId: 'messageId',
+  userId: 'userId',
+  reaction: 'reaction',
+  createdAt: 'createdAt'
+} as const
+
+export type MessageReactionScalarFieldEnum = (typeof MessageReactionScalarFieldEnum)[keyof typeof MessageReactionScalarFieldEnum]
+
+
+export const MessageReadReceiptScalarFieldEnum = {
+  messageId: 'messageId',
+  userId: 'userId',
+  readAt: 'readAt'
+} as const
+
+export type MessageReadReceiptScalarFieldEnum = (typeof MessageReadReceiptScalarFieldEnum)[keyof typeof MessageReadReceiptScalarFieldEnum]
+
+
+export const MessageDeliveryScalarFieldEnum = {
+  messageId: 'messageId',
+  userId: 'userId',
+  state: 'state',
+  deliveredAt: 'deliveredAt',
+  failedAt: 'failedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MessageDeliveryScalarFieldEnum = (typeof MessageDeliveryScalarFieldEnum)[keyof typeof MessageDeliveryScalarFieldEnum]
+
+
+export const PinnedMessageScalarFieldEnum = {
+  conversationId: 'conversationId',
+  messageId: 'messageId',
+  pinnedById: 'pinnedById',
+  pinnedAt: 'pinnedAt'
+} as const
+
+export type PinnedMessageScalarFieldEnum = (typeof PinnedMessageScalarFieldEnum)[keyof typeof PinnedMessageScalarFieldEnum]
+
+
+export const ConversationDraftScalarFieldEnum = {
+  conversationId: 'conversationId',
+  userId: 'userId',
+  text: 'text',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ConversationDraftScalarFieldEnum = (typeof ConversationDraftScalarFieldEnum)[keyof typeof ConversationDraftScalarFieldEnum]
+
+
+export const ChatMuteScalarFieldEnum = {
+  conversationId: 'conversationId',
+  userId: 'userId',
+  mutedUntil: 'mutedUntil',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChatMuteScalarFieldEnum = (typeof ChatMuteScalarFieldEnum)[keyof typeof ChatMuteScalarFieldEnum]
+
+
+export const ChatAuditEventScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  actorUserId: 'actorUserId',
+  targetUserId: 'targetUserId',
+  action: 'action',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type ChatAuditEventScalarFieldEnum = (typeof ChatAuditEventScalarFieldEnum)[keyof typeof ChatAuditEventScalarFieldEnum]
+
+
 export const MemoryScalarFieldEnum = {
   id: 'id',
   ownerId: 'ownerId',
@@ -431,6 +605,7 @@ export const ReportScalarFieldEnum = {
   reportedUserId: 'reportedUserId',
   signalId: 'signalId',
   messageId: 'messageId',
+  chatMessageId: 'chatMessageId',
   category: 'category',
   details: 'details',
   state: 'state',
