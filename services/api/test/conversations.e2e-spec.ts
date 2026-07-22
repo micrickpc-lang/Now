@@ -39,7 +39,9 @@ describe("persistent conversation authorization and delivery", () => {
         transform: true,
       }),
     );
-    await app.init();
+    // Bind once before issuing concurrent Supertest requests. Otherwise each
+    // request may own and close the same ephemeral server independently.
+    await app.listen(0, "127.0.0.1");
     prisma = app.get(PrismaService);
     [a, b, c, d] = await Promise.all([
       register(`+7993${suffix}`, `chat-a-${suffix}`, "192.0.2.10"),
