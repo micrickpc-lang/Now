@@ -59,8 +59,21 @@ export class RedisTypingStore implements TypingStore, OnModuleDestroy {
   }
 
   async onModuleDestroy(): Promise<void> {
-    if (this.redis.status !== "end")
-      await this.redis.quit().catch(() => undefined);
+    if (this.redis.status === "end") return;
+
+    // Calling quit() while a lazy client is still waiting for its first
+    // connection makes ioredis start connecting before rejecting the command.
+    // That reconnect loop keeps short-lived workers (including Jest) alive.
+    if (this.redis.status !== "ready") {
+      this.redis.disconnect(false);
+      return;
+    }
+
+    try {
+      await this.redis.quit();
+    } catch {
+      this.redis.disconnect(false);
+    }
   }
 
   private async ensureConnected(): Promise<void> {
