@@ -47,7 +47,7 @@
 - enum-типы, FK, check constraints и индексы для пары direct-чата, пагинации, непрочитанного состояния и идемпотентности;
 - связь жалобы с конкретным сообщением чата.
 
-Prisma schema проходит `validate` и `generate`. Локально миграция не применялась: PostgreSQL на `127.0.0.1:5432` и Docker daemon недоступны. Миграционный Docker target и команда Compose исправлены для CI/окружения с PostgreSQL.
+Prisma schema проходит `validate` и `generate`. Локально миграция не применялась: PostgreSQL на `127.0.0.1:5432` и Docker daemon недоступны. В [GitHub Actions run 29953296793](https://github.com/micrickpc-lang/Now/actions/runs/29953296793) обе миграции успешно применены с нуля к PostgreSQL 17 + PostGIS 3.5; после этого выполнены реальные integration-тесты. Миграционный Docker target и команда Compose валидированы локально, а используемая ими команда Prisma подтверждена в CI.
 
 ## 5. Добавленные API
 
@@ -81,21 +81,23 @@ Prisma schema проходит `validate` и `generate`. Локально миг
 ## 7. Результаты тестов
 
 - `npm run verify` — успешно.
-- API Jest — 10 suites, 39/39 тестов успешно.
+- API Jest — 10 suites, 47/47 тестов успешно.
+- API integration с PostgreSQL 17 + PostGIS 3.5 — 2 suites, 9/9 тестов успешно.
 - API contracts — 2/2 теста успешно.
 - Flutter — 21/21 тестов успешно.
 - `flutter analyze` — ошибок нет.
 - `npm audit --audit-level=high` — 0 уязвимостей.
 - `security:maps`, `security:secrets`, `docker compose config --quiet` — успешно.
 
-PostgreSQL integration spec добавлен, но его локальный запуск пропущен из-за отсутствующего сервера БД; это не следует путать с успешно выполненными unit-тестами.
+Локальный PostgreSQL отсутствует, поэтому integration-набор выполнен в изолированном CI с реальными PostgreSQL, PostGIS и Redis. Итоговый [CI run 29953296793](https://github.com/micrickpc-lang/Now/actions/runs/29953296793) полностью зелёный: `node`, `flutter`, `containers` и `security` завершились успешно.
 
 ## 8. Результаты сборки
 
 - Next.js admin production build — успешно.
 - NestJS API, worker и все TypeScript packages — успешно.
 - Android debug APK с автономным Demo Mode — успешно: `apps/mobile/build/app/outputs/flutter-apk/app-debug.apk`, 222 409 038 байт, SHA-256 `2C2914BE9F7C37794711A13850B5D94E42A2BF7FC8DA129710999A2C97512550`.
-- Docker Compose конфигурация валидна. Реальная локальная сборка Docker image и Trivy scan не выполнены, потому что Docker daemon выключен.
+- Docker Compose конфигурация валидна. API image собран, загружен в runner и успешно прошёл Trivy HIGH/CRITICAL scan в CI; локальная сборка не выполнялась только из-за выключенного Docker daemon.
+- Android debug AAB также успешно собран в CI с `APP_ENV=development`.
 
 Flutter вывел предупреждение о будущем переходе `maplibre_gl` на Built-in Kotlin; текущую сборку оно не ломает.
 
@@ -111,6 +113,10 @@ Flutter вывел предупреждение о будущем переход
 - Добавлены refresh/reconnect после `auth.error`, controlled backoff и защита от reconnect после logout.
 - Исправлена небезопасная работа с Riverpod `ref` при размонтировании `ChatScreen`; ошибку обнаружил новый widget-тест.
 - Закрыта high severity dependency-цепочка Next/Sharp без downgrade Next.js.
+- Исправлено зависание integration runner при shutdown: ленивый ioredis-клиент больше не запускает reconnect через `quit()` до первого подключения; lifecycle покрыт регрессионными тестами.
+- Исправлена обработка IP за reverse proxy: `TRUST_PROXY_HOPS` валидируется и задаётся явно, поэтому OTP/throttling/session audit не объединяют всех клиентов Nginx в один IP и при этом не доверяют произвольному `X-Forwarded-For`.
+- Устранены две ошибки E2E-стенда: тестовые пользователи больше не делят один OTP abuse budget, а параллельные Supertest-запросы используют один явно запущенный HTTP server без `ECONNRESET`.
+- GitHub Actions обновлены до Node 24-compatible major-релизов; предупреждения runner о deprecated Node 20 runtime устранены.
 
 ## 10. Что осталось
 
@@ -119,14 +125,14 @@ Flutter вывел предупреждение о будущем переход
 - Multi-instance realtime требует Redis Socket.IO adapter и глобальный sequence source.
 - Полный UI фазы 2 для reply/edit/delete/reactions/pin/search ещё не завершён, хотя backend-контракты уже существуют.
 - Медиа pipeline, голосовые, production push/SMS, WebRTC/coturn, нативные call services, истории и SFU относятся к следующим фазам.
-- Нужны прогон migration/E2E в реальном PostgreSQL, Docker/Trivy в окружении с daemon и smoke-тест на физическом Android.
+- Нужен smoke-тест debug APK на физическом Android: установка, перезапуск persistent Demo, отправка/retry и выход из Demo к обычному входу.
 - Message burst-limit сейчас сочетает global throttler и DB count; для строгой multi-instance атомарности его нужно перенести в Redis. Дополнительное Demo-состояние сигналов пока memory-only.
 
 ## 11. Текущая готовность
 
-- Фаза 1 по коду и локальным проверкам: **около 90%**, но формально ещё не принята до зелёного PostgreSQL migration/E2E в CI. Основной текстовый сценарий, realtime, receipts, offline queue и persistent Demo готовы; проценты также снижены из-за отсутствия device smoke-test.
+- Фаза 1 по коду и автоматизированным критериям: **около 95%**. Личный и групповой чат, история, realtime, receipts, offline queue, persistent Demo, block policy, сигнал в чате, отдельные временные комнаты, миграции, Android debug build и `npm run verify` подтверждены зелёным CI. До 100% первой фазы не хватает smoke-теста на физическом Android и закрытия перечисленных выше продуктовых краёв.
 - Полный мессенджер из целевого плана: **около 35%**. Нельзя считать продукт готовым без production SMS/push, media security/storage, coturn, звонков на физических Android/iOS, CallKit/Android call service, production map region и monitoring.
 
 ## 12. Следующая фаза
 
-Сначала закрыть формальную приёмку фазы 1 в CI/PostgreSQL/физическом Android, затем завершить фазу 2: per-user delete semantics, reply/edit/delete/reactions/pin/search в Flutter, расширенные offline операции и дополнительные IDOR/limitedMode тесты. К медиа и звонкам переходить только после этого.
+Сначала выполнить короткий smoke-тест готового APK на физическом Android, затем завершить фазу 2: per-user delete semantics, reply/edit/delete/reactions/pin/search в Flutter, расширенные offline операции и дополнительные IDOR/limitedMode тесты. К медиа и звонкам переходить только после этого.
