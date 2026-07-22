@@ -14,6 +14,7 @@ services:
       PHONE_HASH_SECRET: ${PHONE_HASH_SECRET:?from secret manager}
       LOCATION_MASTER_KEY_BASE64: ${LOCATION_MASTER_KEY_BASE64:?from KMS-backed secret manager}
       APP_ORIGINS: ${APP_ORIGINS:?HTTPS origins}
+      TRUST_PROXY_HOPS: ${TRUST_PROXY_HOPS:?exact trusted ingress hop count, 0 for direct traffic}
       ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:?from secret manager}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT:?private object storage endpoint}
       MINIO_PORT: ${MINIO_PORT:-9000}

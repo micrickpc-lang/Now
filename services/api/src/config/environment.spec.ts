@@ -35,4 +35,17 @@ describe("validateEnvironment", () => {
       }),
     ).toThrow("secret manager");
   });
+
+  it.each(["-1", "1.5", "true", "11"])(
+    "rejects an invalid trusted proxy hop count: %s",
+    (TRUST_PROXY_HOPS) => {
+      expect(() =>
+        validateEnvironment({ ...safeProduction, TRUST_PROXY_HOPS }),
+      ).toThrow("TRUST_PROXY_HOPS");
+    },
+  );
+
+  it("defaults to direct-client IP handling", () => {
+    expect(validateEnvironment(safeProduction).TRUST_PROXY_HOPS).toBe("0");
+  });
 });

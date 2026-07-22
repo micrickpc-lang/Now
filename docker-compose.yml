@@ -11,6 +11,7 @@ x-app-env: &app-env
   ALLOW_DEV_OTP: "true"
   DEV_OTP_CODE: "123456"
   APP_ORIGINS: http://localhost:3001,http://localhost:8080
+  TRUST_PROXY_HOPS: "1"
   INTERNAL_MARTIN_URL: http://martin:3000
   INTERNAL_NOMINATIM_URL: http://nominatim:8080
   MAP_PUBLIC_BASE_URL: http://localhost:8080/api/v1/maps

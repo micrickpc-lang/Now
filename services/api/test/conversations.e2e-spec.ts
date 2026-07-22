@@ -30,6 +30,7 @@ describe("persistent conversation authorization and delivery", () => {
       imports: [AppModule],
     }).compile();
     app = module.createNestApplication();
+    app.getHttpAdapter().getInstance().set("trust proxy", 1);
     app.setGlobalPrefix("api/v1");
     app.useGlobalPipes(
       new ValidationPipe({
@@ -41,10 +42,10 @@ describe("persistent conversation authorization and delivery", () => {
     await app.init();
     prisma = app.get(PrismaService);
     [a, b, c, d] = await Promise.all([
-      register(`+7993${suffix}`, `chat-a-${suffix}`),
-      register(`+7994${suffix}`, `chat-b-${suffix}`),
-      register(`+7995${suffix}`, `chat-c-${suffix}`),
-      register(`+7996${suffix}`, `chat-d-${suffix}`),
+      register(`+7993${suffix}`, `chat-a-${suffix}`, "192.0.2.10"),
+      register(`+7994${suffix}`, `chat-b-${suffix}`, "192.0.2.11"),
+      register(`+7995${suffix}`, `chat-c-${suffix}`, "192.0.2.12"),
+      register(`+7996${suffix}`, `chat-d-${suffix}`, "192.0.2.13"),
     ]);
     await Promise.all([befriend(a, b), befriend(a, c), befriend(a, d)]);
   });
@@ -60,13 +61,15 @@ describe("persistent conversation authorization and delivery", () => {
     if (app) await app.close();
   });
 
-  async function register(phone: string, installationId: string) {
+  async function register(phone: string, installationId: string, ip: string) {
     await request(app.getHttpServer())
       .post("/api/v1/auth/otp/request")
+      .set("X-Forwarded-For", ip)
       .send({ phone })
       .expect(201);
     const response = await request(app.getHttpServer())
       .post("/api/v1/auth/otp/verify")
+      .set("X-Forwarded-For", ip)
       .send({
         phone,
         code: process.env.DEV_OTP_CODE ?? "123456",

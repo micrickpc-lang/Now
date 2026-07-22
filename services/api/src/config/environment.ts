@@ -14,6 +14,12 @@ export function validateEnvironment(env: Record<string, unknown>) {
   if (!value.DATABASE_URL) throw new Error("DATABASE_URL is required");
   if (!value.REDIS_URL) throw new Error("REDIS_URL is required");
 
+  const trustProxyHops = value.TRUST_PROXY_HOPS ?? "0";
+  if (!/^(0|[1-9]\d*)$/.test(trustProxyHops) || Number(trustProxyHops) > 10) {
+    throw new Error("TRUST_PROXY_HOPS must be an integer between 0 and 10");
+  }
+  value.TRUST_PROXY_HOPS = trustProxyHops;
+
   if (production) {
     if (value.ALLOW_DEV_OTP === "true" || value.DEV_OTP_CODE) {
       throw new Error("Development OTP is forbidden in production");

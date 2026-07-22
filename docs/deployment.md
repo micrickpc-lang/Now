@@ -7,7 +7,7 @@ Local Compose описан в README. Production использует `docker-co
 3. Запустить migration job от migrator role, затем smoke/compatibility check.
 4. Развернуть API/worker/admin images по immutable digest с read-only FS/non-root.
 5. Развернуть versioned tile/style assets, private Nominatim и Martin.
-6. Включить TLS 1.2+, HSTS, strict CORS, WAF/ingress limits и admin IP/identity policy.
+6. Включить TLS 1.2+, HSTS, strict CORS, WAF/ingress limits и admin IP/identity policy. Задать `TRUST_PROXY_HOPS` равным точному числу доверенных ingress-прокси (`1` для штатного Nginx) и не публиковать API в обход этого ingress; значение `true` и безусловное доверие `X-Forwarded-For` запрещены.
 7. Проверить `/health`, `/ready`, metrics, synthetic OTP (не реальный пользователь), signal-room flow и location TTL.
 8. Выполнить canary/rolling rollout; rollback приложения не откатывает необратимую миграцию.
 

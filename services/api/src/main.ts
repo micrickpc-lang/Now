@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { RequestMethod, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
+import type { NestExpressApplication } from "@nestjs/platform-express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
@@ -9,12 +10,14 @@ import { AppModule } from "./app.module";
 import { JsonLogger } from "./json-logger";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: new JsonLogger(),
     bodyParser: true,
   });
   const config = app.get(ConfigService);
   const production = config.get("NODE_ENV") === "production";
+  const trustProxyHops = Number(config.get("TRUST_PROXY_HOPS") ?? 0);
+  if (trustProxyHops > 0) app.set("trust proxy", trustProxyHops);
   app.setGlobalPrefix("api/v1", {
     exclude: [
       { path: "health", method: RequestMethod.GET },

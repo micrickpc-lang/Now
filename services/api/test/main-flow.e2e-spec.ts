@@ -17,6 +17,7 @@ describe("private social main flow (real PostGIS)", () => {
       imports: [AppModule],
     }).compile();
     app = module.createNestApplication();
+    app.getHttpAdapter().getInstance().set("trust proxy", 1);
     app.setGlobalPrefix("api/v1");
     app.useGlobalPipes(
       new ValidationPipe({
@@ -33,13 +34,15 @@ describe("private social main flow (real PostGIS)", () => {
     if (app) await app.close();
   });
 
-  async function register(phone: string, installationId: string) {
+  async function register(phone: string, installationId: string, ip: string) {
     await request(app.getHttpServer())
       .post("/api/v1/auth/otp/request")
+      .set("X-Forwarded-For", ip)
       .send({ phone })
       .expect(201);
     const response = await request(app.getHttpServer())
       .post("/api/v1/auth/otp/verify")
+      .set("X-Forwarded-For", ip)
       .send({
         phone,
         code: process.env.DEV_OTP_CODE ?? "123456",
@@ -57,8 +60,8 @@ describe("private social main flow (real PostGIS)", () => {
   }
 
   it("enforces friendship, room membership and exact-location revocation", async () => {
-    const a = await register(phoneA, `e2e-a-${suffix}`);
-    const b = await register(phoneB, `e2e-b-${suffix}`);
+    const a = await register(phoneA, `e2e-a-${suffix}`, "198.51.100.10");
+    const b = await register(phoneB, `e2e-b-${suffix}`, "198.51.100.11");
     const authA = { Authorization: `Bearer ${a.accessToken}` };
     const authB = { Authorization: `Bearer ${b.accessToken}` };
 
