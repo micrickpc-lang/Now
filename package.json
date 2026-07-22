@@ -32,7 +32,7 @@
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build && npm run security:maps && npm run security:secrets"
   },
   "devDependencies": {
-    "prettier": "3.6.2"
+    "prettier": "3.9.6"
   },
   "overrides": {
     "next": {
