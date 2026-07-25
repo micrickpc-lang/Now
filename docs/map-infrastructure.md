@@ -1,20 +1,120 @@
-# Self-hosted карты
+# Self-hosted maps: Monaco pilot
 
-MapLibre получает style, vector tiles, sprites, glyphs и search только с first-party endpoints. Backend proxy обращается к Nominatim по private Docker DNS. Martin читает versioned MBTiles. В production внешний OSM extract разрешён только pipeline обновления, не runtime mobile/API traffic.
+Mobile получает карты только с first-party endpoints. Nginx отдаёт canonical MapLibre style/sprites/glyphs и проксирует vector tiles через API; API обращается к Martin и Nominatim по private Docker DNS. У mobile/API нет runtime-запросов к внешним map providers.
 
-## Demo
-
-`infra/maps/region.json` ограничивает загрузку extract размером 10 MB и по умолчанию использует Монако. Это демонстрационный регион; production регион утверждается отдельно. `infra/maps/data/demo.geojson` позволяет проверить style/attribution без большого PBF.
-
-```powershell
-npm run maps:download
-./scripts/maps/build-tiles.ps1
-./scripts/maps/start-map-stack.ps1
-npm run maps:validate
+```text
+MapLibre ── /api/v1/maps/style.json ──> Nginx alias ──> assets/v1/style.json
+         ├─ /maps/v1/tiles/... ───────> Nginx cache ─> API ─> Martin ─> MBTiles
+         ├─ /maps/v1/sprites/... ─────> Nginx alias
+         └─ /maps/v1/glyphs/... ──────> Nginx alias
+Mobile ──── /api/v1/maps/search|reverse ─> API ─> Nominatim
 ```
 
-Обновление: `./scripts/maps/update-map-data.ps1`. Для zero-downtime production pipeline строит новый versioned файл, валидирует tile metadata/style, публикует под новым URL, прогревает cache, переключает style version и оставляет предыдущую версию до истечения mobile cache. Локальный упрощённый скрипт перезапускает только Martin.
+Nominatim и Martin не публикуют host ports. Routing в V1 отключён.
 
-RoutingProvider присутствует, но отключён. V2 может подключить private OSRM; публичный routing endpoint запрещён. `npm run security:maps` проверяет source/network configuration на запрещённые SDK/domains. ODbL attribution: `© OpenStreetMap contributors` видима поверх карты и есть в style metadata.
+## Artifacts
 
-Sprites/glyphs должны размещаться в `infra/maps/assets` под versioned именами. Production download, tile generation и database import выполняются отдельным CI runner без доступа к application secrets.
+- `infra/maps/region.json` — Monaco download/checksum policy и output paths.
+- `infra/maps/data/region.osm.pbf` — downloaded extract, игнорируется Git.
+- `infra/maps/data/region.osm.pbf.metadata.json` — фактические MD5/SHA-256, size и source metadata.
+- `infra/maps/data/seychas-v1.mbtiles` — versioned Martin input, игнорируется Git.
+- `infra/maps/tilemaker/image.txt` — закреплённый Tilemaker `3.0.0`.
+- `infra/maps/tilemaker/config.json` и `process.lua` — детерминированные слои `water`, `landuse`, `transportation`.
+- `infra/maps/assets/v1` — canonical style, 1x/2x empty sprite и minimal glyph envelope.
+- `infra/maps/martin.yaml` — internal source `seychas -> /data/seychas-v1.mbtiles`.
+
+V1 style намеренно не имеет `symbol` layers: текущий glyph asset — валидная минимальная оболочка, но не полный font set. Добавление подписей или icons требует versioned real glyph/sprite generation и нового style version.
+
+## Checksum model
+
+Geofabrik для Monaco публикует MD5 manifest. Downloader:
+
+1. получает manifest только по HTTPS и выбирает точное имя PBF;
+2. загружает PBF с size limit;
+3. вычисляет MD5 и SHA-256 в потоке;
+4. повторно получает manifest, исключая смену `latest` во время download;
+5. публикует PBF только после совпадения MD5;
+6. сохраняет SHA-256 в metadata sidecar.
+
+`pinnedSha256` в `region.json` может быть заполнен release owner после отдельной проверки конкретного extract. Пока он `null`, build checksum-verified, но URL `latest` не является долгосрочно воспроизводимым release input. Не вписывай выдуманный digest.
+
+## Local build
+
+Linux/macOS shell (Node.js 24+ используется, а при его отсутствии скрипт запускает закреплённый Node container через Docker):
+
+```bash
+sh scripts/maps/download-region.sh
+sh scripts/maps/build-tiles.sh
+sh scripts/maps/validate-map.sh --mbtiles infra/maps/data/seychas-v1.mbtiles
+sh scripts/maps/check-map-security.sh
+```
+
+PowerShell требует Node.js 24+ и Docker:
+
+```powershell
+./scripts/maps/download-region.ps1
+./scripts/maps/build-tiles.ps1
+./scripts/maps/validate-map.ps1 --mbtiles infra/maps/data/seychas-v1.mbtiles
+./scripts/maps/check-map-security.ps1
+```
+
+Повторная загрузка и перезапись versioned MBTiles требуют явного `--force`. Build запускает Tilemaker с `--network none`, проверяет local PBF sidecar, генерирует assets и проверяет SQLite header до atomic rename.
+
+## First server import
+
+На новом staging host с уже созданным private env:
+
+```bash
+cd /opt/now/app
+sh scripts/deploy/prepare-staging-maps.sh \
+  --env-file /opt/now/app/.env.staging \
+  --data-root /opt/now/data
+```
+
+Profile `maps-import` ограничен 768 MiB и должен выполняться без runtime stack. Скрипт ждёт `/status.php?format=json`, затем останавливает/removes import container и требует `/opt/now/data/nominatim/PG_VERSION`. Runtime Nominatim имеет меньший memory limit и не предназначен для initial import.
+
+Наличие `PG_VERSION` делает операцию idempotent: artifacts обновляются, но Nominatim не импортируется заново. `--force-import` не удаляет существующую БД и намеренно отказывает для in-place destructive import.
+
+## Runtime routes
+
+| Public path                          | Поведение                                             |
+| ------------------------------------ | ----------------------------------------------------- |
+| `/api/v1/maps/style.json`            | stable mobile URL; canonical v1 style, короткий cache |
+| `/api/v1/maps/tilejson.json`         | API TileJSON с `/api/v1/maps/tiles/...`               |
+| `/api/v1/maps/tiles/{z}/{x}/{y}.pbf` | public API tile proxy/cache                           |
+| `/maps/v1/style.json`                | immutable canonical style                             |
+| `/maps/v1/tiles/{z}/{x}/{y}.pbf`     | versioned alias/rewrite к API tile                    |
+| `/maps/v1/sprites/...`               | immutable 1x/2x sprite assets                         |
+| `/maps/v1/glyphs/...`                | immutable glyph assets                                |
+| `/api/v1/maps/search`                | authenticated, rate-limited Nominatim search          |
+| `/api/v1/maps/reverse`               | authenticated, rate-limited reverse lookup            |
+
+Attribution `© OpenStreetMap contributors` находится в source и style metadata; mobile оставляет MapLibre attribution control видимым.
+
+## Validation и smoke
+
+Static graph validator проверяет mobile URL, API controller routes, Nginx aliases/rewrite/cache, Compose DNS/base URLs, Martin source, Nominatim routes, Tilemaker layers, asset manifest и checksum policy:
+
+```bash
+sh scripts/maps/validate-map.sh
+```
+
+После deploy:
+
+```bash
+sh scripts/maps/smoke-map.sh --base-url http://127.0.0.1
+```
+
+PowerShell:
+
+```powershell
+./scripts/maps/smoke-map.ps1 --base-url http://127.0.0.1
+```
+
+Smoke фиксирует status/content-type/bytes для health, обоих styles, TileJSON, API/versioned tile, 1x/2x sprites и glyph. Неаутентифицированные search/reverse должны вернуть `401`. Успешный transport smoke не доказывает визуальное отображение: отдельно открой picker на Android, дождись `onStyleLoaded`, проверь pilot bounds и видимую attribution.
+
+## Обновление данных
+
+`scripts/maps/update-map-data.sh`/`.ps1` — staging convenience: повторно загружает Monaco, перестраивает `v1`, atomically публикует files и перезапускает только Martin. Он не re-import Nominatim и не очищает persistent Nginx/client caches. Поэтому не используй его как production zero-downtime pipeline и не считай search dataset обновлённым.
+
+Для release обновления создай новый dataset/style version, новый MBTiles filename и новые URLs; прогрей cache, переключи style и сохрани предыдущую версию на mobile cache window. Nominatim обновляй через отдельную verified import/replication процедуру, а не in-place удаление.

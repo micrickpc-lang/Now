@@ -1,84 +1,94 @@
 # Сейчас
 
-«Сейчас» — privacy-first мессенджер и приложение для координации встреч внутри взаимного круга друзей. Постоянные личные и закрытые групповые чаты отделены от временных комнат встреч. В продукте нет публичных групп, поиска незнакомцев и фонового отслеживания: сигнал живёт ограниченное время, а точная геопозиция доступна только подтверждённым участникам временной комнаты и удаляется по TTL.
+«Сейчас» — privacy-first мессенджер и приложение для координации встреч внутри взаимного круга друзей. Постоянные личные и закрытые групповые чаты отделены от временных комнат. Публичных групп, поиска незнакомцев и фонового отслеживания местоположения нет.
 
-## Состав репозитория
+## Репозиторий
 
-- `apps/mobile` — Flutter-клиент для Android и iOS.
+- `apps/mobile` — Flutter-клиент Android/iOS.
 - `apps/admin` — закрытая Next.js-панель модерации.
-- `services/api` — NestJS REST/WebSocket API.
-- `services/worker` — TTL, уведомления, удаление данных и фоновые задания.
+- `services/api` — NestJS REST/Socket.IO API.
+- `services/worker` — TTL и фоновые задания.
 - `packages` — контракты, типы и дизайн-токены.
-- `infra` — Docker, reverse proxy, monitoring и self-hosted map stack.
-- `scripts` — development, maps и security automation.
-- `docs` — архитектура, безопасность, приватность и эксплуатация.
+- `infra` — Compose, Nginx, PostgreSQL/PostGIS и self-hosted maps.
+- `scripts` — map, security, backup и staging automation.
+- `docs` — архитектура, приватность и runbooks.
 
-## Быстрый запуск
+## Local development
 
-Требования: Node.js 24 LTS+, npm 11+, Flutter 3.44+, Docker Engine 27+ с Compose v2.
+Требования: Node.js 24+, npm 11+, Flutter 3.44+ и Docker Compose v2.
 
 ```bash
-cp .env.example .env
 npm ci
 npm run db:generate
 docker compose up -d postgres redis minio
 docker compose run --rm migrate
-docker compose run --rm migrate npm run db:seed --workspace=@seychas/api
 docker compose up --build api worker admin nginx
 ```
 
-API: `http://localhost:8080/api/v1`; Swagger: `http://localhost:8080/docs`; admin: `http://localhost:8080/admin`; health: `http://localhost:8080/health`.
+Local endpoints: API `http://localhost:8080/api/v1`, Swagger `http://localhost:8080/docs`, admin `http://localhost:8080/admin`, health `http://localhost:8080/health`.
 
-Development OTP — значение `DEV_OTP_CODE` из локального `.env`. Оно журналируется только при `NODE_ENV=development` и `ALLOW_DEV_OTP=true`. Эти переменные запрещены production-конфигурацией.
+`.env.example` намеренно не содержит значений credentials, cryptographic keys, test phones или кодов входа. Для запуска Node-процессов вне Compose скопируй файл в `.env`, заполни пустые поля локально и не добавляй `.env` в Git.
 
-### Mobile
+### Mobile development
+
+Android Emulator:
 
 ```bash
 cd apps/mobile
 flutter pub get
-flutter run --dart-define=APP_ENV=development --dart-define=API_BASE_URL=http://10.0.2.2:3000/api/v1 --dart-define=WS_BASE_URL=http://10.0.2.2:3000
+flutter run \
+  --dart-define=APP_ENV=development \
+  --dart-define=API_BASE_URL=http://10.0.2.2:3000/api/v1 \
+  --dart-define=WS_BASE_URL=http://10.0.2.2:3000
 ```
 
-Автономная демонстрация на телефоне без backend, Docker и WSL:
+Автономный UI без backend:
 
 ```bash
-flutter run --dart-define=APP_ENV=development --dart-define=DEMO_MODE=true
+flutter run \
+  --dart-define=APP_ENV=development \
+  --dart-define=DEMO_MODE=true
 ```
 
-В этом режиме OTP `123456`, а список чатов, история сообщений, черновики и очередь отправки сохраняются локально и переживают перезапуск приложения. Выбранный Demo Mode также сохраняется на устройстве. Production-конфигурация отклоняет `DEMO_MODE` при запуске.
+Demo Mode хранит тестовые чаты и outbox только локально. Production-конфигурация запрещает `DEMO_MODE`.
 
-Для проверки с реальным API на физическом Android используй LAN-адрес компьютера с Windows (телефон и компьютер должны быть в одной доверенной Wi-Fi-сети). `10.0.2.2` работает только в Android Emulator:
+Поведение разрешений и privacy contract описаны в [mobile GPS](docs/mobile-gps.md) и [location privacy](docs/location-privacy.md).
+
+## Bare-IP staging
+
+Standalone staging описан в `docker-compose.staging.yml`: с хоста опубликован только TCP `80`; PostgreSQL, Redis, Martin, Nominatim, API и worker остаются во внутренних Docker-сетях. Это временный HTTP-контур без TLS. В нём exact location отключён на сервере и в mobile UI, media pipeline отключён, а Android подключается только debug-сборкой. Для iOS и release-сборок требуется HTTPS.
+
+Посмотреть интерфейс безопасных команд:
+
+```bash
+sh scripts/deploy/create-staging-env.sh --help
+sh scripts/deploy/prepare-staging-maps.sh --help
+sh scripts/deploy/deploy-staging.sh --help
+```
+
+Полный порядок: [server deployment](docs/server-deployment.md), [staging boundaries](docs/staging-environment.md), [troubleshooting](docs/troubleshooting.md).
+
+## Monaco map pilot
+
+Пилот использует небольшой extract Монако. Download сверяет опубликованный Geofabrik MD5 до и после передачи, записывает локальный SHA-256, Tilemaker закреплён по версии, а style/sprite/glyph/tile URLs находятся на first-party endpoints.
+
+Linux:
+
+```bash
+sh scripts/maps/download-region.sh
+sh scripts/maps/build-tiles.sh
+sh scripts/maps/validate-map.sh --mbtiles infra/maps/data/seychas-v1.mbtiles
+```
+
+PowerShell:
 
 ```powershell
-flutter run --dart-define=APP_ENV=development --dart-define=API_BASE_URL=http://192.168.1.10:3000/api/v1 --dart-define=WS_BASE_URL=http://192.168.1.10:3000
+./scripts/maps/download-region.ps1
+./scripts/maps/build-tiles.ps1
+./scripts/maps/validate-map.ps1 --mbtiles infra/maps/data/seychas-v1.mbtiles
 ```
 
-Замени `192.168.1.10` на IPv4-адрес компьютера. Не публикуй development API в интернет; для внешней сети нужен HTTPS reverse proxy и production-настройки безопасности.
-
-Android release:
-
-```bash
-flutter build appbundle --release --obfuscate --split-debug-info=build/symbols --dart-define=APP_ENV=production --dart-define=API_BASE_URL=https://api.example.invalid/api/v1 --dart-define=WS_BASE_URL=https://api.example.invalid
-```
-
-iOS release (только macOS с Xcode):
-
-```bash
-flutter build ipa --release --obfuscate --split-debug-info=build/symbols --dart-define=APP_ENV=production --dart-define=API_BASE_URL=https://api.example.invalid/api/v1 --dart-define=WS_BASE_URL=https://api.example.invalid
-```
-
-### Карты
-
-Пилотный регион по умолчанию — Монако (малый reproducible extract, не production dataset):
-
-```bash
-npm run maps:download --if-present
-powershell -File scripts/maps/build-tiles.ps1
-powershell -File scripts/maps/start-map-stack.ps1
-node scripts/maps/validate-map-style.mjs
-```
-
-Подробности и Linux-команды находятся в [docs/map-infrastructure.md](docs/map-infrastructure.md).
+См. [map infrastructure](docs/map-infrastructure.md).
 
 ## Проверки
 
@@ -87,8 +97,13 @@ npm run verify
 docker compose --profile test run --rm api-integration-tests
 ```
 
-Docker-интеграционные тесты используют настоящий PostgreSQL/PostGIS. Mobile golden-файлы создаются и проверяются Flutter-командами из `apps/mobile`.
+Map-only checks:
 
-## Production
+```bash
+sh scripts/maps/validate-map.sh
+sh scripts/maps/check-map-security.sh
+```
 
-`.env.example` содержит только локальные заглушки. Production требует secret manager, реальный SMS/Push provider, собственные домены и TLS, юридически утверждённые документы, загруженный OSM extract выбранного региона и ключи подписи магазинов. См. [docs/deployment.md](docs/deployment.md) и [docs/legal-open-questions.md](docs/legal-open-questions.md).
+## Production boundary
+
+Bare-IP staging не является production. Production требует TLS, domain allowlist, secret manager/KMS, реальных SMS/Push и media providers, admin SSO/MFA, юридически утверждённых политик, store signing и отдельного sizing/backup drill. Начни с [deployment](docs/deployment.md), [security model](docs/security-model.md) и [legal open questions](docs/legal-open-questions.md).
