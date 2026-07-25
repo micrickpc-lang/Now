@@ -18,6 +18,8 @@
 
 Default runtime total — 1088 MiB. Одноразовый `maps-import` profile ограничен 768 MiB и выполняется при остановленном runtime. Migration job ограничен 256 MiB и завершается до старта API/worker/Nginx.
 
+Backend images собираются последовательно (`COMPOSE_PARALLEL_LIMIT=1`), а две стадии установки API-зависимостей связаны одной цепочкой BuildKit. Это обязательное ограничение для pilot host без swap: параллельные `npm ci` могут лишить памяти даже `sshd`.
+
 ## Feature matrix
 
 | Возможность                                 | Staging                                 |

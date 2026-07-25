@@ -45,6 +45,7 @@ if [ -z "$image_tag" ]; then image_tag=$(git -C "$root" rev-parse --short=12 HEA
 case "$image_tag" in ''|*[!A-Za-z0-9_.-]*) echo "Invalid image tag" >&2; exit 2 ;; esac
 
 export IMAGE_TAG="$image_tag"
+export COMPOSE_PARALLEL_LIMIT=${COMPOSE_PARALLEL_LIMIT:-1}
 compose() {
   docker compose --env-file "$env_file" -f "$root/docker-compose.staging.yml" "$@"
 }
@@ -64,7 +65,11 @@ done
 
 cd "$root"
 compose config --quiet
-compose build migrate api worker
+# Build one service at a time. The pilot VPS has 2 GiB RAM and no swap;
+# parallel npm installs can starve sshd or trigger the host OOM killer.
+compose build migrate
+compose build api
+compose build worker
 compose up -d --wait --wait-timeout 600
 
 state_root=/opt/now/data/deployments
