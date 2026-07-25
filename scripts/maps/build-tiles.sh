@@ -32,7 +32,7 @@ root=$(CDPATH= cd -- "$script_dir/../.." && pwd)
 data="$root/infra/maps/data"
 source="$data/region.osm.pbf"
 output="$data/seychas-v1.mbtiles"
-partial="$output.partial"
+partial="$data/seychas-v1.partial.mbtiles"
 tilemaker="$root/infra/maps/tilemaker"
 image=$(tr -d '\r\n' < "$tilemaker/image.txt")
 
@@ -55,7 +55,7 @@ docker run --rm --network none --cpus 1.5 --memory 768m --pids-limit 256 \
   -v "$tilemaker:/config:ro" \
   "$image" \
   /data/region.osm.pbf \
-  --output /data/seychas-v1.mbtiles.partial \
+  --output /data/seychas-v1.partial.mbtiles \
   --config /config/config.json \
   --process /config/process.lua
 
@@ -64,6 +64,6 @@ if [ ! -f "$partial" ]; then
   exit 1
 fi
 map_node scripts/maps/validate-map-style.mjs \
-  --mbtiles infra/maps/data/seychas-v1.mbtiles.partial
+  --mbtiles infra/maps/data/seychas-v1.partial.mbtiles
 mv -f -- "$partial" "$output"
 echo "Built $output with $image"

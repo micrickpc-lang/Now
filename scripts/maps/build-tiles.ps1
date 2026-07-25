@@ -32,7 +32,7 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
 $data = Join-Path $root 'infra\maps\data'
 $source = Join-Path $data 'region.osm.pbf'
 $output = Join-Path $data 'seychas-v1.mbtiles'
-$partial = "$output.partial"
+$partial = Join-Path $data 'seychas-v1.partial.mbtiles'
 $tilemaker = Join-Path $root 'infra\maps\tilemaker'
 $image = (Get-Content -Raw -Encoding utf8 (Join-Path $tilemaker 'image.txt')).Trim()
 if ($image -notmatch '^ghcr\.io/systemed/tilemaker@sha256:[a-f0-9]{64}$') {
@@ -55,7 +55,7 @@ $dockerArgs = @(
   '-v', "${tilemaker}:/config:ro",
   $image,
   '/data/region.osm.pbf',
-  '--output', '/data/seychas-v1.mbtiles.partial',
+  '--output', '/data/seychas-v1.partial.mbtiles',
   '--config', '/config/config.json',
   '--process', '/config/process.lua'
 )
