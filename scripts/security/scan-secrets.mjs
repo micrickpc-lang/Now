@@ -23,6 +23,9 @@ const extensions = new Set([
   ".xml",
   ".kt",
   ".swift",
+  ".mjs",
+  ".sh",
+  ".ps1",
 ]);
 const patterns = [
   /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/u,
