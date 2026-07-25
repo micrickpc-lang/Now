@@ -71,7 +71,8 @@ unset NOW_PUBLIC_IP NOW_TEST_PHONE_ALLOWLIST
 for artifact in \
   /opt/now/data/maps/region.osm.pbf \
   /opt/now/data/maps/seychas-v1.mbtiles \
-  /opt/now/data/nominatim/PG_VERSION; do
+  /opt/now/data/nominatim/PG_VERSION \
+  /opt/now/data/nominatim/import-finished; do
   if test -s "$artifact"; then
     stat -c '%a %U:%G %s %n' "$artifact"
   else
@@ -90,7 +91,7 @@ sh scripts/deploy/prepare-staging-maps.sh \
 sh scripts/deploy/deploy-staging.sh --env-file .env.staging
 ```
 
-Не запускай initial import одновременно с runtime stack: profile `maps-import` рассчитан на отдельное окно и 768 MiB. Если `PG_VERSION` уже существует, скрипт обновит проверенные map artifacts и пропустит Nominatim import. `--force-import` намеренно не удаляет и не перезаписывает существующую БД; recoverable rebuild описан в [backup/restore](backup-restore.md).
+Не запускай initial import одновременно с runtime stack: profile `maps-import` рассчитан на отдельное окно и 768 MiB. Для VPS на 2 GiB Compose передаёт upstream-образу уменьшенный PostgreSQL tuning profile. Импорт считается готовым только при наличии одновременно `PG_VERSION` и `import-finished`; один `PG_VERSION` означает оборванный `initdb`, а не пригодный geocoder. `--force-import` намеренно не удаляет и не перезаписывает существующую БД; recoverable rebuild описан в [backup/restore](backup-restore.md).
 
 ## `/ready` возвращает ошибку
 
@@ -104,7 +105,7 @@ docker stats --no-stream
 
 - `postgres`/`redis` unhealthy: проверь bind-mount permissions и свободное место через `df -h /opt/now`; не удаляй persistent directories.
 - `martin` unhealthy: проверь `/opt/now/data/maps/seychas-v1.mbtiles` через `sh scripts/maps/validate-map.sh --mbtiles /opt/now/data/maps/seychas-v1.mbtiles`, затем повтори deploy.
-- `nominatim` unhealthy: проверь наличие `PG_VERSION` и логи; не запускай destructive in-place re-import.
+- `nominatim` unhealthy: проверь наличие `PG_VERSION` и `import-finished`, затем логи; не запускай destructive in-place re-import.
 - exit `137` или OOM: убедись, что profile `maps-import` остановлен. Runtime limits суммарно составляют 1088 MiB; не повышай их без повторного sizing host.
 
 После исправления не делай ручной restart отдельных зависимостей без необходимости; воспроизводимый запуск:

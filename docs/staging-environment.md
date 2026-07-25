@@ -6,15 +6,15 @@
 
 С хоста публикуется только `0.0.0.0:80 -> nginx:8080`. Ни PostgreSQL/PostGIS, ни Redis, Martin, Nominatim, API или worker host ports не имеют. `private` network имеет `internal: true`; Nginx видит API через отдельную `edge` network.
 
-| Service            | Runtime limit | Назначение                        |
-| ------------------ | ------------: | --------------------------------- |
-| PostgreSQL/PostGIS |       256 MiB | system of record и spatial types  |
-| Redis              |        64 MiB | ephemeral cache/queue             |
-| Martin             |        64 MiB | internal MBTiles source `seychas` |
-| Nominatim runtime  |       256 MiB | private search/reverse            |
-| API                |       256 MiB | REST/Socket.IO/map proxy          |
-| Worker             |       128 MiB | TTL cleanup                       |
-| Nginx              |        64 MiB | единственный public ingress       |
+| Service            | Runtime limit | Назначение                                     |
+| ------------------ | ------------: | ---------------------------------------------- |
+| PostgreSQL/PostGIS |       256 MiB | system of record и spatial types               |
+| Redis              |        64 MiB | ephemeral cache/queue                          |
+| Martin             |        64 MiB | internal MBTiles source `seychas`              |
+| Nominatim runtime  |       256 MiB | private search/reverse, 128 MiB shared buffers |
+| API                |       256 MiB | REST/Socket.IO/map proxy                       |
+| Worker             |       128 MiB | TTL cleanup                                    |
+| Nginx              |        64 MiB | единственный public ingress                    |
 
 Default runtime total — 1088 MiB. Одноразовый `maps-import` profile ограничен 768 MiB и выполняется при остановленном runtime. Migration job ограничен 256 MiB и завершается до старта API/worker/Nginx.
 

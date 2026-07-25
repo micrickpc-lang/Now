@@ -11,7 +11,7 @@ to persistent staging storage, and perform the one-time Nominatim import.
 Options:
   --env-file <path>   Staging env file (default: .env.staging)
   --data-root <path>  Persistent data root (default: /opt/now/data)
-  --force-import      Re-import even when Nominatim PG_VERSION exists
+  --force-import      Re-import only when no completed Nominatim DB exists
   --help              Show this help
 EOF
 }
@@ -64,13 +64,21 @@ docker run --rm --network none --user 0:0 \
   nginxinc/nginx-unprivileged:1.29-alpine \
   chown -R 101:101 /cache
 
-if [ -f "$data_root/nominatim/PG_VERSION" ] && [ "$force_import" != true ]; then
+if [ -f "$data_root/nominatim/import-finished" ] && [ "$force_import" != true ]; then
   echo "Nominatim import already exists; verified map artifacts were refreshed only."
   exit 0
 fi
 if [ "$force_import" = true ]; then
   echo "Refusing an in-place destructive Nominatim re-import. Move the existing data directory to a backup first." >&2
-  [ ! -e "$data_root/nominatim/PG_VERSION" ] || exit 1
+  [ ! -e "$data_root/nominatim/import-finished" ] || exit 1
+fi
+
+# PG_VERSION alone is not proof of a usable import: initdb creates it before
+# Nominatim loads any OSM data. Refuse to reuse a partial cluster so operators
+# can move/remove that generated directory explicitly and retry from the PBF.
+if [ -e "$data_root/nominatim/PG_VERSION" ]; then
+  echo "Incomplete Nominatim database found (missing import-finished); move or remove the partial directory before retrying." >&2
+  exit 1
 fi
 
 compose() {
@@ -80,5 +88,8 @@ compose --profile maps-import config --quiet
 compose --profile maps-import up -d --wait --wait-timeout 3600 nominatim-import
 compose --profile maps-import stop nominatim-import
 compose --profile maps-import rm -f nominatim-import
-[ -f "$data_root/nominatim/PG_VERSION" ] || { echo "Nominatim import did not create PG_VERSION" >&2; exit 1; }
+[ -f "$data_root/nominatim/PG_VERSION" ] && [ -f "$data_root/nominatim/import-finished" ] || {
+  echo "Nominatim import did not complete" >&2
+  exit 1
+}
 echo "Verified pilot tiles and Nominatim database are ready in $data_root."

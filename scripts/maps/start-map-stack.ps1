@@ -42,7 +42,8 @@ if (-not (Test-Path -LiteralPath $envFile -PathType Leaf)) {
 foreach ($required in @(
   (Join-Path $dataRoot 'maps\region.osm.pbf'),
   (Join-Path $dataRoot 'maps\seychas-v1.mbtiles'),
-  (Join-Path $dataRoot 'nominatim\PG_VERSION')
+  (Join-Path $dataRoot 'nominatim\PG_VERSION'),
+  (Join-Path $dataRoot 'nominatim\import-finished')
 )) {
   if (-not (Test-Path -LiteralPath $required -PathType Leaf)) {
     throw "Required map runtime artifact is missing: $required. Complete the maps-import profile first."

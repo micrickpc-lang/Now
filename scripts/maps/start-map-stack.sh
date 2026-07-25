@@ -45,7 +45,8 @@ done
 for required in \
   "$data_root/maps/region.osm.pbf" \
   "$data_root/maps/seychas-v1.mbtiles" \
-  "$data_root/nominatim/PG_VERSION"; do
+  "$data_root/nominatim/PG_VERSION" \
+  "$data_root/nominatim/import-finished"; do
   if [ ! -f "$required" ]; then
     echo "Required map runtime artifact is missing: $required" >&2
     echo "Complete the maps-import profile first." >&2

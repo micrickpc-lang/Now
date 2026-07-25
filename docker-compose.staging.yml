@@ -18,7 +18,9 @@ x-service-defaults: &service-defaults
   logging: *json-logging
 
 x-nominatim-environment: &nominatim-environment
-  PBF_PATH: /nominatim/data/region.osm.pbf
+  # Keep the read-only extract outside /nominatim: the upstream entrypoint
+  # recursively changes ownership of that application directory on first boot.
+  PBF_PATH: /maps-input/region.osm.pbf
   NOMINATIM_PASSWORD: ${NOMINATIM_PASSWORD:?set NOMINATIM_PASSWORD}
   IMPORT_WIKIPEDIA: "false"
   IMPORT_US_POSTCODES: "false"
@@ -26,6 +28,15 @@ x-nominatim-environment: &nominatim-environment
   REPLICATION_URL: ""
   FREEZE: "true"
   THREADS: "1"
+  # mediagis/nominatim defaults target a much larger host (2 GiB shared
+  # buffers and 10 GiB maintenance memory). These values keep the Monaco
+  # pilot importer/runtime inside the documented 2 GiB staging VPS budget.
+  POSTGRES_SHARED_BUFFERS: 128MB
+  POSTGRES_MAINTENANCE_WORK_MEM: 128MB
+  POSTGRES_AUTOVACUUM_WORK_MEM: 64MB
+  POSTGRES_WORK_MEM: 4MB
+  POSTGRES_EFFECTIVE_CACHE_SIZE: 768MB
+  POSTGRES_MAX_WAL_SIZE: 512MB
 
 x-api-environment: &api-environment
   NODE_ENV: production
@@ -156,12 +167,12 @@ services:
   nominatim-import:
     <<: *service-defaults
     profiles: [maps-import]
-    image: mediagis/nominatim:4.5
+    image: mediagis/nominatim@sha256:e25b434212b46fadb378fab8054fb3e96bdd69e8d174b0274e5f20e53f15e9f1
     restart: "no"
     environment:
       <<: *nominatim-environment
     volumes:
-      - ${NOW_DATA_ROOT:-/opt/now/data}/maps/region.osm.pbf:/nominatim/data/region.osm.pbf:ro
+      - ${NOW_DATA_ROOT:-/opt/now/data}/maps/region.osm.pbf:/maps-input/region.osm.pbf:ro
       - ${NOW_DATA_ROOT:-/opt/now/data}/nominatim:/var/lib/postgresql/16/main
     networks: [private]
     healthcheck:
@@ -181,11 +192,11 @@ services:
 
   nominatim:
     <<: *service-defaults
-    image: mediagis/nominatim:4.5
+    image: mediagis/nominatim@sha256:e25b434212b46fadb378fab8054fb3e96bdd69e8d174b0274e5f20e53f15e9f1
     environment:
       <<: *nominatim-environment
     volumes:
-      - ${NOW_DATA_ROOT:-/opt/now/data}/maps/region.osm.pbf:/nominatim/data/region.osm.pbf:ro
+      - ${NOW_DATA_ROOT:-/opt/now/data}/maps/region.osm.pbf:/maps-input/region.osm.pbf:ro
       - ${NOW_DATA_ROOT:-/opt/now/data}/nominatim:/var/lib/postgresql/16/main
     expose: ["8080"]
     networks: [private]

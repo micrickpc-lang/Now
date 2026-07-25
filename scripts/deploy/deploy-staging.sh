@@ -47,7 +47,8 @@ case "$image_tag" in ''|*[!A-Za-z0-9_.-]*) echo "Invalid image tag" >&2; exit 2 
 for artifact in \
   /opt/now/data/maps/region.osm.pbf \
   /opt/now/data/maps/seychas-v1.mbtiles \
-  /opt/now/data/nominatim/PG_VERSION; do
+  /opt/now/data/nominatim/PG_VERSION \
+  /opt/now/data/nominatim/import-finished; do
   [ -f "$artifact" ] || { echo "Required runtime artifact missing: $artifact" >&2; exit 1; }
 done
 

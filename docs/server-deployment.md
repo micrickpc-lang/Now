@@ -89,9 +89,9 @@ sh scripts/deploy/prepare-staging-maps.sh \
 4. валидирует style/assets/MBTiles;
 5. публикует artifacts atomically в `/opt/now/data/maps`;
 6. запускает только profile `maps-import` с лимитом 768 MiB;
-7. ждёт Nominatim status, останавливает import container и проверяет `PG_VERSION`.
+7. ждёт Nominatim status, останавливает import container и проверяет `PG_VERSION` вместе с upstream-маркером `import-finished`.
 
-Если `PG_VERSION` уже существует, in-place re-import намеренно не выполняется. Для нового geocoder dataset сначала останови runtime и перемести старый каталог в отдельный recovery path; не удаляй его до успешной проверки нового import.
+Если `import-finished` уже существует, in-place re-import намеренно не выполняется. Один `PG_VERSION` без этого маркера считается оборванным импортом. Для нового geocoder dataset сначала останови runtime и перемести старый каталог в отдельный recovery path; не удаляй его до успешной проверки нового import.
 
 ## 4. Deploy
 

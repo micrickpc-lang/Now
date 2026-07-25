@@ -71,9 +71,9 @@ sh scripts/deploy/prepare-staging-maps.sh \
   --data-root /opt/now/data
 ```
 
-Profile `maps-import` ограничен 768 MiB и должен выполняться без runtime stack. Скрипт ждёт `/status.php?format=json`, затем останавливает/removes import container и требует `/opt/now/data/nominatim/PG_VERSION`. Runtime Nominatim имеет меньший memory limit и не предназначен для initial import.
+Profile `maps-import` ограничен 768 MiB и должен выполняться без runtime stack. Upstream PostgreSQL defaults уменьшены до профиля пилотного VPS (в частности, `shared_buffers=128MB` и один import thread). Скрипт ждёт `/status.php?format=json`, затем останавливает/removes import container и требует `/opt/now/data/nominatim/PG_VERSION` вместе с `/opt/now/data/nominatim/import-finished`. Runtime Nominatim имеет меньший memory limit и не предназначен для initial import.
 
-Наличие `PG_VERSION` делает операцию idempotent: artifacts обновляются, но Nominatim не импортируется заново. `--force-import` не удаляет существующую БД и намеренно отказывает для in-place destructive import.
+Наличие `import-finished` делает операцию idempotent: artifacts обновляются, но Nominatim не импортируется заново. Один `PG_VERSION` не принимается за успех, потому что он появляется до загрузки OSM. `--force-import` не удаляет существующую БД и намеренно отказывает для in-place destructive import.
 
 ## Runtime routes
 
