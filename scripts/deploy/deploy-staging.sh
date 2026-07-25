@@ -44,18 +44,24 @@ command -v docker >/dev/null 2>&1 || { echo "Docker Compose v2 is required" >&2;
 if [ -z "$image_tag" ]; then image_tag=$(git -C "$root" rev-parse --short=12 HEAD); fi
 case "$image_tag" in ''|*[!A-Za-z0-9_.-]*) echo "Invalid image tag" >&2; exit 2 ;; esac
 
-for artifact in \
-  /opt/now/data/maps/region.osm.pbf \
-  /opt/now/data/maps/seychas-v1.mbtiles \
-  /opt/now/data/nominatim/PG_VERSION \
-  /opt/now/data/nominatim/import-finished; do
-  [ -f "$artifact" ] || { echo "Required runtime artifact missing: $artifact" >&2; exit 1; }
-done
-
 export IMAGE_TAG="$image_tag"
 compose() {
   docker compose --env-file "$env_file" -f "$root/docker-compose.staging.yml" "$@"
 }
+
+for artifact in \
+  /opt/now/data/maps/region.osm.pbf \
+  /opt/now/data/maps/seychas-v1.mbtiles; do
+  [ -f "$artifact" ] || { echo "Required runtime artifact missing: $artifact" >&2; exit 1; }
+done
+for marker in PG_VERSION import-finished; do
+  compose run --rm --no-deps --entrypoint test nominatim \
+    -f "/var/lib/postgresql/16/main/$marker" || {
+    echo "Required Nominatim readiness marker missing: $marker" >&2
+    exit 1
+  }
+done
+
 cd "$root"
 compose config --quiet
 compose build migrate api worker

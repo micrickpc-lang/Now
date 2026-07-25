@@ -44,6 +44,16 @@ done
 [ -f "$env_file" ] || { echo "Staging env file not found: $env_file" >&2; exit 1; }
 case "$data_root" in ''|/) echo "Unsafe data root" >&2; exit 2 ;; esac
 command -v docker >/dev/null 2>&1 || { echo "Docker Compose v2 is required" >&2; exit 1; }
+export NOW_DATA_ROOT="$data_root"
+
+compose() {
+  docker compose --env-file "$env_file" -f "$root/docker-compose.staging.yml" "$@"
+}
+
+nominatim_db_has() {
+  compose run --rm --no-deps --entrypoint test nominatim \
+    -f "/var/lib/postgresql/16/main/$1"
+}
 
 cd "$root"
 sh scripts/maps/download-region.sh
@@ -64,31 +74,27 @@ docker run --rm --network none --user 0:0 \
   nginxinc/nginx-unprivileged:1.29-alpine \
   chown -R 101:101 /cache
 
-if [ -f "$data_root/nominatim/import-finished" ] && [ "$force_import" != true ]; then
+if nominatim_db_has import-finished && [ "$force_import" != true ]; then
   echo "Nominatim import already exists; verified map artifacts were refreshed only."
   exit 0
 fi
 if [ "$force_import" = true ]; then
   echo "Refusing an in-place destructive Nominatim re-import. Move the existing data directory to a backup first." >&2
-  [ ! -e "$data_root/nominatim/import-finished" ] || exit 1
+  ! nominatim_db_has import-finished || exit 1
 fi
 
 # PG_VERSION alone is not proof of a usable import: initdb creates it before
 # Nominatim loads any OSM data. Refuse to reuse a partial cluster so operators
 # can move/remove that generated directory explicitly and retry from the PBF.
-if [ -e "$data_root/nominatim/PG_VERSION" ]; then
+if nominatim_db_has PG_VERSION; then
   echo "Incomplete Nominatim database found (missing import-finished); move or remove the partial directory before retrying." >&2
   exit 1
 fi
-
-compose() {
-  docker compose --env-file "$env_file" -f "$root/docker-compose.staging.yml" "$@"
-}
 compose --profile maps-import config --quiet
 compose --profile maps-import up -d --wait --wait-timeout 3600 nominatim-import
 compose --profile maps-import stop nominatim-import
 compose --profile maps-import rm -f nominatim-import
-[ -f "$data_root/nominatim/PG_VERSION" ] && [ -f "$data_root/nominatim/import-finished" ] || {
+nominatim_db_has PG_VERSION && nominatim_db_has import-finished || {
   echo "Nominatim import did not complete" >&2
   exit 1
 }

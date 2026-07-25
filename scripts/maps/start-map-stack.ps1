@@ -39,21 +39,31 @@ Options:
 if (-not (Test-Path -LiteralPath $envFile -PathType Leaf)) {
   throw "Staging env file not found: $envFile"
 }
+if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
+  throw 'Docker Engine with Compose v2 is required'
+}
 foreach ($required in @(
   (Join-Path $dataRoot 'maps\region.osm.pbf'),
-  (Join-Path $dataRoot 'maps\seychas-v1.mbtiles'),
-  (Join-Path $dataRoot 'nominatim\PG_VERSION'),
-  (Join-Path $dataRoot 'nominatim\import-finished')
+  (Join-Path $dataRoot 'maps\seychas-v1.mbtiles')
 )) {
   if (-not (Test-Path -LiteralPath $required -PathType Leaf)) {
     throw "Required map runtime artifact is missing: $required. Complete the maps-import profile first."
   }
 }
-if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
-  throw 'Docker Engine with Compose v2 is required'
-}
 
 $compose = Join-Path $root 'docker-compose.staging.yml'
+$env:NOW_DATA_ROOT = $dataRoot
+foreach ($marker in @('PG_VERSION', 'import-finished')) {
+  $checkArgs = @(
+    'compose', '--env-file', $envFile, '-f', $compose,
+    'run', '--rm', '--no-deps', '--entrypoint', 'test', 'nominatim',
+    '-f', "/var/lib/postgresql/16/main/$marker"
+  )
+  & docker @checkArgs
+  if ($LASTEXITCODE -ne 0) {
+    throw "Required Nominatim readiness marker is missing: $marker. Complete the maps-import profile first."
+  }
+}
 $dockerArgs = @('compose', '--env-file', $envFile, '-f', $compose, 'up', '-d')
 if ($wait) { $dockerArgs += '--wait' }
 $dockerArgs += @('martin', 'nominatim')

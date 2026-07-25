@@ -42,18 +42,30 @@ while [ "$#" -gt 0 ]; do
 done
 
 [ -f "$env_file" ] || { echo "Staging env file not found: $env_file" >&2; exit 1; }
+command -v docker >/dev/null 2>&1 || { echo "Docker Compose v2 is required" >&2; exit 1; }
+export NOW_DATA_ROOT="$data_root"
+
+compose() {
+  docker compose --env-file "$env_file" -f "$root/docker-compose.staging.yml" "$@"
+}
+
 for required in \
   "$data_root/maps/region.osm.pbf" \
-  "$data_root/maps/seychas-v1.mbtiles" \
-  "$data_root/nominatim/PG_VERSION" \
-  "$data_root/nominatim/import-finished"; do
+  "$data_root/maps/seychas-v1.mbtiles"; do
   if [ ! -f "$required" ]; then
     echo "Required map runtime artifact is missing: $required" >&2
     echo "Complete the maps-import profile first." >&2
     exit 1
   fi
 done
-command -v docker >/dev/null 2>&1 || { echo "Docker Compose v2 is required" >&2; exit 1; }
+for marker in PG_VERSION import-finished; do
+  if ! compose run --rm --no-deps --entrypoint test nominatim \
+    -f "/var/lib/postgresql/16/main/$marker"; then
+    echo "Required Nominatim readiness marker is missing: $marker" >&2
+    echo "Complete the maps-import profile first." >&2
+    exit 1
+  fi
+done
 
 set -- docker compose --env-file "$env_file" -f "$root/docker-compose.staging.yml" up -d
 if [ "$wait_for_health" = true ]; then set -- "$@" --wait; fi
