@@ -1,8 +1,15 @@
 {
-  "id": "monaco-demo",
-  "name": "Monaco demonstration extract",
+  "schemaVersion": 1,
+  "id": "monaco-geofabrik",
+  "name": "Monaco staging extract",
+  "datasetVersion": "v1",
   "pbfUrl": "https://download.geofabrik.de/europe/monaco-latest.osm.pbf",
-  "sha256Url": "https://download.geofabrik.de/europe/monaco-latest.osm.pbf.md5",
+  "checksumUrl": "https://download.geofabrik.de/europe/monaco-latest.osm.pbf.md5",
+  "checksumAlgorithm": "md5",
+  "checksumFileName": "monaco-latest.osm.pbf",
+  "pinnedSha256": null,
   "output": "infra/maps/data/region.osm.pbf",
+  "metadataOutput": "infra/maps/data/region.osm.pbf.metadata.json",
+  "mbtilesOutput": "infra/maps/data/seychas-v1.mbtiles",
   "maxBytes": 10000000
 }

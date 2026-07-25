@@ -1,5 +1,7 @@
 listen_addresses: 0.0.0.0:3000
-cache_size_mb: 256
+cache_size_mb: 16
 mbtiles:
   sources:
-    seychas: /data/seychas.mbtiles
+    # The public URL is versioned; `seychas` remains an internal implementation
+    # detail used only by the API map gateway.
+    seychas: /data/seychas-v1.mbtiles

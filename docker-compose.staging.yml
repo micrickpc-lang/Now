@@ -1,0 +1,355 @@
+name: seychas-staging
+
+# Default runtime limits total 1088 MiB. The 256 MiB migration job completes
+# before API/worker/Nginx start. The 768 MiB maps-import profile is a mutually
+# exclusive maintenance task and must be targeted explicitly while runtime is down.
+
+x-json-logging: &json-logging
+  driver: json-file
+  options:
+    max-size: "5m"
+    max-file: "3"
+
+x-service-defaults: &service-defaults
+  init: true
+  restart: unless-stopped
+  security_opt:
+    - no-new-privileges:true
+  logging: *json-logging
+
+x-nominatim-environment: &nominatim-environment
+  PBF_PATH: /nominatim/data/region.osm.pbf
+  NOMINATIM_PASSWORD: ${NOMINATIM_PASSWORD:?set NOMINATIM_PASSWORD}
+  IMPORT_WIKIPEDIA: "false"
+  IMPORT_US_POSTCODES: "false"
+  IMPORT_GB_POSTCODES: "false"
+  REPLICATION_URL: ""
+  FREEZE: "true"
+  THREADS: "1"
+
+x-api-environment: &api-environment
+  NODE_ENV: production
+  APP_ENV: staging
+  NODE_OPTIONS: --max-old-space-size=160
+  PORT: "3000"
+  DATABASE_URL: postgresql://${POSTGRES_USER:-seychas}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-seychas}?schema=public
+  REDIS_URL: redis://redis:6379/0
+  JWT_SECRET: ${JWT_SECRET:?set a random secret of at least 32 bytes}
+  TOKEN_HASH_SECRET: ${TOKEN_HASH_SECRET:?set a different random secret of at least 32 bytes}
+  PHONE_HASH_SECRET: ${PHONE_HASH_SECRET:?set a different random secret of at least 32 bytes}
+  LOCATION_MASTER_KEY_BASE64: ${LOCATION_MASTER_KEY_BASE64:?set a random base64-encoded 32-byte key}
+  LOCATION_PRIVACY_SECRET: ${LOCATION_PRIVACY_SECRET:?set a different random secret of at least 32 bytes}
+  APP_ORIGINS: http://${PUBLIC_IP:?set the server IPv4 address}
+  PUBLIC_API_URL: http://${PUBLIC_IP:?set the server IPv4 address}/api/v1
+  TRUST_PROXY_HOPS: "1"
+  ALLOW_EXACT_LOCATION: "false"
+  ALLOW_DEV_OTP: "false"
+  STAGING_TEST_PHONE_ALLOWLIST: ${STAGING_TEST_PHONE_ALLOWLIST:?set comma-separated E.164 staging test numbers}
+  STAGING_TEST_OTP: ${STAGING_TEST_OTP:?set a six-digit staging-only OTP}
+  INTERNAL_MARTIN_URL: http://martin:3000
+  INTERNAL_NOMINATIM_URL: http://nominatim:8080
+  MAP_PUBLIC_BASE_URL: http://${PUBLIC_IP:?set the server IPv4 address}/api/v1/maps
+  MAP_UPSTREAM_TIMEOUT_MS: ${MAP_UPSTREAM_TIMEOUT_MS:-5000}
+  SEARCH_COUNTRY_CODES: ${SEARCH_COUNTRY_CODES:-mc}
+  MINIO_ENDPOINT: media-disabled
+  MINIO_PORT: "9000"
+  MINIO_ACCESS_KEY: disabled-staging-media
+  MINIO_SECRET_KEY: disabled-staging-media
+  MINIO_BUCKET: seychas-media-disabled
+  CLAMAV_HOST: clamav-disabled
+  CLAMAV_PORT: "3310"
+  ALLOW_UNSCANNED_UPLOADS: "false"
+  ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:?set a random secret of at least 32 bytes}
+
+services:
+  postgres:
+    <<: *service-defaults
+    image: postgis/postgis:17-3.5
+    command:
+      - postgres
+      - -c
+      - shared_buffers=64MB
+      - -c
+      - work_mem=4MB
+      - -c
+      - maintenance_work_mem=32MB
+      - -c
+      - max_connections=50
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-seychas}
+      POSTGRES_USER: ${POSTGRES_USER:-seychas}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - ${NOW_DATA_ROOT:-/opt/now/data}/postgres:/var/lib/postgresql/data
+    expose: ["5432"]
+    networks: [private]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    shm_size: 64mb
+    cpus: 0.75
+    mem_limit: 256m
+    mem_reservation: 128m
+    pids_limit: 128
+    stop_grace_period: 60s
+
+  redis:
+    <<: *service-defaults
+    image: redis:8.2-alpine
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --appendfsync
+      - everysec
+      - --maxmemory
+      - 32mb
+      - --maxmemory-policy
+      - noeviction
+    volumes:
+      - ${NOW_DATA_ROOT:-/opt/now/data}/redis:/data
+    expose: ["6379"]
+    networks: [private]
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    cpus: 0.25
+    mem_limit: 64m
+    mem_reservation: 32m
+    pids_limit: 64
+    stop_grace_period: 30s
+
+  martin:
+    <<: *service-defaults
+    image: ghcr.io/maplibre/martin:v0.18.1
+    command: [--config, /config/martin.yaml]
+    volumes:
+      - ./infra/maps/martin.yaml:/config/martin.yaml:ro
+      - ${NOW_DATA_ROOT:-/opt/now/data}/maps:/data:ro
+    expose: ["3000"]
+    networks: [private]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -fsS http://127.0.0.1:3000/seychas | grep -q '"tiles"'
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop: [ALL]
+    cpus: 0.5
+    mem_limit: 64m
+    mem_reservation: 32m
+    pids_limit: 64
+
+  nominatim-import:
+    <<: *service-defaults
+    profiles: [maps-import]
+    image: mediagis/nominatim:4.5
+    restart: "no"
+    environment:
+      <<: *nominatim-environment
+    volumes:
+      - ${NOW_DATA_ROOT:-/opt/now/data}/maps/region.osm.pbf:/nominatim/data/region.osm.pbf:ro
+      - ${NOW_DATA_ROOT:-/opt/now/data}/nominatim:/var/lib/postgresql/16/main
+    networks: [private]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -fsS 'http://127.0.0.1:8080/status.php?format=json' | grep -Eq '"status"[[:space:]]*:[[:space:]]*0|OK'
+      interval: 30s
+      timeout: 10s
+      retries: 60
+      start_period: 30m
+    shm_size: 256mb
+    cpus: 1.5
+    mem_limit: 768m
+    mem_reservation: 512m
+    pids_limit: 384
+    stop_grace_period: 2m
+
+  nominatim:
+    <<: *service-defaults
+    image: mediagis/nominatim:4.5
+    environment:
+      <<: *nominatim-environment
+    volumes:
+      - ${NOW_DATA_ROOT:-/opt/now/data}/maps/region.osm.pbf:/nominatim/data/region.osm.pbf:ro
+      - ${NOW_DATA_ROOT:-/opt/now/data}/nominatim:/var/lib/postgresql/16/main
+    expose: ["8080"]
+    networks: [private]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -fsS 'http://127.0.0.1:8080/status.php?format=json' | grep -Eq '"status"[[:space:]]*:[[:space:]]*0|OK'
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 2m
+    shm_size: 64mb
+    cpus: 0.5
+    mem_limit: 256m
+    mem_reservation: 128m
+    pids_limit: 192
+    stop_grace_period: 90s
+
+  migrate:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+      target: build
+    image: seychas-api-migrate:${IMAGE_TAG:-staging}
+    init: true
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true
+    logging: *json-logging
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=128
+      DATABASE_URL: postgresql://${POSTGRES_USER:-seychas}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-seychas}?schema=public
+    command: [npm, run, db:migrate, --workspace=@seychas/api]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [private]
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+      - /root/.npm:size=16m,mode=0700
+    cpus: 0.75
+    mem_limit: 256m
+    mem_reservation: 128m
+    pids_limit: 192
+
+  api:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    image: seychas-api:${IMAGE_TAG:-staging}
+    environment:
+      <<: *api-environment
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      martin:
+        condition: service_healthy
+      nominatim:
+        condition: service_healthy
+    expose: ["3000"]
+    networks: [edge, private]
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3000/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    cap_drop: [ALL]
+    cpus: 0.75
+    mem_limit: 256m
+    mem_reservation: 128m
+    pids_limit: 192
+    stop_grace_period: 30s
+
+  worker:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: services/worker/Dockerfile
+    image: seychas-worker:${IMAGE_TAG:-staging}
+    environment:
+      NODE_ENV: production
+      APP_ENV: staging
+      NODE_OPTIONS: --max-old-space-size=64
+      DATABASE_URL: postgresql://${POSTGRES_USER:-seychas}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-seychas}?schema=public
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    networks: [private]
+    healthcheck:
+      test:
+        [CMD, node, -e, "try { process.kill(1, 0) } catch { process.exit(1) }"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop: [ALL]
+    cpus: 0.4
+    mem_limit: 128m
+    mem_reservation: 64m
+    pids_limit: 96
+    stop_grace_period: 45s
+
+  nginx:
+    <<: *service-defaults
+    image: nginxinc/nginx-unprivileged:1.29-alpine
+    ports:
+      - name: staging-http
+        target: 8080
+        published: "80"
+        host_ip: "${STAGING_BIND_ADDRESS:-0.0.0.0}"
+        protocol: tcp
+    volumes:
+      - ./infra/nginx/staging.conf:/etc/nginx/nginx.conf:ro
+      - ./infra/maps/assets:/srv/maps:ro
+      - ${NOW_DATA_ROOT:-/opt/now/data}/nginx-map-cache:/var/cache/nginx/maps
+    depends_on:
+      api:
+        condition: service_healthy
+    networks: [edge]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget -q -O /dev/null http://127.0.0.1:8080/_edge/health || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+      - /var/run:size=4m,mode=0755,uid=101,gid=101
+      - /var/cache/nginx/client_temp:size=4m,mode=0700,uid=101,gid=101
+      - /var/cache/nginx/proxy_temp:size=8m,mode=0700,uid=101,gid=101
+      - /var/cache/nginx/fastcgi_temp:size=2m,mode=0700,uid=101,gid=101
+      - /var/cache/nginx/uwsgi_temp:size=2m,mode=0700,uid=101,gid=101
+      - /var/cache/nginx/scgi_temp:size=2m,mode=0700,uid=101,gid=101
+    cap_drop: [ALL]
+    cpus: 0.25
+    mem_limit: 64m
+    mem_reservation: 32m
+    pids_limit: 64
+    stop_grace_period: 20s
+
+networks:
+  edge:
+    driver: bridge
+  private:
+    driver: bridge
+    internal: true

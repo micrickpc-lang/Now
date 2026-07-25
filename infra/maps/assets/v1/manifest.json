@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "styleVersion": "v1",
+  "note": "Deterministic empty sprite and minimal glyph envelope for the label-free staging style",
+  "files": {
+    "sprites/sprite.json": {
+      "bytes": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    "sprites/sprite.png": {
+      "bytes": 68,
+      "sha256": "2aa4fa20701cdd6d8d56046069001186b5267e3ee7d0ef618ad2f4a683723e11"
+    },
+    "sprites/sprite@2x.json": {
+      "bytes": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    "sprites/sprite@2x.png": {
+      "bytes": 68,
+      "sha256": "391590d092f57b13968ea0174fda8726918550f84594de498c72482f1f2e9623"
+    },
+    "glyphs/Noto Sans Regular/0-255.pbf": {
+      "bytes": 28,
+      "sha256": "f77ba7e2928db1fe766b3cb21aede4047042276f14785852fd69b35e1ecb7a50"
+    }
+  }
+}

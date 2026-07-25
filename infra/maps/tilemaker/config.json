@@ -1,0 +1,27 @@
+{
+  "settings": {
+    "minzoom": 0,
+    "maxzoom": 14,
+    "basezoom": 14,
+    "include_ids": false,
+    "combine_below": 12,
+    "name": "Seychas Monaco v1",
+    "version": "1",
+    "description": "Versioned staging vector tiles built from the verified Monaco extract",
+    "compress": "gzip"
+  },
+  "layers": {
+    "water": {
+      "minzoom": 0,
+      "maxzoom": 14
+    },
+    "landuse": {
+      "minzoom": 7,
+      "maxzoom": 14
+    },
+    "transportation": {
+      "minzoom": 7,
+      "maxzoom": 14
+    }
+  }
+}
