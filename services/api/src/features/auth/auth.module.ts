@@ -6,6 +6,7 @@ import {
   DevelopmentOtpProvider,
   OTP_PROVIDER,
   OtpDispatcher,
+  StagingOtpProvider,
   UnconfiguredProductionOtpProvider,
 } from "./otp.provider";
 import { TokenService } from "./token.service";
@@ -17,19 +18,27 @@ import { TokenService } from "./token.service";
     TokenService,
     OtpDispatcher,
     DevelopmentOtpProvider,
+    StagingOtpProvider,
     UnconfiguredProductionOtpProvider,
     {
       provide: OTP_PROVIDER,
       inject: [
         ConfigService,
         DevelopmentOtpProvider,
+        StagingOtpProvider,
         UnconfiguredProductionOtpProvider,
       ],
       useFactory: (
         config: ConfigService,
         development: DevelopmentOtpProvider,
+        staging: StagingOtpProvider,
         production: UnconfiguredProductionOtpProvider,
-      ) => (config.get("NODE_ENV") === "production" ? production : development),
+      ) => {
+        const appEnvironment = config.get<string>("APP_ENV");
+        if (appEnvironment === "staging") return staging;
+        if (appEnvironment === "production") return production;
+        return development;
+      },
     },
   ],
   exports: [TokenService],

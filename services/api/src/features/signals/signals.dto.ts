@@ -5,8 +5,6 @@ import {
   IsDateString,
   IsIn,
   IsInt,
-  IsLatitude,
-  IsLongitude,
   IsOptional,
   IsString,
   IsUUID,
@@ -57,22 +55,8 @@ export class CreateSignalDto {
   locationMode!: "NONE" | "CITY" | "DISTRICT" | "APPROXIMATE";
 
   @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  cityLabel?: string;
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  districtLabel?: string;
-
-  @IsOptional()
-  @IsLatitude()
-  latitude?: number;
-
-  @IsOptional()
-  @IsLongitude()
-  longitude?: number;
+  @IsUUID("4")
+  safeLocationId?: string;
 
   @Type(() => Number)
   @IsInt()

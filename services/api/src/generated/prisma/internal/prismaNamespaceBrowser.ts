@@ -72,6 +72,7 @@ export const ModelName = {
   RoomPollOption: 'RoomPollOption',
   RoomPollVote: 'RoomPollVote',
   LocationShare: 'LocationShare',
+  SafeLocationZone: 'SafeLocationZone',
   Conversation: 'Conversation',
   ConversationMember: 'ConversationMember',
   ConversationInvite: 'ConversationInvite',
@@ -388,6 +389,24 @@ export const LocationShareScalarFieldEnum = {
 } as const
 
 export type LocationShareScalarFieldEnum = (typeof LocationShareScalarFieldEnum)[keyof typeof LocationShareScalarFieldEnum]
+
+
+export const SafeLocationZoneScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  signalId: 'signalId',
+  mode: 'mode',
+  radiusMeters: 'radiusMeters',
+  description: 'description',
+  cityLabel: 'cityLabel',
+  districtLabel: 'districtLabel',
+  expiresAt: 'expiresAt',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SafeLocationZoneScalarFieldEnum = (typeof SafeLocationZoneScalarFieldEnum)[keyof typeof SafeLocationZoneScalarFieldEnum]
 
 
 export const ConversationScalarFieldEnum = {

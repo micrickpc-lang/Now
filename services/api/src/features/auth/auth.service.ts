@@ -12,7 +12,7 @@ import { AuditService } from "../../common/audit.service";
 import { CryptoService } from "../../common/crypto.service";
 import { PrismaService } from "../../common/prisma.service";
 import type { VerifyOtpDto } from "./auth.dto";
-import { OtpDispatcher } from "./otp.provider";
+import { OtpDispatcher, stagingPhoneAllowlist } from "./otp.provider";
 import { TokenService } from "./token.service";
 
 const GENERIC_OTP_RESPONSE = { accepted: true, retryAfterSeconds: 60 } as const;
@@ -43,11 +43,7 @@ export class AuthService {
     ]);
     if (phoneRecent > 0 || ipRecent >= 5) return GENERIC_OTP_RESPONSE;
 
-    const code =
-      this.config.get("NODE_ENV") === "development" &&
-      this.config.get("DEV_OTP_CODE")
-        ? this.config.getOrThrow<string>("DEV_OTP_CODE")
-        : String(randomInt(100000, 1_000_000));
+    const code = this.issueOtpCode(phone);
     await this.prisma.otpChallenge.create({
       data: {
         phoneHash,
@@ -259,5 +255,19 @@ export class AuthService {
     if (!parsed?.isValid())
       throw new BadRequestException("Некорректный номер телефона");
     return parsed.number;
+  }
+
+  private issueOtpCode(phone: string): string {
+    const appEnvironment = this.config.get<string>("APP_ENV");
+    if (appEnvironment === "development" && this.config.get("DEV_OTP_CODE")) {
+      return this.config.getOrThrow<string>("DEV_OTP_CODE");
+    }
+    if (
+      appEnvironment === "staging" &&
+      stagingPhoneAllowlist(this.config).has(phone)
+    ) {
+      return this.config.getOrThrow<string>("STAGING_TEST_OTP");
+    }
+    return String(randomInt(100000, 1_000_000));
   }
 }

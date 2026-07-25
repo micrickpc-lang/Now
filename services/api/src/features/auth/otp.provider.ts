@@ -7,6 +7,15 @@ export interface OtpProvider {
   send(phone: string, code: string): Promise<void>;
 }
 
+export function stagingPhoneAllowlist(config: ConfigService): Set<string> {
+  return new Set(
+    (config.get<string>("STAGING_TEST_PHONE_ALLOWLIST") ?? "")
+      .split(",")
+      .map((phone) => phone.trim())
+      .filter(Boolean),
+  );
+}
+
 @Injectable()
 export class DevelopmentOtpProvider implements OtpProvider {
   private readonly logger = new Logger("DevelopmentOtpProvider");
@@ -20,10 +29,29 @@ export class DevelopmentOtpProvider implements OtpProvider {
     ) {
       throw new Error("Development OTP provider is disabled");
     }
-    const masked = `${phone.slice(0, 3)}***${phone.slice(-2)}`;
-    this.logger.warn(
-      JSON.stringify({ event: "development_otp", phone: masked, code }),
-    );
+    void phone;
+    void code;
+    this.logger.warn({ event: "development_otp_dispatched" });
+    return Promise.resolve();
+  }
+}
+
+@Injectable()
+export class StagingOtpProvider implements OtpProvider {
+  constructor(private readonly config: ConfigService) {}
+
+  send(phone: string, code: string): Promise<void> {
+    if (this.config.get("APP_ENV") !== "staging") {
+      throw new Error("Staging OTP provider is disabled");
+    }
+    if (!stagingPhoneAllowlist(this.config).has(phone)) {
+      // Keep the public OTP response indistinguishable while no real SMS
+      // provider is connected to staging.
+      return Promise.resolve();
+    }
+    if (code !== this.config.getOrThrow<string>("STAGING_TEST_OTP")) {
+      throw new Error("Invalid staging OTP dispatch configuration");
+    }
     return Promise.resolve();
   }
 }

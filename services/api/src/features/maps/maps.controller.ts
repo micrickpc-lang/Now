@@ -10,8 +10,12 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import type { Response } from "express";
-import { Public } from "../../common/http";
-import { ApproximateLocationDto } from "./maps.dto";
+import { CurrentAuth, Public } from "../../common/http";
+import {
+  ApproximateLocationDto,
+  MapSearchDto,
+  ReverseLocationDto,
+} from "./maps.dto";
 import { MapsService } from "./maps.service";
 
 @ApiTags("maps")
@@ -24,6 +28,12 @@ export class MapsController {
   @Public()
   style() {
     return this.maps.style();
+  }
+
+  @Get("tilejson.json")
+  @Public()
+  tileJson() {
+    return this.maps.tileJson();
   }
 
   @Get("tiles/:z/:x/:y")
@@ -44,17 +54,20 @@ export class MapsController {
   }
 
   @Get("search")
-  search(@Query("q") query: string) {
-    return this.maps.search(query ?? "");
+  search(@Query() query: MapSearchDto) {
+    return this.maps.search(query.q);
   }
 
   @Get("reverse")
-  reverse(@Query("lat") lat: string, @Query("lon") lon: string) {
-    return this.maps.reverse(Number(lat), Number(lon));
+  reverse(@Query() query: ReverseLocationDto) {
+    return this.maps.reverse(query.lat, query.lon);
   }
 
   @Post("approximate-location")
-  approximate(@Body() dto: ApproximateLocationDto) {
-    return this.maps.approximate(dto.latitude, dto.longitude);
+  approximate(
+    @CurrentAuth() auth: { userId: string },
+    @Body() dto: ApproximateLocationDto,
+  ) {
+    return this.maps.createSafeLocation(auth.userId, dto);
   }
 }

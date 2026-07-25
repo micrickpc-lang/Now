@@ -310,6 +310,7 @@ export type SignalWhereInput = {
   participants?: Prisma.SignalParticipantListRelationFilter
   room?: Prisma.XOR<Prisma.TemporaryRoomNullableScalarRelationFilter, Prisma.TemporaryRoomWhereInput> | null
   reports?: Prisma.ReportListRelationFilter
+  safeLocationZone?: Prisma.XOR<Prisma.SafeLocationZoneNullableScalarRelationFilter, Prisma.SafeLocationZoneWhereInput> | null
 }
 
 export type SignalOrderByWithRelationInput = {
@@ -335,6 +336,7 @@ export type SignalOrderByWithRelationInput = {
   participants?: Prisma.SignalParticipantOrderByRelationAggregateInput
   room?: Prisma.TemporaryRoomOrderByWithRelationInput
   reports?: Prisma.ReportOrderByRelationAggregateInput
+  safeLocationZone?: Prisma.SafeLocationZoneOrderByWithRelationInput
 }
 
 export type SignalWhereUniqueInput = Prisma.AtLeast<{
@@ -363,6 +365,7 @@ export type SignalWhereUniqueInput = Prisma.AtLeast<{
   participants?: Prisma.SignalParticipantListRelationFilter
   room?: Prisma.XOR<Prisma.TemporaryRoomNullableScalarRelationFilter, Prisma.TemporaryRoomWhereInput> | null
   reports?: Prisma.ReportListRelationFilter
+  safeLocationZone?: Prisma.XOR<Prisma.SafeLocationZoneNullableScalarRelationFilter, Prisma.SafeLocationZoneWhereInput> | null
 }, "id">
 
 export type SignalOrderByWithAggregationInput = {
@@ -433,6 +436,7 @@ export type SignalCreateInput = {
   participants?: Prisma.SignalParticipantCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateInput = {
@@ -457,6 +461,7 @@ export type SignalUncheckedCreateInput = {
   participants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomUncheckedCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUpdateInput = {
@@ -481,6 +486,7 @@ export type SignalUpdateInput = {
   participants?: Prisma.SignalParticipantUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateInput = {
@@ -505,6 +511,7 @@ export type SignalUncheckedUpdateInput = {
   participants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUncheckedUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalCreateManyInput = {
@@ -758,6 +765,22 @@ export type SignalUpdateOneRequiredWithoutRoomNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SignalUpdateToOneWithWhereWithoutRoomInput, Prisma.SignalUpdateWithoutRoomInput>, Prisma.SignalUncheckedUpdateWithoutRoomInput>
 }
 
+export type SignalCreateNestedOneWithoutSafeLocationZoneInput = {
+  create?: Prisma.XOR<Prisma.SignalCreateWithoutSafeLocationZoneInput, Prisma.SignalUncheckedCreateWithoutSafeLocationZoneInput>
+  connectOrCreate?: Prisma.SignalCreateOrConnectWithoutSafeLocationZoneInput
+  connect?: Prisma.SignalWhereUniqueInput
+}
+
+export type SignalUpdateOneWithoutSafeLocationZoneNestedInput = {
+  create?: Prisma.XOR<Prisma.SignalCreateWithoutSafeLocationZoneInput, Prisma.SignalUncheckedCreateWithoutSafeLocationZoneInput>
+  connectOrCreate?: Prisma.SignalCreateOrConnectWithoutSafeLocationZoneInput
+  upsert?: Prisma.SignalUpsertWithoutSafeLocationZoneInput
+  disconnect?: Prisma.SignalWhereInput | boolean
+  delete?: Prisma.SignalWhereInput | boolean
+  connect?: Prisma.SignalWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SignalUpdateToOneWithWhereWithoutSafeLocationZoneInput, Prisma.SignalUpdateWithoutSafeLocationZoneInput>, Prisma.SignalUncheckedUpdateWithoutSafeLocationZoneInput>
+}
+
 export type SignalCreateNestedOneWithoutReportsInput = {
   create?: Prisma.XOR<Prisma.SignalCreateWithoutReportsInput, Prisma.SignalUncheckedCreateWithoutReportsInput>
   connectOrCreate?: Prisma.SignalCreateOrConnectWithoutReportsInput
@@ -795,6 +818,7 @@ export type SignalCreateWithoutAuthorInput = {
   participants?: Prisma.SignalParticipantCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutAuthorInput = {
@@ -818,6 +842,7 @@ export type SignalUncheckedCreateWithoutAuthorInput = {
   participants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomUncheckedCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedCreateNestedOneWithoutSignalInput
 }
 
 export type SignalCreateOrConnectWithoutAuthorInput = {
@@ -889,6 +914,7 @@ export type SignalCreateWithoutVisibilityInput = {
   participants?: Prisma.SignalParticipantCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutVisibilityInput = {
@@ -912,6 +938,7 @@ export type SignalUncheckedCreateWithoutVisibilityInput = {
   participants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomUncheckedCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedCreateNestedOneWithoutSignalInput
 }
 
 export type SignalCreateOrConnectWithoutVisibilityInput = {
@@ -951,6 +978,7 @@ export type SignalUpdateWithoutVisibilityInput = {
   participants?: Prisma.SignalParticipantUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutVisibilityInput = {
@@ -974,6 +1002,7 @@ export type SignalUncheckedUpdateWithoutVisibilityInput = {
   participants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUncheckedUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalCreateWithoutJoinRequestsInput = {
@@ -997,6 +1026,7 @@ export type SignalCreateWithoutJoinRequestsInput = {
   participants?: Prisma.SignalParticipantCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutJoinRequestsInput = {
@@ -1020,6 +1050,7 @@ export type SignalUncheckedCreateWithoutJoinRequestsInput = {
   participants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomUncheckedCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedCreateNestedOneWithoutSignalInput
 }
 
 export type SignalCreateOrConnectWithoutJoinRequestsInput = {
@@ -1059,6 +1090,7 @@ export type SignalUpdateWithoutJoinRequestsInput = {
   participants?: Prisma.SignalParticipantUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutJoinRequestsInput = {
@@ -1082,6 +1114,7 @@ export type SignalUncheckedUpdateWithoutJoinRequestsInput = {
   participants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUncheckedUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalCreateWithoutParticipantsInput = {
@@ -1105,6 +1138,7 @@ export type SignalCreateWithoutParticipantsInput = {
   joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutParticipantsInput = {
@@ -1128,6 +1162,7 @@ export type SignalUncheckedCreateWithoutParticipantsInput = {
   joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomUncheckedCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedCreateNestedOneWithoutSignalInput
 }
 
 export type SignalCreateOrConnectWithoutParticipantsInput = {
@@ -1167,6 +1202,7 @@ export type SignalUpdateWithoutParticipantsInput = {
   joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutParticipantsInput = {
@@ -1190,6 +1226,7 @@ export type SignalUncheckedUpdateWithoutParticipantsInput = {
   joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUncheckedUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalCreateWithoutRoomInput = {
@@ -1213,6 +1250,7 @@ export type SignalCreateWithoutRoomInput = {
   joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutSignalInput
   participants?: Prisma.SignalParticipantCreateNestedManyWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutRoomInput = {
@@ -1236,6 +1274,7 @@ export type SignalUncheckedCreateWithoutRoomInput = {
   joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutSignalInput
   participants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutSignalInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedCreateNestedOneWithoutSignalInput
 }
 
 export type SignalCreateOrConnectWithoutRoomInput = {
@@ -1275,6 +1314,7 @@ export type SignalUpdateWithoutRoomInput = {
   joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutSignalNestedInput
   participants?: Prisma.SignalParticipantUpdateManyWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutRoomInput = {
@@ -1297,6 +1337,119 @@ export type SignalUncheckedUpdateWithoutRoomInput = {
   visibility?: Prisma.SignalVisibilityUncheckedUpdateManyWithoutSignalNestedInput
   joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutSignalNestedInput
   participants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutSignalNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedUpdateOneWithoutSignalNestedInput
+}
+
+export type SignalCreateWithoutSafeLocationZoneInput = {
+  id?: string
+  category: string
+  text?: string | null
+  emoji?: string | null
+  startsAt: Date | string
+  expiresAt: Date | string
+  format: $Enums.SignalFormat
+  locationMode?: $Enums.LocationMode
+  cityLabel?: string | null
+  districtLabel?: string | null
+  maxParticipants?: number
+  state?: $Enums.SignalState
+  extendedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  author: Prisma.UserCreateNestedOneWithoutSignalsInput
+  visibility?: Prisma.SignalVisibilityCreateNestedManyWithoutSignalInput
+  joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutSignalInput
+  participants?: Prisma.SignalParticipantCreateNestedManyWithoutSignalInput
+  room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
+  reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
+}
+
+export type SignalUncheckedCreateWithoutSafeLocationZoneInput = {
+  id?: string
+  authorId: string
+  category: string
+  text?: string | null
+  emoji?: string | null
+  startsAt: Date | string
+  expiresAt: Date | string
+  format: $Enums.SignalFormat
+  locationMode?: $Enums.LocationMode
+  cityLabel?: string | null
+  districtLabel?: string | null
+  maxParticipants?: number
+  state?: $Enums.SignalState
+  extendedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  visibility?: Prisma.SignalVisibilityUncheckedCreateNestedManyWithoutSignalInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutSignalInput
+  participants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutSignalInput
+  room?: Prisma.TemporaryRoomUncheckedCreateNestedOneWithoutSignalInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutSignalInput
+}
+
+export type SignalCreateOrConnectWithoutSafeLocationZoneInput = {
+  where: Prisma.SignalWhereUniqueInput
+  create: Prisma.XOR<Prisma.SignalCreateWithoutSafeLocationZoneInput, Prisma.SignalUncheckedCreateWithoutSafeLocationZoneInput>
+}
+
+export type SignalUpsertWithoutSafeLocationZoneInput = {
+  update: Prisma.XOR<Prisma.SignalUpdateWithoutSafeLocationZoneInput, Prisma.SignalUncheckedUpdateWithoutSafeLocationZoneInput>
+  create: Prisma.XOR<Prisma.SignalCreateWithoutSafeLocationZoneInput, Prisma.SignalUncheckedCreateWithoutSafeLocationZoneInput>
+  where?: Prisma.SignalWhereInput
+}
+
+export type SignalUpdateToOneWithWhereWithoutSafeLocationZoneInput = {
+  where?: Prisma.SignalWhereInput
+  data: Prisma.XOR<Prisma.SignalUpdateWithoutSafeLocationZoneInput, Prisma.SignalUncheckedUpdateWithoutSafeLocationZoneInput>
+}
+
+export type SignalUpdateWithoutSafeLocationZoneInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  text?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emoji?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  format?: Prisma.EnumSignalFormatFieldUpdateOperationsInput | $Enums.SignalFormat
+  locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
+  cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
+  state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
+  extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneRequiredWithoutSignalsNestedInput
+  visibility?: Prisma.SignalVisibilityUpdateManyWithoutSignalNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutSignalNestedInput
+  participants?: Prisma.SignalParticipantUpdateManyWithoutSignalNestedInput
+  room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
+}
+
+export type SignalUncheckedUpdateWithoutSafeLocationZoneInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  text?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emoji?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  format?: Prisma.EnumSignalFormatFieldUpdateOperationsInput | $Enums.SignalFormat
+  locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
+  cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
+  state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
+  extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  visibility?: Prisma.SignalVisibilityUncheckedUpdateManyWithoutSignalNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutSignalNestedInput
+  participants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutSignalNestedInput
+  room?: Prisma.TemporaryRoomUncheckedUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutSignalNestedInput
 }
 
@@ -1321,6 +1474,7 @@ export type SignalCreateWithoutReportsInput = {
   joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutSignalInput
   participants?: Prisma.SignalParticipantCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutReportsInput = {
@@ -1344,6 +1498,7 @@ export type SignalUncheckedCreateWithoutReportsInput = {
   joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutSignalInput
   participants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomUncheckedCreateNestedOneWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedCreateNestedOneWithoutSignalInput
 }
 
 export type SignalCreateOrConnectWithoutReportsInput = {
@@ -1383,6 +1538,7 @@ export type SignalUpdateWithoutReportsInput = {
   joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutSignalNestedInput
   participants?: Prisma.SignalParticipantUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutReportsInput = {
@@ -1406,6 +1562,7 @@ export type SignalUncheckedUpdateWithoutReportsInput = {
   joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutSignalNestedInput
   participants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUncheckedUpdateOneWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalCreateManyAuthorInput = {
@@ -1447,6 +1604,7 @@ export type SignalUpdateWithoutAuthorInput = {
   participants?: Prisma.SignalParticipantUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutAuthorInput = {
@@ -1470,6 +1628,7 @@ export type SignalUncheckedUpdateWithoutAuthorInput = {
   participants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUncheckedUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateManyWithoutAuthorInput = {
@@ -1571,6 +1730,7 @@ export type SignalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   participants?: boolean | Prisma.Signal$participantsArgs<ExtArgs>
   room?: boolean | Prisma.Signal$roomArgs<ExtArgs>
   reports?: boolean | Prisma.Signal$reportsArgs<ExtArgs>
+  safeLocationZone?: boolean | Prisma.Signal$safeLocationZoneArgs<ExtArgs>
   _count?: boolean | Prisma.SignalCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["signal"]>
 
@@ -1641,6 +1801,7 @@ export type SignalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   participants?: boolean | Prisma.Signal$participantsArgs<ExtArgs>
   room?: boolean | Prisma.Signal$roomArgs<ExtArgs>
   reports?: boolean | Prisma.Signal$reportsArgs<ExtArgs>
+  safeLocationZone?: boolean | Prisma.Signal$safeLocationZoneArgs<ExtArgs>
   _count?: boolean | Prisma.SignalCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SignalIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1659,6 +1820,7 @@ export type $SignalPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     participants: Prisma.$SignalParticipantPayload<ExtArgs>[]
     room: Prisma.$TemporaryRoomPayload<ExtArgs> | null
     reports: Prisma.$ReportPayload<ExtArgs>[]
+    safeLocationZone: Prisma.$SafeLocationZonePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2077,6 +2239,7 @@ export interface Prisma__SignalClient<T, Null = never, ExtArgs extends runtime.T
   participants<T extends Prisma.Signal$participantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Signal$participantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SignalParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   room<T extends Prisma.Signal$roomArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Signal$roomArgs<ExtArgs>>): Prisma.Prisma__TemporaryRoomClient<runtime.Types.Result.GetResult<Prisma.$TemporaryRoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   reports<T extends Prisma.Signal$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Signal$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  safeLocationZone<T extends Prisma.Signal$safeLocationZoneArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Signal$safeLocationZoneArgs<ExtArgs>>): Prisma.Prisma__SafeLocationZoneClient<runtime.Types.Result.GetResult<Prisma.$SafeLocationZonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2635,6 +2798,25 @@ export type Signal$reportsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.ReportScalarFieldEnum | Prisma.ReportScalarFieldEnum[]
+}
+
+/**
+ * Signal.safeLocationZone
+ */
+export type Signal$safeLocationZoneArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SafeLocationZone
+   */
+  select?: Prisma.SafeLocationZoneSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SafeLocationZone
+   */
+  omit?: Prisma.SafeLocationZoneOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SafeLocationZoneInclude<ExtArgs> | null
+  where?: Prisma.SafeLocationZoneWhereInput
 }
 
 /**

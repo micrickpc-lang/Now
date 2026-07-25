@@ -1,5 +1,14 @@
 import { Type } from "class-transformer";
-import { IsLatitude, IsLongitude, IsString, Length } from "class-validator";
+import {
+  IsIn,
+  IsLatitude,
+  IsLongitude,
+  IsNumber,
+  IsString,
+  Length,
+  Max,
+  Min,
+} from "class-validator";
 
 export class MapSearchDto {
   @IsString()
@@ -7,7 +16,20 @@ export class MapSearchDto {
   q!: string;
 }
 
+export class ReverseLocationDto {
+  @Type(() => Number)
+  @IsLatitude()
+  lat!: number;
+
+  @Type(() => Number)
+  @IsLongitude()
+  lon!: number;
+}
+
 export class ApproximateLocationDto {
+  @IsIn(["CITY", "DISTRICT", "APPROXIMATE"])
+  mode!: "CITY" | "DISTRICT" | "APPROXIMATE";
+
   @Type(() => Number)
   @IsLatitude()
   latitude!: number;
@@ -15,6 +37,12 @@ export class ApproximateLocationDto {
   @Type(() => Number)
   @IsLongitude()
   longitude!: number;
+
+  @Type(() => Number)
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  @Min(0)
+  @Max(100_000)
+  accuracyMeters!: number;
 }
 
 export interface RoutingProvider {

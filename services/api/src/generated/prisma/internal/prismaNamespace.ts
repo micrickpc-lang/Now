@@ -418,6 +418,7 @@ export const ModelName = {
   RoomPollOption: 'RoomPollOption',
   RoomPollVote: 'RoomPollVote',
   LocationShare: 'LocationShare',
+  SafeLocationZone: 'SafeLocationZone',
   Conversation: 'Conversation',
   ConversationMember: 'ConversationMember',
   ConversationInvite: 'ConversationInvite',
@@ -460,7 +461,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userProfile" | "device" | "authSession" | "otpChallenge" | "friendship" | "friendshipInvite" | "circle" | "circleMember" | "signal" | "signalVisibility" | "signalJoinRequest" | "signalParticipant" | "temporaryRoom" | "roomMember" | "roomMessage" | "roomReaction" | "roomPoll" | "roomPollOption" | "roomPollVote" | "locationShare" | "conversation" | "conversationMember" | "conversationInvite" | "message" | "messageEdit" | "messageAttachment" | "messageReaction" | "messageReadReceipt" | "messageDelivery" | "pinnedMessage" | "conversationDraft" | "chatMute" | "chatAuditEvent" | "memory" | "memoryParticipant" | "mediaFile" | "block" | "report" | "adminUser" | "moderationAction" | "notificationToken" | "consentRecord" | "auditLog" | "featureFlag" | "forbiddenWord" | "analyticsEvent" | "deletionReport"
+    modelProps: "user" | "userProfile" | "device" | "authSession" | "otpChallenge" | "friendship" | "friendshipInvite" | "circle" | "circleMember" | "signal" | "signalVisibility" | "signalJoinRequest" | "signalParticipant" | "temporaryRoom" | "roomMember" | "roomMessage" | "roomReaction" | "roomPoll" | "roomPollOption" | "roomPollVote" | "locationShare" | "safeLocationZone" | "conversation" | "conversationMember" | "conversationInvite" | "message" | "messageEdit" | "messageAttachment" | "messageReaction" | "messageReadReceipt" | "messageDelivery" | "pinnedMessage" | "conversationDraft" | "chatMute" | "chatAuditEvent" | "memory" | "memoryParticipant" | "mediaFile" | "block" | "report" | "adminUser" | "moderationAction" | "notificationToken" | "consentRecord" | "auditLog" | "featureFlag" | "forbiddenWord" | "analyticsEvent" | "deletionReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2015,6 +2016,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LocationShareCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LocationShareCountAggregateOutputType> | number
+        }
+      }
+    }
+    SafeLocationZone: {
+      payload: Prisma.$SafeLocationZonePayload<ExtArgs>
+      fields: Prisma.SafeLocationZoneFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SafeLocationZoneFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SafeLocationZoneFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>
+        }
+        findFirst: {
+          args: Prisma.SafeLocationZoneFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SafeLocationZoneFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>
+        }
+        findMany: {
+          args: Prisma.SafeLocationZoneFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>[]
+        }
+        create: {
+          args: Prisma.SafeLocationZoneCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>
+        }
+        createMany: {
+          args: Prisma.SafeLocationZoneCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SafeLocationZoneCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>[]
+        }
+        delete: {
+          args: Prisma.SafeLocationZoneDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>
+        }
+        update: {
+          args: Prisma.SafeLocationZoneUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>
+        }
+        deleteMany: {
+          args: Prisma.SafeLocationZoneDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SafeLocationZoneUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SafeLocationZoneUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>[]
+        }
+        upsert: {
+          args: Prisma.SafeLocationZoneUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>
+        }
+        aggregate: {
+          args: Prisma.SafeLocationZoneAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSafeLocationZone>
+        }
+        groupBy: {
+          args: Prisma.SafeLocationZoneGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SafeLocationZoneGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SafeLocationZoneCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SafeLocationZoneCountAggregateOutputType> | number
         }
       }
     }
@@ -4328,6 +4403,24 @@ export const LocationShareScalarFieldEnum = {
 export type LocationShareScalarFieldEnum = (typeof LocationShareScalarFieldEnum)[keyof typeof LocationShareScalarFieldEnum]
 
 
+export const SafeLocationZoneScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  signalId: 'signalId',
+  mode: 'mode',
+  radiusMeters: 'radiusMeters',
+  description: 'description',
+  cityLabel: 'cityLabel',
+  districtLabel: 'districtLabel',
+  expiresAt: 'expiresAt',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SafeLocationZoneScalarFieldEnum = (typeof SafeLocationZoneScalarFieldEnum)[keyof typeof SafeLocationZoneScalarFieldEnum]
+
+
 export const ConversationScalarFieldEnum = {
   id: 'id',
   type: 'type',
@@ -5188,6 +5281,7 @@ export type GlobalOmitConfig = {
   roomPollOption?: Prisma.RoomPollOptionOmit
   roomPollVote?: Prisma.RoomPollVoteOmit
   locationShare?: Prisma.LocationShareOmit
+  safeLocationZone?: Prisma.SafeLocationZoneOmit
   conversation?: Prisma.ConversationOmit
   conversationMember?: Prisma.ConversationMemberOmit
   conversationInvite?: Prisma.ConversationInviteOmit

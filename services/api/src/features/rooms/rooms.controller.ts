@@ -16,6 +16,14 @@ import { RoomsService } from "./rooms.service";
 export class RoomsController {
   constructor(private readonly rooms: RoomsService) {}
 
+  @Get(":id/location-share")
+  locationShares(
+    @CurrentAuth() auth: { userId: string },
+    @Param("id") id: string,
+  ) {
+    return this.rooms.locationShares(auth.userId, id);
+  }
+
   @Get(":id")
   get(@CurrentAuth() auth: { userId: string }, @Param("id") id: string) {
     return this.rooms.get(auth.userId, id);

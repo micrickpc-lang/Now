@@ -1,11 +1,5 @@
 import type { LoggerService } from "@nestjs/common";
-
-const redact = (value: unknown): unknown => {
-  if (typeof value !== "string") return value;
-  return value
-    .replace(/Bearer\s+[A-Za-z0-9._-]+/gu, "Bearer [REDACTED]")
-    .replace(/\+?\d[\d\s()-]{7,}/gu, "[PHONE_REDACTED]");
-};
+import { redactSensitive } from "./common/sensitive-data";
 
 export class JsonLogger implements LoggerService {
   log(message: unknown, context?: string) {
@@ -34,8 +28,8 @@ export class JsonLogger implements LoggerService {
       level,
       time: new Date().toISOString(),
       context,
-      message: redact(message),
-      ...(trace && { trace }),
+      message: redactSensitive(message),
+      ...(trace && { trace: redactSensitive(trace) }),
     });
     if (level === "error") process.stderr.write(`${entry}\n`);
     else process.stdout.write(`${entry}\n`);

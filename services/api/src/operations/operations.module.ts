@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
+import { MapsModule } from "../features/maps/maps.module";
 import { OperationsController } from "./operations.controller";
 
-@Module({ controllers: [OperationsController] })
+@Module({ imports: [MapsModule], controllers: [OperationsController] })
 export class OperationsModule {}

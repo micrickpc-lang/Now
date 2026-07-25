@@ -25,6 +25,11 @@ async function sweep() {
     const locations = await client.query(
       "DELETE FROM location_shares WHERE expires_at <= now() RETURNING id",
     );
+    const expiredSafeLocations = await client.query(
+      `DELETE FROM safe_location_zones
+       WHERE expires_at <= now()
+       RETURNING id`,
+    );
     const signals = await client.query(`
       UPDATE signals SET state = 'EXPIRED', updated_at = now()
       WHERE expires_at <= now() AND state IN ('ACTIVE', 'FULL') RETURNING id
@@ -49,6 +54,7 @@ async function sweep() {
         level: "info",
         event: "ttl_sweep",
         expiredLocations: locations.rowCount,
+        expiredSafeLocations: expiredSafeLocations.rowCount,
         expiredSignals: signals.rowCount,
         archivedRooms: rooms.rowCount,
         time: new Date().toISOString(),

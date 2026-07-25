@@ -1,6 +1,7 @@
 import { ValidationPipe } from "@nestjs/common";
 import type { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
+import { ConfigService } from "@nestjs/config";
 import request from "supertest";
 import { AppModule } from "../src/app.module";
 import { PrismaService } from "../src/common/prisma.service";
@@ -11,11 +12,23 @@ describe("private social main flow (real PostGIS)", () => {
   const suffix = String(Date.now()).slice(-7);
   const phoneA = `+7991${suffix}`;
   const phoneB = `+7992${suffix}`;
+  const phoneC = `+7993${suffix}`;
 
   beforeAll(async () => {
-    const module = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+    const module = await Test.createTestingModule({ imports: [AppModule] })
+      .overrideProvider(ConfigService)
+      .useValue(
+        new ConfigService({
+          ...process.env,
+          APP_ENV: process.env.APP_ENV ?? "development",
+          // The transport is in-memory HTTP, but this isolated integration
+          // fixture exercises the HTTPS-gated exact-share service contract.
+          ALLOW_EXACT_LOCATION: "true",
+          LOCATION_PRIVACY_SECRET:
+            "integration-location-privacy-secret-at-least-32-bytes",
+        }),
+      )
+      .compile();
     app = module.createNestApplication();
     app.getHttpAdapter().getInstance().set("trust proxy", 1);
     app.setGlobalPrefix("api/v1");
@@ -62,8 +75,10 @@ describe("private social main flow (real PostGIS)", () => {
   it("enforces friendship, room membership and exact-location revocation", async () => {
     const a = await register(phoneA, `e2e-a-${suffix}`, "198.51.100.10");
     const b = await register(phoneB, `e2e-b-${suffix}`, "198.51.100.11");
+    const c = await register(phoneC, `e2e-c-${suffix}`, "198.51.100.12");
     const authA = { Authorization: `Bearer ${a.accessToken}` };
     const authB = { Authorization: `Bearer ${b.accessToken}` };
+    const authC = { Authorization: `Bearer ${c.accessToken}` };
 
     const invite = await request(app.getHttpServer())
       .post("/api/v1/friends/invites")
@@ -86,6 +101,32 @@ describe("private social main flow (real PostGIS)", () => {
       })
       .expect(201);
 
+    const sourcePoint = { latitude: 43.7384, longitude: 7.4246 };
+    const safeLocation = await request(app.getHttpServer())
+      .post("/api/v1/maps/approximate-location")
+      .set(authA)
+      .send({
+        mode: "APPROXIMATE",
+        ...sourcePoint,
+        accuracyMeters: 12,
+      })
+      .expect(201);
+    expect(safeLocation.body.radiusMeters).toBeGreaterThanOrEqual(2_000);
+    expect(safeLocation.body.center).not.toEqual(sourcePoint);
+    const storedSafeLocation = await prisma.$queryRaw<
+      Array<{ latitude: number; longitude: number; radiusMeters: number }>
+    >`
+      SELECT
+        ST_Y("safe_center"::geometry) AS "latitude",
+        ST_X("safe_center"::geometry) AS "longitude",
+        "radius_meters" AS "radiusMeters"
+      FROM "safe_location_zones"
+      WHERE "id" = ${safeLocation.body.safeLocationId}::uuid
+    `;
+    expect(storedSafeLocation).toHaveLength(1);
+    expect(storedSafeLocation[0]).not.toMatchObject(sourcePoint);
+    expect(storedSafeLocation[0]?.radiusMeters).toBeGreaterThanOrEqual(2_000);
+
     const signal = await request(app.getHttpServer())
       .post("/api/v1/signals")
       .set(authA)
@@ -95,7 +136,8 @@ describe("private social main flow (real PostGIS)", () => {
         startsAt: new Date().toISOString(),
         durationMinutes: 60,
         format: "OFFLINE",
-        locationMode: "NONE",
+        locationMode: "APPROXIMATE",
+        safeLocationId: safeLocation.body.safeLocationId,
         maxParticipants: 4,
         circleIds: [circle.body.id],
         userIds: [],
@@ -109,6 +151,14 @@ describe("private social main flow (real PostGIS)", () => {
     expect(
       feed.body.some((row: { id: string }) => row.id === signal.body.id),
     ).toBe(true);
+    const visibleSignal = feed.body.find(
+      (row: { id: string }) => row.id === signal.body.id,
+    );
+    expect(visibleSignal.safeLocation).toMatchObject({
+      mode: "APPROXIMATE",
+      radiusMeters: expect.any(Number),
+    });
+    expect(visibleSignal.safeLocation.center).not.toEqual(sourcePoint);
     await request(app.getHttpServer())
       .patch(`/api/v1/signals/${signal.body.id}`)
       .set(authB)
@@ -155,10 +205,19 @@ describe("private social main flow (real PostGIS)", () => {
       .get(`/api/v1/rooms/${roomId}`)
       .set(authB)
       .expect(200);
-    expect(roomForB.body.locationShares[0].value).toMatchObject({
+    expect(roomForB.body).not.toHaveProperty("locationShares");
+    const locationsForB = await request(app.getHttpServer())
+      .get(`/api/v1/rooms/${roomId}/location-share`)
+      .set(authB)
+      .expect(200);
+    expect(locationsForB.body[0].value).toMatchObject({
       latitude: 55.7512,
       longitude: 37.6184,
     });
+    await request(app.getHttpServer())
+      .get(`/api/v1/rooms/${roomId}/location-share`)
+      .set(authC)
+      .expect(403);
     expect(
       await prisma.auditLog.count({
         where: { action: "location.exact_read", resourceId: share.body.id },
@@ -172,6 +231,10 @@ describe("private social main flow (real PostGIS)", () => {
       .expect(201);
     await request(app.getHttpServer())
       .get(`/api/v1/rooms/${roomId}`)
+      .set(authB)
+      .expect(403);
+    await request(app.getHttpServer())
+      .get(`/api/v1/rooms/${roomId}/location-share`)
       .set(authB)
       .expect(403);
     await request(app.getHttpServer())
@@ -206,9 +269,14 @@ describe("private social main flow (real PostGIS)", () => {
       .set(authA)
       .send({ confirmation: "УДАЛИТЬ" })
       .expect(200);
+    await request(app.getHttpServer())
+      .delete("/api/v1/users/me")
+      .set(authC)
+      .send({ confirmation: "УДАЛИТЬ" })
+      .expect(200);
     expect(
       await prisma.user.count({
-        where: { id: { in: [a.user.id, b.user.id] } },
+        where: { id: { in: [a.user.id, b.user.id, c.user.id] } },
       }),
     ).toBe(0);
   });
