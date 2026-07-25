@@ -20,38 +20,38 @@ local landuse_values = {
   retail = true,
 }
 
-local function add_class(object, value)
+local function add_class(value)
   if value ~= "" then
-    object:Attribute("class", value)
+    Attribute("class", value)
   end
 end
 
-function node_function(_node)
+function node_function()
   -- Style v1 has no point layers. Keeping this function explicit prevents
   -- accidental inclusion of POI names or other unnecessary personal context.
 end
 
-function way_function(way)
-  local natural = way:Find("natural")
-  local water = way:Find("water")
-  local waterway = way:Find("waterway")
+function way_function()
+  local natural = Find("natural")
+  local water = Find("water")
+  local waterway = Find("waterway")
   if natural == "water" or water_values[water] or waterway == "riverbank" then
-    way:Layer("water", true)
-    add_class(way, water ~= "" and water or natural)
+    Layer("water", true)
+    add_class(water ~= "" and water or natural)
     return
   end
 
-  local leisure = way:Find("leisure")
-  local landuse = way:Find("landuse")
+  local leisure = Find("leisure")
+  local landuse = Find("landuse")
   if leisure == "park" or landuse_values[landuse] then
-    way:Layer("landuse", true)
-    add_class(way, leisure ~= "" and leisure or landuse)
+    Layer("landuse", true)
+    add_class(leisure ~= "" and leisure or landuse)
     return
   end
 
-  local highway = way:Find("highway")
+  local highway = Find("highway")
   if highway ~= "" then
-    way:Layer("transportation", false)
-    add_class(way, highway)
+    Layer("transportation", false)
+    add_class(highway)
   end
 end

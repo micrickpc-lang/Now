@@ -165,7 +165,7 @@ for (const sourceLayer of sourceLayers) {
     `Style source-layer is missing from Tilemaker config: ${sourceLayer}`,
   );
   requireCondition(
-    processLua.includes(`:Layer("${sourceLayer}"`),
+    processLua.includes(`Layer("${sourceLayer}"`),
     `Tilemaker Lua never emits source-layer: ${sourceLayer}`,
   );
 }
