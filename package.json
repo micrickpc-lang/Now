@@ -35,8 +35,15 @@
     "prettier": "3.6.2"
   },
   "overrides": {
+    "@nestjs/swagger": {
+      "js-yaml": "5.2.2"
+    },
+    "@prisma/dev": {
+      "find-my-way": "9.7.0",
+      "valibot": "1.4.2"
+    },
     "next": {
-      "postcss": "8.5.10",
+      "postcss": "8.5.18",
       "sharp": "0.35.3"
     }
   },
