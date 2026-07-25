@@ -7,7 +7,7 @@
   "checksumUrl": "https://download.geofabrik.de/europe/monaco-latest.osm.pbf.md5",
   "checksumAlgorithm": "md5",
   "checksumFileName": "monaco-latest.osm.pbf",
-  "pinnedSha256": null,
+  "pinnedSha256": "5ded287e567f29edf263fd2e90ea0fd89f5109070d65a6eaffe44a14ce173355",
   "output": "infra/maps/data/region.osm.pbf",
   "metadataOutput": "infra/maps/data/region.osm.pbf.metadata.json",
   "mbtilesOutput": "infra/maps/data/seychas-v1.mbtiles",

@@ -36,10 +36,10 @@ partial="$output.partial"
 tilemaker="$root/infra/maps/tilemaker"
 image=$(tr -d '\r\n' < "$tilemaker/image.txt")
 
-case "$image" in
-  ghcr.io/systemed/tilemaker:[0-9]*.[0-9]*.[0-9]*) ;;
-  *) echo "Tilemaker image must be pinned to a semantic version" >&2; exit 1 ;;
-esac
+if ! printf '%s\n' "$image" | grep -Eq '^ghcr\.io/systemed/tilemaker@sha256:[a-f0-9]{64}$'; then
+  echo "Tilemaker image must be pinned to an immutable sha256 digest" >&2
+  exit 1
+fi
 if [ -e "$output" ] && [ "$force" != true ]; then
   echo "Versioned MBTiles already exists; pass --force to replace it" >&2
   exit 1

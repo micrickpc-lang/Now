@@ -35,8 +35,8 @@ $output = Join-Path $data 'seychas-v1.mbtiles'
 $partial = "$output.partial"
 $tilemaker = Join-Path $root 'infra\maps\tilemaker'
 $image = (Get-Content -Raw -Encoding utf8 (Join-Path $tilemaker 'image.txt')).Trim()
-if ($image -notmatch '^ghcr\.io/systemed/tilemaker:\d+\.\d+\.\d+$') {
-  throw 'Tilemaker image must be pinned to a semantic version'
+if ($image -notmatch '^ghcr\.io/systemed/tilemaker@sha256:[a-f0-9]{64}$') {
+  throw 'Tilemaker image must be pinned to an immutable sha256 digest'
 }
 if ((Test-Path -LiteralPath $output) -and -not $force) {
   throw 'Versioned MBTiles already exists; pass --force to replace it'

@@ -190,8 +190,8 @@ requireCondition(
   "MBTiles output must carry its v1 identifier",
 );
 requireCondition(
-  /^ghcr\.io\/systemed\/tilemaker:\d+\.\d+\.\d+$/u.test(tilemakerImage),
-  "Tilemaker image must use a pinned semantic version, never latest/master",
+  /^ghcr\.io\/systemed\/tilemaker@sha256:[a-f0-9]{64}$/u.test(tilemakerImage),
+  "Tilemaker image must use an immutable sha256 digest, never latest/master",
 );
 requireCondition(
   tilemaker.settings?.version === "1" && tilemaker.settings?.maxzoom === 14,

@@ -1,1 +1,1 @@
-ghcr.io/systemed/tilemaker:3.0.0
+ghcr.io/systemed/tilemaker@sha256:d32505d7827907089c2dd07517524276946d8930b4b82e93cf5c25ec989bbe41

@@ -18,7 +18,7 @@ Nominatim и Martin не публикуют host ports. Routing в V1 отклю
 - `infra/maps/data/region.osm.pbf` — downloaded extract, игнорируется Git.
 - `infra/maps/data/region.osm.pbf.metadata.json` — фактические MD5/SHA-256, size и source metadata.
 - `infra/maps/data/seychas-v1.mbtiles` — versioned Martin input, игнорируется Git.
-- `infra/maps/tilemaker/image.txt` — закреплённый Tilemaker `3.0.0`.
+- `infra/maps/tilemaker/image.txt` — официальный Tilemaker, закреплённый по immutable OCI digest.
 - `infra/maps/tilemaker/config.json` и `process.lua` — детерминированные слои `water`, `landuse`, `transportation`.
 - `infra/maps/assets/v1` — canonical style, 1x/2x empty sprite и minimal glyph envelope.
 - `infra/maps/martin.yaml` — internal source `seychas -> /data/seychas-v1.mbtiles`.
