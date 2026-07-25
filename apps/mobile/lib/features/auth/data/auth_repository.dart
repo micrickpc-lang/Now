@@ -8,6 +8,7 @@ import '../../../core/network/realtime_client.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/storage/local_cache.dart';
 import '../../../core/storage/token_store.dart';
+import '../../rooms/data/room_location_share_coordinator.dart';
 
 class AuthRepository {
   AuthRepository(this._api, this._tokens, this._cache, this._demoMode);
@@ -107,6 +108,7 @@ class SessionController extends AsyncNotifier<bool> {
   Future<void> signedIn() async => state = const AsyncData(true);
   Future<void> logout() async {
     state = const AsyncLoading();
+    await ref.read(roomLocationShareCoordinatorProvider).stop();
     await ref.read(realtimeCoordinatorProvider).stop();
     await ref.read(authRepositoryProvider).logout();
     state = const AsyncData(false);

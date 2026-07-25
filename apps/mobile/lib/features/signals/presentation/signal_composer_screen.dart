@@ -5,9 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../chats/data/chats_repository.dart';
+import '../../map/domain/map_models.dart';
 import '../../social/data/social_repository.dart';
 import '../data/signals_repository.dart';
 import '../domain/signal.dart';
+import '../domain/signal_location_payload.dart';
 
 class SignalComposerScreen extends ConsumerStatefulWidget {
   const SignalComposerScreen({this.conversationId, super.key});
@@ -20,12 +22,10 @@ class SignalComposerScreen extends ConsumerStatefulWidget {
 
 class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
   String _category = 'walk';
-  String _location = 'NONE';
+  MapSelectionResult _location = const MapSelectionResult.none();
   String? _circleId;
   int _duration = 60;
   bool _publishing = false;
-  double? _latitude;
-  double? _longitude;
   final _text = TextEditingController();
   @override
   void dispose() {
@@ -73,23 +73,22 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
         'format': _category == 'game' || _category == 'movie'
             ? 'ONLINE'
             : 'OFFLINE',
-        'locationMode': _location,
+        ...buildSignalLocationPayload(_location),
         'maxParticipants': widget.conversationId == null
             ? 4
             : (userIds.length + 1).clamp(2, 20),
         'circleIds': circleIds,
         'userIds': userIds,
       };
-      if (_location == 'APPROXIMATE') {
-        if (_latitude == null || _longitude == null) {
-          throw StateError('Выбери приблизительную зону на карте');
-        }
-        payload['latitude'] = _latitude;
-        payload['longitude'] = _longitude;
-      }
       final signal = await ref.read(signalsRepositoryProvider).create(payload);
       await HapticFeedback.mediumImpact();
-      if (mounted) context.pop(signal);
+      if (!mounted) return;
+      final roomId = signal['roomId']?.toString();
+      if (roomId != null && roomId.isNotEmpty) {
+        context.go('/rooms/$roomId');
+      } else {
+        context.pop(signal);
+      }
     } on DioException catch (error) {
       if (mounted)
         ScaffoldMessenger.of(context).showSnackBar(
@@ -214,23 +213,21 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
           Text('Место', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 10),
           RadioGroup<String>(
-            groupValue: _location,
+            groupValue: _location.mode.apiValue,
             onChanged: (value) async {
-              if (value == 'APPROXIMATE') {
-                final point = await context.push<Map<String, double>>('/map');
-                if (!mounted || point == null) return;
-                setState(() {
-                  _location = value!;
-                  _latitude = point['latitude'];
-                  _longitude = point['longitude'];
-                });
-              } else {
-                setState(() {
-                  _location = value!;
-                  _latitude = null;
-                  _longitude = null;
-                });
+              final selectedMode = LocationPrivacyMode.values.firstWhere(
+                (mode) => mode.apiValue == value,
+              );
+              if (selectedMode == LocationPrivacyMode.none) {
+                setState(() => _location = const MapSelectionResult.none());
+                return;
               }
+              final result = await context.push<MapSelectionResult>(
+                '/map',
+                extra: PlacePickerRequest.signal(initialMode: selectedMode),
+              );
+              if (!mounted || result == null) return;
+              setState(() => _location = result);
             },
             child: const Column(
               children: [
@@ -249,6 +246,15 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
               ],
             ),
           ),
+          if (_location.safeLocation case final safeLocation?)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.shield_outlined),
+              title: Text(safeLocation.description),
+              subtitle: const Text(
+                'В сигнал уйдёт только безопасный идентификатор зоны',
+              ),
+            ),
           const SizedBox(height: 26),
           FilledButton.icon(
             onPressed: _publishing ? null : _publish,

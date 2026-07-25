@@ -7,6 +7,9 @@ import 'package:go_router/go_router.dart';
 import '../../../core/network/realtime_client.dart';
 import '../../../core/platform/secure_screen.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/config/app_config.dart';
+import '../../map/domain/map_models.dart';
+import '../data/room_location_share_coordinator.dart';
 import '../data/rooms_repository.dart';
 
 class RoomScreen extends ConsumerStatefulWidget {
@@ -20,6 +23,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   final _message = TextEditingController();
   Future<Map<String, dynamic>>? _room;
   Future<List<Map<String, dynamic>>>? _messages;
+  Future<List<RoomLocationShare>>? _locationShares;
   StreamSubscription<RealtimeEvent>? _events;
   RealtimeLease? _roomLease;
 
@@ -36,21 +40,35 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
             return (roomId == null || roomId == widget.roomId) &&
                 (event.type == 'room.message.created' ||
                     event.type == 'location.share.updated' ||
-                    event.type == 'location.share.revoked');
+                    event.type == 'location.share.revoked' ||
+                    event.type == 'room.completed');
           })
-          .listen((_) {
-            if (mounted) _reload();
+          .listen((event) {
+            if (event.type == 'room.completed') {
+              unawaited(_roomCompleted());
+            } else if (mounted) {
+              _reload();
+            }
           });
     });
   }
 
-  void _reload() => setState(() {
-    _room = ref.read(roomsRepositoryProvider).room(widget.roomId);
-    _messages = ref.read(roomsRepositoryProvider).messages(widget.roomId);
-  });
+  void _reload() {
+    final rooms = ref.read(roomsRepositoryProvider);
+    final exactEnabled = ref.read(appConfigProvider).canShareExactLocation;
+    setState(() {
+      _room = rooms.room(widget.roomId);
+      _messages = rooms.messages(widget.roomId);
+      _locationShares = exactEnabled
+          ? rooms.locationShares(widget.roomId)
+          : Future.value(const <RoomLocationShare>[]);
+    });
+  }
 
   @override
   void dispose() {
+    final share = ref.read(roomLocationShareCoordinatorProvider);
+    if (share.activeRoomId == widget.roomId) unawaited(share.stop());
     _events?.cancel();
     _roomLease?.close();
     _message.dispose();
@@ -67,8 +85,12 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   }
 
   Future<void> _shareLocation() async {
-    final result = await context.push<Map<String, double>>('/map');
-    if (result == null || !mounted) return;
+    if (!ref.read(appConfigProvider).canShareExactLocation) return;
+    final result = await context.push<MapSelectionResult>(
+      '/map',
+      extra: const PlacePickerRequest.exactRoom(),
+    );
+    if (result == null || !mounted || result.sourcePoint == null) return;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -90,15 +112,71 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
       ),
     );
     if (confirmed == true) {
-      await SecureScreen.enable();
-      await ref
-          .read(roomsRepositoryProvider)
-          .share(
-            widget.roomId,
-            latitude: result['latitude']!,
-            longitude: result['longitude']!,
+      try {
+        await ref
+            .read(roomLocationShareCoordinatorProvider)
+            .start(widget.roomId, result);
+        await SecureScreen.enable();
+        _reload();
+      } catch (_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Не удалось включить геопозицию')),
           );
+        }
+      }
+    }
+  }
+
+  Future<void> _revokeLocation() async {
+    try {
+      await ref
+          .read(roomLocationShareCoordinatorProvider)
+          .stop(suppressRevokeErrors: false);
+      await SecureScreen.disable();
+      if (mounted) _reload();
+    } catch (_) {
+      if (!mounted) return;
       _reload();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'GPS остановлен, но сервер не подтвердил отзыв. Повтори действие.',
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _leaveRoom() async {
+    await ref.read(roomLocationShareCoordinatorProvider).stop(revoke: false);
+    await ref.read(roomsRepositoryProvider).leave(widget.roomId);
+    if (mounted) context.go('/now');
+  }
+
+  Future<void> _roomCompleted() async {
+    await ref.read(roomLocationShareCoordinatorProvider).stop(revoke: false);
+    await SecureScreen.disable();
+    if (mounted) context.go('/now');
+  }
+
+  Future<void> _openLocation(RoomLocationShare share) async {
+    final latitude = share.latitude;
+    final longitude = share.longitude;
+    if (latitude == null || longitude == null) return;
+    await SecureScreen.enable();
+    if (!mounted) return;
+    await context.push<void>(
+      '/map',
+      extra: PlacePickerRequest.viewExact(
+        point: GeoPoint(latitude, longitude),
+        label: share.label,
+      ),
+    );
+    if (mounted &&
+        ref.read(roomLocationShareCoordinatorProvider).activeRoomId !=
+            widget.roomId) {
+      await SecureScreen.disable();
     }
   }
 
@@ -122,8 +200,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
         PopupMenuButton<String>(
           onSelected: (value) async {
             if (value == 'leave') {
-              await ref.read(roomsRepositoryProvider).leave(widget.roomId);
-              if (context.mounted) context.go('/now');
+              await _leaveRoom();
             } else if (value == 'report') {
               context.push('/report');
             }
@@ -137,25 +214,38 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
     ),
     body: Column(
       children: [
-        FutureBuilder<Map<String, dynamic>>(
-          future: _room,
+        FutureBuilder<List<RoomLocationShare>>(
+          future: _locationShares,
           builder: (context, snapshot) {
-            final shares =
-                (snapshot.data?['locationShares'] as List<dynamic>?) ??
-                const [];
+            final ownShare =
+                ref.read(roomLocationShareCoordinatorProvider).activeRoomId ==
+                widget.roomId;
+            final hasShares = ownShare || (snapshot.data?.isNotEmpty ?? false);
+            final exactEnabled = ref
+                .watch(appConfigProvider)
+                .canShareExactLocation;
+            RoomLocationShare? visibleShare;
+            for (final share in snapshot.data ?? const <RoomLocationShare>[]) {
+              if (share.latitude != null && share.longitude != null) {
+                visibleShare = share;
+                break;
+              }
+            }
             return AnimatedSwitcher(
               duration: AppDuration.normal,
-              child: shares.isEmpty
+              child: !hasShares
                   ? Material(
                       color: AppColors.violet.withValues(alpha: .12),
                       child: ListTile(
                         leading: const Icon(Icons.location_on_outlined),
                         title: const Text('Место ещё не выбрано'),
-                        subtitle: const Text(
-                          'Точная точка — только с явным согласием',
+                        subtitle: Text(
+                          exactEnabled
+                              ? 'Точная точка — только с явным согласием'
+                              : 'Отключено для небезопасного HTTP staging',
                         ),
                         trailing: TextButton(
-                          onPressed: _shareLocation,
+                          onPressed: exactEnabled ? _shareLocation : null,
                           child: const Text('Выбрать'),
                         ),
                       ),
@@ -163,6 +253,9 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                   : Material(
                       color: AppColors.mint.withValues(alpha: .12),
                       child: ListTile(
+                        onTap: visibleShare == null
+                            ? null
+                            : () => _openLocation(visibleShare!),
                         leading: const Icon(
                           Icons.shield_rounded,
                           color: AppColors.mint,
@@ -171,16 +264,14 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                         subtitle: const Text(
                           'Скриншоты на этом экране ограничены',
                         ),
-                        trailing: TextButton(
-                          onPressed: () async {
-                            await ref
-                                .read(roomsRepositoryProvider)
-                                .revoke(widget.roomId);
-                            await SecureScreen.disable();
-                            _reload();
-                          },
-                          child: const Text('Отозвать'),
-                        ),
+                        trailing: ownShare
+                            ? TextButton(
+                                onPressed: _revokeLocation,
+                                child: const Text('Отозвать'),
+                              )
+                            : visibleShare == null
+                            ? null
+                            : const Icon(Icons.chevron_right_rounded),
                       ),
                     ),
             );
@@ -243,7 +334,9 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
             child: Row(
               children: [
                 IconButton(
-                  onPressed: _shareLocation,
+                  onPressed: ref.watch(appConfigProvider).canShareExactLocation
+                      ? _shareLocation
+                      : null,
                   tooltip: 'Поделиться точным местом',
                   icon: const Icon(Icons.add_location_alt_outlined),
                 ),
