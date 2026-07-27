@@ -18,7 +18,7 @@ const root = resolve(import.meta.dirname, "../..");
 function usage() {
   process.stdout.write(`Usage: node scripts/maps/download-region.mjs [options]
 
-Download the configured Monaco PBF, verify Geofabrik's HTTPS checksum before
+Download the configured Monaco PBF, verify its upstream HTTPS checksum before
 publishing it, and record both MD5 and SHA-256 in a local metadata sidecar.
 
 Options:
@@ -70,7 +70,7 @@ function pathInsideRoot(value, label) {
 function validateConfig(config) {
   if (config.schemaVersion !== 1) throw new Error("Unsupported region schema");
   if (config.checksumAlgorithm !== "md5") {
-    throw new Error("Geofabrik checksumAlgorithm must be md5");
+    throw new Error("Region checksumAlgorithm must be md5");
   }
   for (const field of ["pbfUrl", "checksumUrl"]) {
     const url = new URL(config[field]);

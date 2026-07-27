@@ -10,6 +10,8 @@ const safeProduction = {
   LOCATION_MASTER_KEY_BASE64: "b".repeat(44),
   LOCATION_PRIVACY_SECRET: "privacy-secret-which-is-at-least-32-bytes",
   APP_ORIGINS: "https://admin.example.invalid",
+  SMS_PROVIDER: "smsru",
+  SMS_RU_API_ID: "unit-test-provider-credential",
 };
 
 describe("validateEnvironment", () => {
@@ -17,6 +19,54 @@ describe("validateEnvironment", () => {
     expect(() =>
       validateEnvironment({ ...safeProduction, ALLOW_DEV_OTP: "true" }),
     ).toThrow("Development OTP");
+  });
+
+  it("requires a configured real SMS provider in production", () => {
+    expect(() =>
+      validateEnvironment({
+        ...safeProduction,
+        SMS_PROVIDER: "staging",
+      }),
+    ).toThrow("Production requires");
+    expect(() =>
+      validateEnvironment({
+        ...safeProduction,
+        SMS_RU_API_ID: "",
+      }),
+    ).toThrow("SMS_RU_API_ID");
+  });
+
+  it("requires a usable development OTP configuration", () => {
+    expect(() =>
+      validateEnvironment({
+        NODE_ENV: "development",
+        APP_ENV: "development",
+        DATABASE_URL: "postgresql://db/app",
+        REDIS_URL: "redis://redis",
+        SMS_PROVIDER: "development",
+        ALLOW_DEV_OTP: "false",
+      }),
+    ).toThrow("six-digit DEV_OTP_CODE");
+    expect(
+      validateEnvironment({
+        NODE_ENV: "development",
+        APP_ENV: "development",
+        DATABASE_URL: "postgresql://db/app",
+        REDIS_URL: "redis://redis",
+        SMS_PROVIDER: "development",
+        ALLOW_DEV_OTP: "true",
+        DEV_OTP_CODE: "123456",
+      }).SMS_PROVIDER,
+    ).toBe("development");
+  });
+
+  it("validates the OTP lifetime", () => {
+    expect(() =>
+      validateEnvironment({
+        ...safeProduction,
+        OTP_TTL_SECONDS: "forever",
+      }),
+    ).toThrow("OTP_TTL_SECONDS");
   });
 
   it("rejects non-HTTPS production origins", () => {
@@ -66,6 +116,7 @@ describe("validateEnvironment", () => {
       validateEnvironment({
         ...safeProduction,
         APP_ENV: "staging",
+        SMS_PROVIDER: "staging",
         APP_ORIGINS: "http://192.0.2.10",
         PUBLIC_API_URL: "http://192.0.2.10/api/v1",
         STAGING_TEST_PHONE_ALLOWLIST: "+79990000000,+79990000001",
@@ -92,6 +143,7 @@ describe("validateEnvironment", () => {
       validateEnvironment({
         ...safeProduction,
         APP_ENV: "staging",
+        SMS_PROVIDER: "staging",
         PUBLIC_API_URL: "https://staging.example.invalid/api/v1",
         ALLOW_EXACT_LOCATION: "true",
         STAGING_TEST_PHONE_ALLOWLIST: "+79990000000",

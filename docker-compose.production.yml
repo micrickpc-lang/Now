@@ -7,13 +7,21 @@ services:
     tmpfs: [/tmp]
     environment:
       NODE_ENV: production
+      APP_ENV: production
       DATABASE_URL: ${DATABASE_URL:?from secret manager}
       REDIS_URL: ${REDIS_URL:?from secret manager}
       JWT_SECRET: ${JWT_SECRET:?from secret manager}
       TOKEN_HASH_SECRET: ${TOKEN_HASH_SECRET:?from secret manager}
       PHONE_HASH_SECRET: ${PHONE_HASH_SECRET:?from secret manager}
       LOCATION_MASTER_KEY_BASE64: ${LOCATION_MASTER_KEY_BASE64:?from KMS-backed secret manager}
+      LOCATION_PRIVACY_SECRET: ${LOCATION_PRIVACY_SECRET:?from KMS-backed secret manager}
+      SMS_PROVIDER: ${SMS_PROVIDER:-smsru}
+      SMS_RU_API_ID: ${SMS_RU_API_ID:?from secret manager}
+      SMS_RU_FROM: ${SMS_RU_FROM:-}
+      SMS_RU_TIMEOUT_MS: ${SMS_RU_TIMEOUT_MS:-5000}
+      OTP_TTL_SECONDS: ${OTP_TTL_SECONDS:-300}
       APP_ORIGINS: ${APP_ORIGINS:?HTTPS origins}
+      PUBLIC_API_URL: ${PUBLIC_API_URL:?first-party HTTPS API URL}
       TRUST_PROXY_HOPS: ${TRUST_PROXY_HOPS:?exact trusted ingress hop count, 0 for direct traffic}
       ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:?from secret manager}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT:?private object storage endpoint}

@@ -72,6 +72,46 @@ describe("private social main flow (real PostGIS)", () => {
     };
   }
 
+  it("consumes one OTP only once under concurrent verification", async () => {
+    const phone = `+7990${suffix}`;
+    const ip = "198.51.100.9";
+    await request(app.getHttpServer())
+      .post("/api/v1/auth/otp/request")
+      .set("X-Forwarded-For", ip)
+      .send({ phone })
+      .expect(201);
+    const payload = (installationId: string) => ({
+      phone,
+      code: process.env.DEV_OTP_CODE ?? "123456",
+      birthDate: "2001-05-10",
+      displayName: "OTP race",
+      installationId,
+      platform: "android",
+    });
+
+    const responses = await Promise.all([
+      request(app.getHttpServer())
+        .post("/api/v1/auth/otp/verify")
+        .set("X-Forwarded-For", ip)
+        .send(payload(`otp-race-a-${suffix}`)),
+      request(app.getHttpServer())
+        .post("/api/v1/auth/otp/verify")
+        .set("X-Forwarded-For", ip)
+        .send(payload(`otp-race-b-${suffix}`)),
+    ]);
+
+    expect(responses.map((response) => response.status).sort()).toEqual([
+      201, 401,
+    ]);
+    const success = responses.find((response) => response.status === 201);
+    expect(success?.body.user.id).toEqual(expect.any(String));
+    expect(
+      await prisma.authSession.count({
+        where: { userId: success?.body.user.id as string, revokedAt: null },
+      }),
+    ).toBe(1);
+  });
+
   it("enforces friendship, room membership and exact-location revocation", async () => {
     const a = await register(phoneA, `e2e-a-${suffix}`, "198.51.100.10");
     const b = await register(phoneB, `e2e-b-${suffix}`, "198.51.100.11");

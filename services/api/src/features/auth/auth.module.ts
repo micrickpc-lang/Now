@@ -6,6 +6,7 @@ import {
   DevelopmentOtpProvider,
   OTP_PROVIDER,
   OtpDispatcher,
+  SmsRuOtpProvider,
   StagingOtpProvider,
   UnconfiguredProductionOtpProvider,
 } from "./otp.provider";
@@ -19,6 +20,7 @@ import { TokenService } from "./token.service";
     OtpDispatcher,
     DevelopmentOtpProvider,
     StagingOtpProvider,
+    SmsRuOtpProvider,
     UnconfiguredProductionOtpProvider,
     {
       provide: OTP_PROVIDER,
@@ -26,14 +28,17 @@ import { TokenService } from "./token.service";
         ConfigService,
         DevelopmentOtpProvider,
         StagingOtpProvider,
+        SmsRuOtpProvider,
         UnconfiguredProductionOtpProvider,
       ],
       useFactory: (
         config: ConfigService,
         development: DevelopmentOtpProvider,
         staging: StagingOtpProvider,
+        smsRu: SmsRuOtpProvider,
         production: UnconfiguredProductionOtpProvider,
       ) => {
+        if (config.get<string>("SMS_PROVIDER") === "smsru") return smsRu;
         const appEnvironment = config.get<string>("APP_ENV");
         if (appEnvironment === "staging") return staging;
         if (appEnvironment === "production") return production;

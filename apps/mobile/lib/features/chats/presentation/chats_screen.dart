@@ -8,6 +8,8 @@ import '../data/chat_controllers.dart';
 import '../data/chats_repository.dart';
 import '../domain/chat_models.dart';
 
+enum _ChatFilter { all, direct, group, room }
+
 class ChatsScreen extends ConsumerStatefulWidget {
   const ChatsScreen({super.key});
 
@@ -17,6 +19,8 @@ class ChatsScreen extends ConsumerStatefulWidget {
 
 class _ChatsScreenState extends ConsumerState<ChatsScreen> {
   final _search = TextEditingController();
+  var _filter = _ChatFilter.all;
+  var _searchVisible = false;
 
   @override
   void dispose() {
@@ -34,6 +38,13 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
         title: const Text('Чаты'),
         actions: [
           IconButton(
+            onPressed: () => setState(() => _searchVisible = !_searchVisible),
+            tooltip: _searchVisible ? 'Закрыть поиск' : 'Поиск по чатам',
+            icon: Icon(
+              _searchVisible ? Icons.close_rounded : Icons.search_rounded,
+            ),
+          ),
+          IconButton(
             onPressed: () => ref.read(chatsProvider.notifier).refresh(),
             tooltip: 'Обновить чаты',
             icon: const Icon(Icons.refresh_rounded),
@@ -43,26 +54,41 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
       body: Column(
         children: [
           if (realtimeStatus == RealtimeConnectionStatus.offline)
-            const Material(
-              color: Color(0x1929D3A2),
-              child: ListTile(
-                dense: true,
-                leading: Icon(Icons.cloud_off_outlined, size: 20),
-                title: Text('Без сети · сообщения останутся в очереди'),
-              ),
+            const _OfflineBanner(
+              text: 'Нет интернета. Черновики и сообщения сохранятся.',
             ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-            child: TextField(
-              key: const ValueKey('chat-search'),
-              controller: _search,
-              onChanged: (_) => setState(() {}),
-              decoration: const InputDecoration(
-                hintText: 'Поиск по чатам',
-                prefixIcon: Icon(Icons.search_rounded),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  for (final filter in _ChatFilter.values) ...[
+                    _ChatFilterChip(
+                      filter: filter,
+                      selected: _filter == filter,
+                      onSelected: () => setState(() => _filter = filter),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                ],
               ),
             ),
           ),
+          if (_searchVisible)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: TextField(
+                key: const ValueKey('chat-search'),
+                controller: _search,
+                autofocus: true,
+                onChanged: (_) => setState(() {}),
+                decoration: const InputDecoration(
+                  hintText: 'Поиск по чатам',
+                  prefixIcon: Icon(Icons.search_rounded),
+                ),
+              ),
+            ),
           Expanded(
             child: chats.when(
               loading: () => const _ChatsSkeleton(),
@@ -74,6 +100,19 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
                 final visible =
                     items
                         .where((chat) => !chat.isArchived)
+                        .where(
+                          (chat) => switch (_filter) {
+                            _ChatFilter.all => true,
+                            _ChatFilter.direct =>
+                              chat.type == ConversationType.direct,
+                            _ChatFilter.group =>
+                              chat.type == ConversationType.group &&
+                                  !chat.hasActiveSignal,
+                            _ChatFilter.room =>
+                              chat.type == ConversationType.group &&
+                                  chat.hasActiveSignal,
+                          },
+                        )
                         .where(
                           (chat) =>
                               query.isEmpty ||
@@ -98,15 +137,18 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
                 }
                 return RefreshIndicator(
                   onRefresh: ref.read(chatsProvider.notifier).refresh,
-                  child: ListView.separated(
+                  child: ListView.builder(
                     key: const PageStorageKey('chats-list'),
-                    padding: const EdgeInsets.only(bottom: 24),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
                     itemCount: visible.length,
-                    separatorBuilder: (_, __) =>
-                        const Divider(height: 1, indent: 78),
-                    itemBuilder: (context, index) => _ChatTile(
-                      conversation: visible[index],
-                      currentUserId: currentUserId,
+                    itemBuilder: (context, index) => Padding(
+                      padding: EdgeInsets.only(
+                        bottom: index == visible.length - 1 ? 0 : 8,
+                      ),
+                      child: _ChatTile(
+                        conversation: visible[index],
+                        currentUserId: currentUserId,
+                      ),
                     ),
                   ),
                 );
@@ -133,104 +175,208 @@ class _ChatTile extends StatelessWidget {
       button: true,
       label:
           '${conversation.displayTitle(currentUserId)}, ${conversation.unreadCount} непрочитанных',
-      child: ListTile(
+      child: Material(
+        color: Theme.of(context).colorScheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(AppRadii.sm),
         key: ValueKey('chat-${conversation.id}'),
-        onTap: () => context.push('/chats/${conversation.id}'),
-        minVerticalPadding: 13,
-        leading: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            CircleAvatar(
-              radius: 26,
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-              child: Text(
-                conversation.displayEmoji(currentUserId),
-                style: const TextStyle(fontSize: 22),
-              ),
-            ),
-            if (conversation.hasActiveSignal)
-              const Positioned(right: -2, bottom: -2, child: _ActivityMark()),
-          ],
-        ),
-        title: Row(
-          children: [
-            Expanded(
-              child: Text(
-                conversation.displayTitle(currentUserId),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.w700),
-              ),
-            ),
-            if (muted)
-              const Padding(
-                padding: EdgeInsets.only(left: 6),
-                child: Icon(Icons.volume_off_outlined, size: 16),
-              ),
-            const SizedBox(width: 8),
-            Text(
-              _formatTime(conversation.lastMessageAt),
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 4),
-          child: Row(
-            children: [
-              if (last?.senderId == currentUserId) ...[
-                _MessageStatus(status: last!.deliveryStatus),
-                const SizedBox(width: 4),
-              ],
-              Expanded(
-                child: Text(
-                  conversation.isTyping ? 'печатает…' : _messagePreview(last),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: conversation.isTyping
-                        ? AppColors.mint
-                        : Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-              if (conversation.hasActiveCall)
-                const Padding(
-                  padding: EdgeInsets.only(left: 6),
-                  child: Icon(Icons.call_outlined, size: 17),
-                ),
-              if (conversation.unreadCount > 0)
-                Container(
-                  margin: const EdgeInsets.only(left: 8),
-                  constraints: const BoxConstraints(minWidth: 22),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.mint,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    conversation.unreadCount > 99
-                        ? '99+'
-                        : '${conversation.unreadCount}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Color(0xFF071A15),
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppRadii.sm),
+          onTap: () => context.push('/chats/${conversation.id}'),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    _ChatAvatar(
+                      emoji: conversation.displayEmoji(currentUserId),
                     ),
+                    if (conversation.hasActiveSignal)
+                      const Positioned(
+                        right: -2,
+                        bottom: -2,
+                        child: _ActivityMark(),
+                      ),
+                  ],
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              conversation.displayTitle(currentUserId),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          if (muted)
+                            const Padding(
+                              padding: EdgeInsets.only(left: 6),
+                              child: Icon(Icons.volume_off_outlined, size: 16),
+                            ),
+                          const SizedBox(width: 8),
+                          Text(
+                            _formatTime(conversation.lastMessageAt),
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          if (last?.senderId == currentUserId) ...[
+                            _MessageStatus(status: last!.deliveryStatus),
+                            const SizedBox(width: 4),
+                          ],
+                          Expanded(
+                            child: Text(
+                              conversation.isTyping
+                                  ? 'печатает...'
+                                  : _messagePreview(last),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: conversation.isTyping
+                                    ? AppColors.mint
+                                    : Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                          if (conversation.hasActiveCall)
+                            const Padding(
+                              padding: EdgeInsets.only(left: 6),
+                              child: Icon(Icons.call_outlined, size: 17),
+                            ),
+                          if (conversation.unreadCount > 0)
+                            _UnreadBadge(count: conversation.unreadCount),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+}
+
+class _ChatAvatar extends StatelessWidget {
+  const _ChatAvatar({required this.emoji});
+
+  final String emoji;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: 44,
+    height: 44,
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+      color: AppColors.violet.withValues(alpha: .22),
+      shape: BoxShape.circle,
+      border: Border.all(color: AppColors.mint, width: 1.5),
+    ),
+    child: Text(emoji, style: const TextStyle(fontSize: 21)),
+  );
+}
+
+class _UnreadBadge extends StatelessWidget {
+  const _UnreadBadge({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    margin: const EdgeInsets.only(left: 8),
+    constraints: const BoxConstraints(minWidth: 20),
+    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+    decoration: const BoxDecoration(
+      color: AppColors.coral,
+      shape: BoxShape.circle,
+    ),
+    child: Text(
+      count > 99 ? '99+' : '$count',
+      textAlign: TextAlign.center,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+  );
+}
+
+class _ChatFilterChip extends StatelessWidget {
+  const _ChatFilterChip({
+    required this.filter,
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final _ChatFilter filter;
+  final bool selected;
+  final VoidCallback onSelected;
+
+  @override
+  Widget build(BuildContext context) => ChoiceChip(
+    label: Text(switch (filter) {
+      _ChatFilter.all => 'Все',
+      _ChatFilter.direct => 'Личные',
+      _ChatFilter.group => 'Группы',
+      _ChatFilter.room => 'Комнаты',
+    }),
+    selected: selected,
+    onSelected: (_) => onSelected(),
+    showCheckmark: false,
+    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    visualDensity: VisualDensity.compact,
+  );
+}
+
+class _OfflineBanner extends StatelessWidget {
+  const _OfflineBanner({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: double.infinity,
+    margin: const EdgeInsets.fromLTRB(16, 2, 16, 10),
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+    decoration: BoxDecoration(
+      color: AppColors.warning.withValues(alpha: .1),
+      borderRadius: BorderRadius.circular(AppRadii.sm),
+      border: Border.all(color: AppColors.warning.withValues(alpha: .75)),
+    ),
+    child: Row(
+      children: [
+        const Icon(
+          Icons.cloud_off_outlined,
+          size: 18,
+          color: AppColors.warning,
+        ),
+        const SizedBox(width: 8),
+        Expanded(child: Text(text, style: const TextStyle(fontSize: 12))),
+      ],
+    ),
+  );
 }
 
 class _ActivityMark extends StatelessWidget {

@@ -17,13 +17,15 @@ class AuthRepository {
   final LocalCache _cache;
   final bool _demoMode;
 
-  Future<void> requestOtp(String phone) async {
-    if (_demoMode) return;
-    await _api.dio.post<void>(
+  Future<int> requestOtp(String phone) async {
+    if (_demoMode) return 60;
+    final response = await _api.dio.post<Map<String, dynamic>>(
       '/auth/otp/request',
       data: {'phone': phone},
       options: Options(extra: {'skipAuth': true}),
     );
+    final retryAfter = response.data?['retryAfterSeconds'];
+    return retryAfter is int && retryAfter > 0 ? retryAfter : 60;
   }
 
   Future<void> verify({

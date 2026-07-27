@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   Length,
+  Matches,
   MaxLength,
 } from "class-validator";
 
@@ -21,6 +22,7 @@ export class VerifyOtpDto {
 
   @IsString()
   @Length(6, 6)
+  @Matches(/^\d{6}$/u)
   code!: string;
 
   @IsDateString()

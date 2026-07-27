@@ -1,0 +1,74 @@
+name: seychas-pc
+
+# Windows/LAN override for docker-compose.staging.yml. Application source and
+# verified map artifacts stay on D:, while Linux databases use Docker-managed
+# volumes so PostgreSQL/Nominatim do not depend on NTFS ownership semantics.
+services:
+  postgres:
+    volumes:
+      - pc-postgres-data:/var/lib/postgresql/data
+
+  redis:
+    volumes:
+      - pc-redis-data:/data
+
+  martin:
+    volumes:
+      - type: bind
+        source: ./infra/maps/martin.yaml
+        target: /config/martin.yaml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./infra/maps/data
+        target: /data
+        read_only: true
+        bind:
+          create_host_path: false
+
+  nominatim-import:
+    volumes:
+      - type: bind
+        source: ./infra/maps/data/region.osm.pbf
+        target: /maps-input/region.osm.pbf
+        read_only: true
+        bind:
+          create_host_path: false
+      - pc-nominatim-data:/var/lib/postgresql/16/main
+
+  nominatim:
+    volumes:
+      - type: bind
+        source: ./infra/maps/data/region.osm.pbf
+        target: /maps-input/region.osm.pbf
+        read_only: true
+        bind:
+          create_host_path: false
+      - pc-nominatim-data:/var/lib/postgresql/16/main
+
+  nginx:
+    volumes:
+      - type: bind
+        source: ./infra/nginx/staging.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./infra/maps/assets
+        target: /srv/maps
+        read_only: true
+        bind:
+          create_host_path: false
+      - pc-nginx-map-cache:/var/cache/nginx/maps
+
+volumes:
+  pc-postgres-data:
+    name: seychas-pc-postgres
+  pc-redis-data:
+    name: seychas-pc-redis
+  pc-nominatim-data:
+    name: seychas-pc-nominatim
+  pc-nginx-map-cache:
+    name: seychas-pc-nginx-map-cache

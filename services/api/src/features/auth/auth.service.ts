@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  ServiceUnavailableException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
@@ -44,7 +45,7 @@ export class AuthService {
     if (phoneRecent > 0 || ipRecent >= 5) return GENERIC_OTP_RESPONSE;
 
     const code = this.issueOtpCode(phone);
-    await this.prisma.otpChallenge.create({
+    const challenge = await this.prisma.otpChallenge.create({
       data: {
         phoneHash,
         codeHash: this.crypto.hashToken(`${phoneHash}:${code}`),
@@ -54,7 +55,16 @@ export class AuthService {
         ),
       },
     });
-    await this.otp.send(phone, code);
+    try {
+      await this.otp.send(phone, code, { requestIp: ip });
+    } catch {
+      await this.prisma.otpChallenge.deleteMany({
+        where: { id: challenge.id, consumedAt: null },
+      });
+      throw new ServiceUnavailableException(
+        "Не удалось отправить SMS. Попробуйте позже",
+      );
+    }
     return GENERIC_OTP_RESPONSE;
   }
 
@@ -85,10 +95,18 @@ export class AuthService {
     if (age > 120) throw new BadRequestException("Некорректная дата рождения");
 
     const result = await this.prisma.$transaction(async (tx) => {
-      await tx.otpChallenge.update({
-        where: { id: challenge.id },
+      const consumed = await tx.otpChallenge.updateMany({
+        where: {
+          id: challenge.id,
+          consumedAt: null,
+          expiresAt: { gt: new Date() },
+          attemptCount: { lt: 5 },
+        },
         data: { consumedAt: new Date() },
       });
+      if (consumed.count !== 1) {
+        throw new UnauthorizedException("Неверный или истёкший код");
+      }
       const user = await tx.user.upsert({
         where: { phoneHash },
         update: {},
@@ -259,7 +277,10 @@ export class AuthService {
 
   private issueOtpCode(phone: string): string {
     const appEnvironment = this.config.get<string>("APP_ENV");
-    if (appEnvironment === "development" && this.config.get("DEV_OTP_CODE")) {
+    if (
+      this.config.get<string>("SMS_PROVIDER") === "development" &&
+      this.config.get("DEV_OTP_CODE")
+    ) {
       return this.config.getOrThrow<string>("DEV_OTP_CODE");
     }
     if (

@@ -55,6 +55,10 @@ x-api-environment: &api-environment
   TRUST_PROXY_HOPS: "1"
   ALLOW_EXACT_LOCATION: "false"
   ALLOW_DEV_OTP: "false"
+  SMS_PROVIDER: ${SMS_PROVIDER:-staging}
+  SMS_RU_API_ID: ${SMS_RU_API_ID:-}
+  SMS_RU_FROM: ${SMS_RU_FROM:-}
+  SMS_RU_TIMEOUT_MS: ${SMS_RU_TIMEOUT_MS:-5000}
   STAGING_TEST_PHONE_ALLOWLIST: ${STAGING_TEST_PHONE_ALLOWLIST:?set comma-separated E.164 staging test numbers}
   STAGING_TEST_OTP: ${STAGING_TEST_OTP:?set a six-digit staging-only OTP}
   INTERNAL_MARTIN_URL: http://martin:3000
@@ -150,7 +154,7 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - curl -fsS http://127.0.0.1:3000/seychas | grep -q '"tiles"'
+        - wget -qO- http://127.0.0.1:3000/seychas | grep -q '"tiles"'
       interval: 15s
       timeout: 5s
       retries: 20

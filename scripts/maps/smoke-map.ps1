@@ -82,7 +82,8 @@ try {
       'png' { $contentType -eq 'image/png' }
       'pbf' { $contentType -in 'application/x-protobuf', 'application/vnd.mapbox-vector-tile', 'application/octet-stream' }
     }
-    $bodyMatches = -not $probe.Needle -or [System.Text.Encoding]::UTF8.GetString($body).Contains($probe.Needle)
+    $needle = if ($probe.ContainsKey('Needle')) { [string]$probe.Needle } else { '' }
+    $bodyMatches = -not $needle -or [System.Text.Encoding]::UTF8.GetString($body).Contains($needle)
     if ($status -ne $probe.Expected -or -not $validType -or $body.Length -lt $probe.Minimum -or -not $bodyMatches) {
       $failures += 1
     }

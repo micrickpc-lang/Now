@@ -9,32 +9,43 @@ import 'chats_repository.dart';
 class ChatsController extends AsyncNotifier<List<ConversationSummary>> {
   StreamSubscription<RealtimeEvent>? _events;
   StreamSubscription<RealtimeConnectionStatus>? _statuses;
-  bool _retryingOutbox = false;
+  bool _initializing = false;
+  bool _processingReconciliation = false;
+  bool _outboxDrainRequested = false;
+  bool _refreshRequested = false;
 
   @override
   Future<List<ConversationSummary>> build() async {
-    _events ??= ref.read(realtimeCoordinatorProvider).events.listen((event) {
-      if (event.type.startsWith('conversation.') ||
-          event.type.startsWith('message.') ||
-          event.type.startsWith('typing.')) {
-        unawaited(refresh(silent: true));
+    _initializing = true;
+    try {
+      _events ??= ref.read(realtimeCoordinatorProvider).events.listen((event) {
+        if (event.type.startsWith('conversation.') ||
+            event.type.startsWith('message.') ||
+            event.type.startsWith('typing.')) {
+          unawaited(refresh(silent: true));
+        }
+      });
+      _statuses ??= ref
+          .read(realtimeCoordinatorProvider)
+          .statuses
+          .where(
+            (status) =>
+                status == RealtimeConnectionStatus.connected ||
+                status == RealtimeConnectionStatus.demo,
+          )
+          .listen((_) => _requestReconciliation(refresh: true));
+      ref.onDispose(() {
+        unawaited(_events?.cancel());
+        unawaited(_statuses?.cancel());
+      });
+      _requestReconciliation(refresh: false);
+      return (await ref.watch(chatsRepositoryProvider).conversations()).items;
+    } finally {
+      _initializing = false;
+      if (_outboxDrainRequested || _refreshRequested) {
+        Timer.run(_startReconciliation);
       }
-    });
-    _statuses ??= ref
-        .read(realtimeCoordinatorProvider)
-        .statuses
-        .where(
-          (status) =>
-              status == RealtimeConnectionStatus.connected ||
-              status == RealtimeConnectionStatus.demo,
-        )
-        .listen((_) => unawaited(_retryOutbox()));
-    ref.onDispose(() {
-      unawaited(_events?.cancel());
-      unawaited(_statuses?.cancel());
-    });
-    unawaited(_retryOutbox());
-    return (await ref.watch(chatsRepositoryProvider).conversations()).items;
+    }
   }
 
   Future<void> refresh({bool silent = false}) async {
@@ -46,14 +57,44 @@ class ChatsController extends AsyncNotifier<List<ConversationSummary>> {
     if (next.hasValue || !silent) state = next;
   }
 
-  Future<void> _retryOutbox() async {
-    if (_retryingOutbox) return;
-    _retryingOutbox = true;
+  void _requestReconciliation({required bool refresh}) {
+    _outboxDrainRequested = true;
+    _refreshRequested = _refreshRequested || refresh;
+    _startReconciliation();
+  }
+
+  void _startReconciliation() {
+    if (_initializing ||
+        _processingReconciliation ||
+        !ref.mounted ||
+        (!_outboxDrainRequested && !_refreshRequested)) {
+      return;
+    }
+    _processingReconciliation = true;
+    unawaited(_runReconciliation());
+  }
+
+  Future<void> _runReconciliation() async {
     try {
-      final retried = await ref.read(chatsRepositoryProvider).retryAllOutbox();
-      if (retried.isNotEmpty) await refresh(silent: true);
+      while (ref.mounted && (_outboxDrainRequested || _refreshRequested)) {
+        final shouldRefresh = _refreshRequested;
+        _outboxDrainRequested = false;
+        _refreshRequested = false;
+        var outboxChanged = false;
+        try {
+          outboxChanged =
+              (await ref.read(chatsRepositoryProvider).retryAllOutbox())
+                  .isNotEmpty;
+        } catch (_) {
+          // Reconciliation still refreshes server state when outbox retry fails.
+        }
+        if ((shouldRefresh || outboxChanged) && ref.mounted) {
+          await refresh(silent: true);
+        }
+      }
     } finally {
-      _retryingOutbox = false;
+      _processingReconciliation = false;
+      _startReconciliation();
     }
   }
 }
@@ -97,40 +138,50 @@ class ChatMessagesController extends AsyncNotifier<ChatTimeline> {
   StreamSubscription<RealtimeEvent>? _events;
   StreamSubscription<RealtimeConnectionStatus>? _statuses;
   RealtimeLease? _lease;
-  bool _retryingOutbox = false;
+  bool _initializing = false;
+  bool _processingReconciliation = false;
+  bool _reconciliationRequested = false;
 
   @override
   Future<ChatTimeline> build() async {
-    final repository = ref.watch(chatsRepositoryProvider);
-    final coordinator = ref.read(realtimeCoordinatorProvider);
-    _lease ??= coordinator.subscribeConversation(conversationId);
-    _events ??= coordinator.events
-        .where(
-          (event) =>
-              event.payload['conversationId']?.toString() == conversationId,
-        )
-        .listen((event) => unawaited(_onRealtime(event)));
-    _statuses ??= coordinator.statuses
-        .where(
-          (status) =>
-              status == RealtimeConnectionStatus.connected ||
-              status == RealtimeConnectionStatus.demo,
-        )
-        .listen((_) => unawaited(_retryAfterReconnect()));
-    ref.onDispose(() {
-      _lease?.close();
-      unawaited(_events?.cancel());
-      unawaited(_statuses?.cancel());
-    });
-    await repository.retryOutbox(conversationId);
-    final page = await repository.messages(conversationId);
-    final timeline = ChatTimeline(
-      messages: page.items,
-      nextCursor: page.nextCursor,
-      draft: await repository.draft(conversationId),
-    );
-    unawaited(_markNewestRead(timeline.messages));
-    return timeline;
+    _initializing = true;
+    try {
+      final repository = ref.watch(chatsRepositoryProvider);
+      final coordinator = ref.read(realtimeCoordinatorProvider);
+      _lease ??= coordinator.subscribeConversation(conversationId);
+      _events ??= coordinator.events
+          .where(
+            (event) =>
+                event.payload['conversationId']?.toString() == conversationId,
+          )
+          .listen((event) => unawaited(_onRealtime(event)));
+      _statuses ??= coordinator.statuses
+          .where(
+            (status) =>
+                status == RealtimeConnectionStatus.connected ||
+                status == RealtimeConnectionStatus.demo,
+          )
+          .listen((_) => _requestReconciliation());
+      ref.onDispose(() {
+        _lease?.close();
+        unawaited(_events?.cancel());
+        unawaited(_statuses?.cancel());
+      });
+      await repository.retryOutbox(conversationId);
+      final page = await repository.messages(conversationId);
+      final timeline = ChatTimeline(
+        messages: page.items,
+        nextCursor: page.nextCursor,
+        draft: await repository.draft(conversationId),
+      );
+      unawaited(_markNewestRead(timeline.messages));
+      return timeline;
+    } finally {
+      _initializing = false;
+      if (_reconciliationRequested) {
+        Timer.run(_startReconciliation);
+      }
+    }
   }
 
   Future<void> loadOlder() async {
@@ -274,23 +325,57 @@ class ChatMessagesController extends AsyncNotifier<ChatTimeline> {
     ref.invalidate(chatsProvider);
   }
 
-  Future<void> _retryAfterReconnect() async {
-    if (_retryingOutbox) return;
-    _retryingOutbox = true;
+  void _requestReconciliation() {
+    _reconciliationRequested = true;
+    _startReconciliation();
+  }
+
+  void _startReconciliation() {
+    if (_initializing ||
+        _processingReconciliation ||
+        !_reconciliationRequested ||
+        !ref.mounted) {
+      return;
+    }
+    _processingReconciliation = true;
+    unawaited(_runReconciliation());
+  }
+
+  Future<void> _runReconciliation() async {
     try {
-      final retried = await ref
-          .read(chatsRepositoryProvider)
-          .retryOutbox(conversationId);
-      if (retried.isEmpty) return;
-      final current = state.value;
-      if (current != null) {
-        state = AsyncData(
-          current.copyWith(messages: _merge(retried, current.messages)),
-        );
+      while (ref.mounted && _reconciliationRequested) {
+        _reconciliationRequested = false;
+        final repository = ref.read(chatsRepositoryProvider);
+        var retried = const <ChatMessage>[];
+        MessagePage? page;
+        try {
+          retried = await repository.retryOutbox(conversationId);
+        } catch (_) {
+          // A failed send must not prevent the gap-closing page refresh.
+        }
+        if (!ref.mounted) return;
+        try {
+          page = await repository.messages(conversationId);
+        } catch (_) {
+          // Cached/current state remains usable until the next reconciliation.
+        }
+        if (!ref.mounted) return;
+        final current = state.value;
+        if (current != null && (page != null || retried.isNotEmpty)) {
+          state = AsyncData(
+            current.copyWith(
+              messages: _merge([...?page?.items, ...retried], current.messages),
+            ),
+          );
+        }
+        if (page != null) {
+          await _markNewestRead(page.items);
+        }
+        if (ref.mounted) ref.invalidate(chatsProvider);
       }
-      ref.invalidate(chatsProvider);
     } finally {
-      _retryingOutbox = false;
+      _processingReconciliation = false;
+      _startReconciliation();
     }
   }
 

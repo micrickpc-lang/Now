@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,13 +30,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: RadialGradient(
-          center: Alignment(.3, -.4),
-          radius: 1.2,
-          colors: [Color(0xFF3A326F), AppColors.ink],
-        ),
-      ),
+      decoration: const BoxDecoration(color: AppColors.ink),
       child: Center(
         child: Semantics(
           label: 'Сейчас',
@@ -46,22 +43,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
-                  gradient: const LinearGradient(
-                    colors: [AppColors.violet, AppColors.coral],
-                  ),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x668B7CFF),
-                      blurRadius: 38,
-                      offset: Offset(0, 14),
-                    ),
-                  ],
+                  color: AppColors.violet,
+                  border: Border.all(color: AppColors.mint, width: 2),
                 ),
                 child: const Text(
-                  'С',
+                  'now',
                   style: TextStyle(
-                    fontSize: 44,
-                    fontWeight: FontWeight.w900,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
                     color: Colors.white,
                   ),
                 ),
@@ -73,7 +62,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                   fontSize: 34,
                   fontWeight: FontWeight.w800,
                   color: Colors.white,
-                  letterSpacing: -1,
                 ),
               ),
             ],
@@ -99,6 +87,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   bool _busy = false;
   String? _error;
   DateTime? _birthDate;
+  Timer? _resendTimer;
+  int _retryAfterSeconds = 0;
 
   @override
   void dispose() {
@@ -106,7 +96,58 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     _phone.dispose();
     _otp.dispose();
     _name.dispose();
+    _resendTimer?.cancel();
     super.dispose();
+  }
+
+  void _startResendCountdown(int seconds) {
+    _resendTimer?.cancel();
+    setState(() => _retryAfterSeconds = seconds);
+    _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+      if (_retryAfterSeconds <= 1) {
+        timer.cancel();
+        setState(() => _retryAfterSeconds = 0);
+      } else {
+        setState(() => _retryAfterSeconds -= 1);
+      }
+    });
+  }
+
+  void _showNetworkError(DioException error) {
+    final data = error.response?.data;
+    setState(
+      () => _error = data is Map && data['message'] != null
+          ? data['message'].toString()
+          : 'Не удалось связаться с сервером',
+    );
+  }
+
+  Future<void> _resendOtp() async {
+    if (_busy || _retryAfterSeconds > 0) return;
+    setState(() {
+      _error = null;
+      _busy = true;
+    });
+    try {
+      final retryAfter = await ref
+          .read(authRepositoryProvider)
+          .requestOtp(_phone.text.trim());
+      _startResendCountdown(retryAfter);
+    } on DioException catch (error) {
+      _showNetworkError(error);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  String get _maskedPhone {
+    final digits = _phone.text.replaceAll(RegExp(r'\D'), '');
+    if (digits.length < 4) return 'указанный номер';
+    return 'номер ••${digits.substring(digits.length - 2)}';
   }
 
   Future<void> _next() async {
@@ -118,20 +159,23 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       if (_step == 0) {
         if (_phone.text.trim().length < 10)
           throw const FormatException('Введите номер телефона');
-        await ref.read(authRepositoryProvider).requestOtp(_phone.text.trim());
+        final retryAfter = await ref
+            .read(authRepositoryProvider)
+            .requestOtp(_phone.text.trim());
+        _startResendCountdown(retryAfter);
       }
-      if (_step == 2 && _birthDate == null)
+      if (_step == 1 && !RegExp(r'^\d{6}$').hasMatch(_otp.text.trim()))
+        throw const FormatException('Введите шестизначный код');
+      if (_step == 3 && _birthDate == null)
         throw const FormatException('Выберите дату рождения');
-      if (_step == 3 && _name.text.trim().length < 2)
+      if (_step == 4 && _name.text.trim().length < 2)
         throw const FormatException('Введите имя');
       if (_step == 5) {
-        if (_otp.text.length != 6)
-          throw const FormatException('Введите шестизначный код');
         await ref
             .read(authRepositoryProvider)
             .verify(
               phone: _phone.text.trim(),
-              code: _otp.text,
+              code: _otp.text.trim(),
               birthDate: _birthDate!,
               displayName: _name.text.trim(),
             );
@@ -140,7 +184,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         return;
       }
       _step += 1;
-      if (_step == 5 && ref.read(appConfigProvider).demoMode) {
+      if (_step == 1 && ref.read(appConfigProvider).demoMode) {
         _otp.text = '123456';
       }
       await _page.animateToPage(
@@ -149,12 +193,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         curve: Curves.easeOutCubic,
       );
     } on DioException catch (error) {
-      final data = error.response?.data;
-      setState(
-        () => _error = data is Map && data['message'] != null
-            ? data['message'].toString()
-            : 'Не удалось связаться с сервером',
-      );
+      _showNetworkError(error);
     } on FormatException catch (error) {
       setState(() => _error = error.message);
     } finally {
@@ -208,12 +247,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   children: [
                     _Step(
                       icon: Icons.waving_hand_rounded,
-                      title: 'Ближе — прямо сейчас',
+                      title: 'Твой номер телефона',
                       text:
-                          'Только друзья, которых ты знаешь. Без публичной ленты и случайных людей.',
+                          'Нужен для входа и восстановления аккаунта. Номер увидишь только ты.',
                       child: Column(
                         children: [
                           TextField(
+                            key: const ValueKey('phone-input'),
                             controller: _phone,
                             keyboardType: TextInputType.phone,
                             autofillHints: const [
@@ -272,6 +312,32 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         ],
                       ),
                     ),
+                    _Step(
+                      icon: Icons.sms_outlined,
+                      title: 'Код из сообщения',
+                      text:
+                          'Отправили на $_maskedPhone. Введи шесть цифр из SMS.',
+                      child: Column(
+                        children: [
+                          _OtpCodeInput(
+                            controller: _otp,
+                            onChanged: () => setState(() {}),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          TextButton.icon(
+                            onPressed: _busy || _retryAfterSeconds > 0
+                                ? null
+                                : _resendOtp,
+                            icon: const Icon(Icons.refresh_rounded),
+                            label: Text(
+                              _retryAfterSeconds > 0
+                                  ? 'Повторно через $_retryAfterSeconds с'
+                                  : 'Отправить код ещё раз',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     const _Step(
                       icon: Icons.lock_outline_rounded,
                       title: 'Твоё пространство закрыто',
@@ -323,25 +389,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           'Контакты нужны только для поиска уже знакомых людей и остаются необязательными. Геолокацию запросим один раз при выборе места — фонового доступа нет.',
                       child: _PermissionCards(),
                     ),
-                    _Step(
-                      icon: Icons.sms_outlined,
-                      title: 'Последний шаг',
-                      text:
-                          'Введи код из SMS. В development используется код из локальной конфигурации.',
-                      child: TextField(
-                        controller: _otp,
-                        keyboardType: TextInputType.number,
-                        autofillHints: const [AutofillHints.oneTimeCode],
-                        maxLength: 6,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 30,
-                          letterSpacing: 12,
-                          fontWeight: FontWeight.w800,
-                        ),
-                        decoration: const InputDecoration(labelText: 'Код'),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -369,7 +416,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             height: 22,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : Text(_step == 5 ? 'Войти в свой круг' : 'Продолжить'),
+                        : Text(
+                            _step == 0
+                                ? 'Получить код'
+                                : _step == 5
+                                ? 'Войти в свой круг'
+                                : 'Продолжить',
+                          ),
                   ),
                 ),
               ),
@@ -426,6 +479,109 @@ class _Step extends StatelessWidget {
       ),
     ),
   );
+}
+
+class _OtpCodeInput extends StatefulWidget {
+  const _OtpCodeInput({required this.controller, required this.onChanged});
+
+  final TextEditingController controller;
+  final VoidCallback onChanged;
+
+  @override
+  State<_OtpCodeInput> createState() => _OtpCodeInputState();
+}
+
+class _OtpCodeInputState extends State<_OtpCodeInput> {
+  final _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(_onFocusChanged);
+  }
+
+  @override
+  void dispose() {
+    _focusNode
+      ..removeListener(_onFocusChanged)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onFocusChanged() => setState(() {});
+
+  @override
+  Widget build(BuildContext context) {
+    final code = widget.controller.text;
+    final borderColor = Theme.of(context).colorScheme.outlineVariant;
+    return Semantics(
+      label: 'Код из SMS, шесть цифр',
+      textField: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: _focusNode.requestFocus,
+        child: SizedBox(
+          height: 58,
+          child: Stack(
+            children: [
+              Row(
+                children: List.generate(6, (index) {
+                  final hasValue = index < code.length;
+                  final active = _focusNode.hasFocus && index == code.length;
+                  return Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(right: index == 5 ? 0 : 8),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(AppRadii.sm),
+                        border: Border.all(
+                          color: active ? AppColors.violet : borderColor,
+                          width: active ? 1.5 : 1,
+                        ),
+                      ),
+                      child: Text(
+                        hasValue ? code[index] : '',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ),
+                  );
+                }),
+              ),
+              Positioned.fill(
+                child: Opacity(
+                  opacity: .01,
+                  child: TextField(
+                    key: const ValueKey('otp-code-input'),
+                    controller: widget.controller,
+                    focusNode: _focusNode,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    autofillHints: const [AutofillHints.oneTimeCode],
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(6),
+                    ],
+                    maxLength: 6,
+                    onChanged: (_) => widget.onChanged(),
+                    decoration: const InputDecoration(
+                      isCollapsed: true,
+                      contentPadding: EdgeInsets.zero,
+                      counterText: '',
+                      border: InputBorder.none,
+                    ),
+                    style: const TextStyle(color: Colors.transparent),
+                    cursorColor: Colors.transparent,
+                    showCursor: false,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _PrivacyBullets extends StatelessWidget {

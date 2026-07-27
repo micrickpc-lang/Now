@@ -26,6 +26,68 @@ export function validateEnvironment(env: Record<string, unknown>) {
   if (!value.DATABASE_URL) throw new Error("DATABASE_URL is required");
   if (!value.REDIS_URL) throw new Error("REDIS_URL is required");
 
+  const smsProvider =
+    value.SMS_PROVIDER ??
+    (appEnvironment === "production"
+      ? "smsru"
+      : appEnvironment === "staging"
+        ? "staging"
+        : "development");
+  if (!["development", "staging", "smsru"].includes(smsProvider)) {
+    throw new Error("SMS_PROVIDER must be development, staging or smsru");
+  }
+  if (appEnvironment === "production" && smsProvider !== "smsru") {
+    throw new Error("Production requires the smsru SMS provider");
+  }
+  if (smsProvider === "development" && appEnvironment !== "development") {
+    throw new Error(
+      "Development SMS provider is forbidden outside development",
+    );
+  }
+  if (smsProvider === "staging" && appEnvironment !== "staging") {
+    throw new Error("Staging SMS provider is available only in staging");
+  }
+  value.SMS_PROVIDER = smsProvider;
+
+  const otpTtl = value.OTP_TTL_SECONDS ?? "300";
+  if (!/^\d+$/u.test(otpTtl) || Number(otpTtl) < 60 || Number(otpTtl) > 900) {
+    throw new Error("OTP_TTL_SECONDS must be between 60 and 900");
+  }
+  value.OTP_TTL_SECONDS = otpTtl;
+  if (
+    smsProvider === "development" &&
+    (value.ALLOW_DEV_OTP !== "true" ||
+      !/^\d{6}$/u.test(value.DEV_OTP_CODE ?? ""))
+  ) {
+    throw new Error(
+      "Development SMS provider requires ALLOW_DEV_OTP=true and a six-digit DEV_OTP_CODE",
+    );
+  }
+
+  const smsTimeout = value.SMS_RU_TIMEOUT_MS ?? "5000";
+  if (
+    !/^\d+$/u.test(smsTimeout) ||
+    Number(smsTimeout) < 500 ||
+    Number(smsTimeout) > 15_000
+  ) {
+    throw new Error("SMS_RU_TIMEOUT_MS must be between 500 and 15000");
+  }
+  value.SMS_RU_TIMEOUT_MS = smsTimeout;
+  if (smsProvider === "smsru") {
+    const apiId = value.SMS_RU_API_ID ?? "";
+    if (
+      apiId.length < 16 ||
+      /\s/u.test(apiId) ||
+      knownDevelopmentMarkers.some((marker) => apiId.includes(marker))
+    ) {
+      throw new Error("SMS_RU_API_ID must contain a valid provider credential");
+    }
+    const sender = value.SMS_RU_FROM ?? "";
+    if (sender.length > 32 || /[\r\n]/u.test(sender)) {
+      throw new Error("SMS_RU_FROM must be a single-line sender name");
+    }
+  }
+
   const trustProxyHops = value.TRUST_PROXY_HOPS ?? "0";
   if (!/^(0|[1-9]\d*)$/.test(trustProxyHops) || Number(trustProxyHops) > 10) {
     throw new Error("TRUST_PROXY_HOPS must be an integer between 0 and 10");
