@@ -15,10 +15,13 @@ services:
       PHONE_HASH_SECRET: ${PHONE_HASH_SECRET:?from secret manager}
       LOCATION_MASTER_KEY_BASE64: ${LOCATION_MASTER_KEY_BASE64:?from KMS-backed secret manager}
       LOCATION_PRIVACY_SECRET: ${LOCATION_PRIVACY_SECRET:?from KMS-backed secret manager}
-      SMS_PROVIDER: ${SMS_PROVIDER:-smsru}
-      SMS_RU_API_ID: ${SMS_RU_API_ID:?from secret manager}
-      SMS_RU_FROM: ${SMS_RU_FROM:-}
-      SMS_RU_TIMEOUT_MS: ${SMS_RU_TIMEOUT_MS:-5000}
+      AUTH_MODE: real_sms
+      SMS_PROVIDER: http
+      SMS_API_BASE_URL: ${SMS_API_BASE_URL:?from secret manager}
+      SMS_API_KEY: ${SMS_API_KEY:?from secret manager}
+      SMS_SENDER: ${SMS_SENDER:?approved sender name}
+      SMS_TEMPLATE: ${SMS_TEMPLATE:?single-line template containing {code}}
+      SMS_TIMEOUT_MS: ${SMS_TIMEOUT_MS:-10000}
       OTP_TTL_SECONDS: ${OTP_TTL_SECONDS:-300}
       APP_ORIGINS: ${APP_ORIGINS:?HTTPS origins}
       PUBLIC_API_URL: ${PUBLIC_API_URL:?first-party HTTPS API URL}
@@ -35,6 +38,14 @@ services:
       INTERNAL_MARTIN_URL: http://martin:3000
       INTERNAL_NOMINATIM_URL: http://nominatim:8080
       MAP_PUBLIC_BASE_URL: ${MAP_PUBLIC_BASE_URL:?first-party HTTPS URL}
+      MAP_MODE: ${MAP_MODE:-self_hosted}
+      GEOCODING_BASE_URL: ${GEOCODING_BASE_URL:-}
+      REVERSE_GEOCODING_BASE_URL: ${REVERSE_GEOCODING_BASE_URL:-}
+      GEOCODING_API_KEY: ${GEOCODING_API_KEY:-}
+      GEOCODING_API_KEY_HEADER: ${GEOCODING_API_KEY_HEADER:-}
+      GEOCODING_API_KEY_QUERY_PARAM: ${GEOCODING_API_KEY_QUERY_PARAM:-key}
+      MAP_GLOBAL_FALLBACK_TO_SELF_HOSTED: ${MAP_GLOBAL_FALLBACK_TO_SELF_HOSTED:-false}
+      MAP_GEOCODER_RETRY_DELAY_MS: ${MAP_GEOCODER_RETRY_DELAY_MS:-1200}
     security_opt: ["no-new-privileges:true"]
     cap_drop: ["ALL"]
     stop_grace_period: 30s

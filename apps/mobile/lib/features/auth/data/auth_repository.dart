@@ -19,8 +19,17 @@ class AuthRepository {
 
   Future<int> requestOtp(String phone) async {
     if (_demoMode) return 60;
+    return _sendOtp('/auth/otp/request', phone);
+  }
+
+  Future<int> resendOtp(String phone) async {
+    if (_demoMode) return 60;
+    return _sendOtp('/auth/otp/resend', phone);
+  }
+
+  Future<int> _sendOtp(String endpoint, String phone) async {
     final response = await _api.dio.post<Map<String, dynamic>>(
-      '/auth/otp/request',
+      endpoint,
       data: {'phone': phone},
       options: Options(extra: {'skipAuth': true}),
     );

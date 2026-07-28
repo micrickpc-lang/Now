@@ -1,15 +1,21 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { isIP } from "node:net";
 
 export const OTP_PROVIDER = Symbol("OTP_PROVIDER");
 
-export type OtpDispatchContext = {
-  requestIp: string;
+export type SmsOtpInput = {
+  phoneE164: string;
+  code: string;
+  requestId: string;
 };
 
-export interface OtpProvider {
-  send(phone: string, code: string, context: OtpDispatchContext): Promise<void>;
+/**
+ * Provider-neutral OTP delivery boundary. The HTTP adapter sends a JSON POST
+ * with Bearer authentication; providers with another wire format only need a
+ * separate implementation of this interface.
+ */
+export interface SmsProvider {
+  sendOtp(input: SmsOtpInput): Promise<void>;
 }
 
 export function stagingPhoneAllowlist(config: ConfigService): Set<string> {
@@ -22,61 +28,135 @@ export function stagingPhoneAllowlist(config: ConfigService): Set<string> {
 }
 
 @Injectable()
-export class DevelopmentOtpProvider implements OtpProvider {
-  private readonly logger = new Logger("DevelopmentOtpProvider");
+export class LocalTestSmsProvider implements SmsProvider {
+  private readonly logger = new Logger(LocalTestSmsProvider.name);
 
   constructor(private readonly config: ConfigService) {}
 
-  send(
-    phone: string,
-    code: string,
-    context: OtpDispatchContext,
-  ): Promise<void> {
+  sendOtp(input: SmsOtpInput): Promise<void> {
     if (
       this.config.get("NODE_ENV") !== "development" ||
-      this.config.get("ALLOW_DEV_OTP") !== "true"
+      this.config.get("APP_ENV") !== "development" ||
+      this.config.get("AUTH_MODE") !== "local_test" ||
+      this.config.get("ALLOW_LOCAL_TEST_OTP") !== "true"
     ) {
-      throw new Error("Development OTP provider is disabled");
+      return Promise.reject(new Error("Local test SMS provider is disabled"));
     }
-    void phone;
-    void code;
-    void context;
-    this.logger.warn({ event: "development_otp_dispatched" });
+    // Do not log phone numbers or OTPs, even in the local-only transport.
+    this.logger.log({
+      event: "local_test_otp_dispatched",
+      requestId: input.requestId,
+    });
+    return Promise.resolve();
+  }
+}
+
+type HttpSmsResponse = {
+  success?: unknown;
+  error?: unknown;
+  id?: unknown;
+  messageId?: unknown;
+};
+
+/**
+ * Generic provider contract: POST `SMS_API_BASE_URL` with JSON
+ * `{ to, from, message, requestId }`, `Authorization: Bearer SMS_API_KEY`,
+ * and `Idempotency-Key: requestId`. Any 2xx response is accepted unless JSON
+ * explicitly contains `success: false` or `error`; optional `id`/`messageId`
+ * values are recorded as the provider delivery identifier.
+ */
+@Injectable()
+export class HttpSmsProvider implements SmsProvider {
+  private readonly logger = new Logger(HttpSmsProvider.name);
+
+  constructor(private readonly config: ConfigService) {}
+
+  async sendOtp(input: SmsOtpInput): Promise<void> {
+    const controller = new AbortController();
+    const timeout = setTimeout(
+      () => controller.abort(),
+      Number(this.config.get("SMS_TIMEOUT_MS") ?? "10000"),
+    );
+    let response: Response;
+    try {
+      response = await fetch(
+        this.config.getOrThrow<string>("SMS_API_BASE_URL"),
+        {
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${this.config.getOrThrow<string>("SMS_API_KEY")}`,
+            "content-type": "application/json",
+            "idempotency-key": input.requestId,
+          },
+          body: JSON.stringify({
+            to: input.phoneE164,
+            from: this.config.getOrThrow<string>("SMS_SENDER"),
+            message: this.config
+              .getOrThrow<string>("SMS_TEMPLATE")
+              .replaceAll("{code}", input.code),
+            requestId: input.requestId,
+          }),
+          signal: controller.signal,
+        },
+      );
+    } catch {
+      throw new Error("SMS provider request failed");
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    let payload: HttpSmsResponse | undefined;
+    try {
+      payload = (await response.json()) as HttpSmsResponse;
+    } catch {
+      // A successful 2xx response without JSON is valid for providers that do
+      // not expose a delivery identifier.
+    }
+    if (!response.ok || payload?.success === false || payload?.error) {
+      throw new Error("SMS provider rejected the message");
+    }
+
+    const providerMessageId = payload?.messageId ?? payload?.id;
+    this.logger.log({
+      event: "sms_provider_accepted",
+      requestId: input.requestId,
+      ...(typeof providerMessageId === "string" ? { providerMessageId } : {}),
+    });
+  }
+}
+
+/** Test-only provider. It is intentionally not registered by AuthModule. */
+export class FakeSmsProvider implements SmsProvider {
+  readonly sent: SmsOtpInput[] = [];
+  failWith?: Error;
+
+  sendOtp(input: SmsOtpInput): Promise<void> {
+    if (this.failWith) return Promise.reject(this.failWith);
+    this.sent.push({ ...input });
     return Promise.resolve();
   }
 }
 
 @Injectable()
-export class StagingOtpProvider implements OtpProvider {
+export class StagingOtpProvider implements SmsProvider {
   constructor(private readonly config: ConfigService) {}
 
-  send(
-    phone: string,
-    code: string,
-    context: OtpDispatchContext,
-  ): Promise<void> {
+  sendOtp(input: SmsOtpInput): Promise<void> {
     if (this.config.get("APP_ENV") !== "staging") {
-      throw new Error("Staging OTP provider is disabled");
+      return Promise.reject(new Error("Staging OTP provider is disabled"));
     }
-    if (!stagingPhoneAllowlist(this.config).has(phone)) {
+    if (!stagingPhoneAllowlist(this.config).has(input.phoneE164)) {
       return Promise.reject(
         new Error("Real SMS is not configured for this staging number"),
       );
     }
-    if (code !== this.config.getOrThrow<string>("STAGING_TEST_OTP")) {
-      throw new Error("Invalid staging OTP dispatch configuration");
+    if (input.code !== this.config.getOrThrow<string>("STAGING_TEST_OTP")) {
+      return Promise.reject(
+        new Error("Invalid staging OTP dispatch configuration"),
+      );
     }
-    void context;
     return Promise.resolve();
   }
-}
-
-export abstract class ProductionOtpProvider implements OtpProvider {
-  abstract send(
-    phone: string,
-    code: string,
-    context: OtpDispatchContext,
-  ): Promise<void>;
 }
 
 type SmsRuResponse = {
@@ -92,37 +172,30 @@ type SmsRuResponse = {
 };
 
 @Injectable()
-export class SmsRuOtpProvider extends ProductionOtpProvider {
+export class SmsRuOtpProvider implements SmsProvider {
   private static readonly endpoint = "https://sms.ru/sms/send";
 
-  constructor(private readonly config: ConfigService) {
-    super();
-  }
+  constructor(private readonly config: ConfigService) {}
 
-  async send(
-    phone: string,
-    code: string,
-    context: OtpDispatchContext,
-  ): Promise<void> {
+  async sendOtp(input: SmsOtpInput): Promise<void> {
     if (
       this.config.get<string>("APP_ENV") === "staging" &&
-      stagingPhoneAllowlist(this.config).has(phone)
+      stagingPhoneAllowlist(this.config).has(input.phoneE164)
     ) {
       return;
     }
 
-    const target = phone.replace(/^\+/u, "");
+    const target = input.phoneE164.replace(/^\+/u, "");
     const ttlSeconds = Number(this.config.get("OTP_TTL_SECONDS") ?? "300");
     const body = new URLSearchParams({
       api_id: this.config.getOrThrow<string>("SMS_RU_API_ID"),
       to: target,
-      msg: `Код для входа в «Сейчас»: ${code}. Никому его не сообщайте.`,
+      msg: `Код для входа в «Сейчас»: ${input.code}. Никому его не сообщайте.`,
       json: "1",
       ttl: String(Math.max(1, Math.min(1440, Math.ceil(ttlSeconds / 60)))),
     });
     const sender = this.config.get<string>("SMS_RU_FROM")?.trim();
     if (sender) body.set("from", sender);
-    if (isIP(context.requestIp)) body.set("ip", context.requestIp);
 
     const controller = new AbortController();
     const timeout = setTimeout(
@@ -163,8 +236,8 @@ export class SmsRuOtpProvider extends ProductionOtpProvider {
 }
 
 @Injectable()
-export class UnconfiguredProductionOtpProvider extends ProductionOtpProvider {
-  send(): Promise<void> {
+export class UnconfiguredProductionOtpProvider implements SmsProvider {
+  sendOtp(): Promise<void> {
     return Promise.reject(
       new Error("Production SMS provider is not configured"),
     );
@@ -173,8 +246,9 @@ export class UnconfiguredProductionOtpProvider extends ProductionOtpProvider {
 
 @Injectable()
 export class OtpDispatcher {
-  constructor(@Inject(OTP_PROVIDER) private readonly provider: OtpProvider) {}
-  send(phone: string, code: string, context: OtpDispatchContext) {
-    return this.provider.send(phone, code, context);
+  constructor(@Inject(OTP_PROVIDER) private readonly provider: SmsProvider) {}
+
+  sendOtp(input: SmsOtpInput) {
+    return this.provider.sendOtp(input);
   }
 }

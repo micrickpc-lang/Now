@@ -11,6 +11,20 @@ import '../../../core/config/app_config.dart';
 import '../../../core/widgets/app_widgets.dart';
 import '../data/auth_repository.dart';
 
+const _countryCallingCodes = [
+  _CountryCallingCode('Россия', '+7'),
+  _CountryCallingCode('США', '+1'),
+  _CountryCallingCode('Великобритания', '+44'),
+  _CountryCallingCode('Германия', '+49'),
+];
+
+class _CountryCallingCode {
+  const _CountryCallingCode(this.country, this.code);
+
+  final String country;
+  final String code;
+}
+
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
   @override
@@ -83,6 +97,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final _phone = TextEditingController();
   final _otp = TextEditingController();
   final _name = TextEditingController();
+  String _countryCode = '+7';
   int _step = 0;
   bool _busy = false;
   String? _error;
@@ -135,7 +150,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     try {
       final retryAfter = await ref
           .read(authRepositoryProvider)
-          .requestOtp(_phone.text.trim());
+          .resendOtp(_normalizedPhone());
       _startResendCountdown(retryAfter);
     } on DioException catch (error) {
       _showNetworkError(error);
@@ -145,10 +160,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   String get _maskedPhone {
-    final digits = _phone.text.replaceAll(RegExp(r'\D'), '');
+    final digits = _normalizedPhone().replaceAll(RegExp(r'\D'), '');
     if (digits.length < 4) return 'указанный номер';
     return 'номер ••${digits.substring(digits.length - 2)}';
   }
+
+  String _normalizedPhone() {
+    final raw = _phone.text.trim().replaceAll(RegExp(r'[\s().-]'), '');
+    if (raw.startsWith('+')) return raw;
+    return '$_countryCode${raw.replaceAll(RegExp(r'\D'), '')}';
+  }
+
+  bool get _hasValidPhone =>
+      RegExp(r'^\+[1-9]\d{7,14}$').hasMatch(_normalizedPhone());
 
   Future<void> _next() async {
     setState(() {
@@ -157,11 +181,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     });
     try {
       if (_step == 0) {
-        if (_phone.text.trim().length < 10)
-          throw const FormatException('Введите номер телефона');
+        if (!_hasValidPhone) {
+          throw const FormatException('Введите номер в международном формате');
+        }
         final retryAfter = await ref
             .read(authRepositoryProvider)
-            .requestOtp(_phone.text.trim());
+            .requestOtp(_normalizedPhone());
         _startResendCountdown(retryAfter);
       }
       if (_step == 1 && !RegExp(r'^\d{6}$').hasMatch(_otp.text.trim()))
@@ -174,7 +199,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         await ref
             .read(authRepositoryProvider)
             .verify(
-              phone: _phone.text.trim(),
+              phone: _normalizedPhone(),
               code: _otp.text.trim(),
               birthDate: _birthDate!,
               displayName: _name.text.trim(),
@@ -252,17 +277,50 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           'Нужен для входа и восстановления аккаунта. Номер увидишь только ты.',
                       child: Column(
                         children: [
-                          TextField(
-                            key: const ValueKey('phone-input'),
-                            controller: _phone,
-                            keyboardType: TextInputType.phone,
-                            autofillHints: const [
-                              AutofillHints.telephoneNumber,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 132,
+                                child: DropdownButtonFormField<String>(
+                                  initialValue: _countryCode,
+                                  isExpanded: true,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Код',
+                                  ),
+                                  items: _countryCallingCodes
+                                      .map(
+                                        (entry) => DropdownMenuItem(
+                                          value: entry.code,
+                                          child: Text('${entry.code} ${entry.country}'),
+                                        ),
+                                      )
+                                      .toList(growable: false),
+                                  onChanged: _busy
+                                      ? null
+                                      : (value) {
+                                          if (value != null) {
+                                            setState(() => _countryCode = value);
+                                          }
+                                        },
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.sm),
+                              Expanded(
+                                child: TextField(
+                                  key: const ValueKey('phone-input'),
+                                  controller: _phone,
+                                  keyboardType: TextInputType.phone,
+                                  autofillHints: const [
+                                    AutofillHints.telephoneNumber,
+                                  ],
+                                  decoration: const InputDecoration(
+                                    labelText: 'Номер телефона',
+                                    hintText: '900 000-00-00',
+                                  ),
+                                ),
+                              ),
                             ],
-                            decoration: const InputDecoration(
-                              labelText: 'Номер телефона',
-                              hintText: '+7 900 000-00-00',
-                            ),
                           ),
                           if (config.environment !=
                               AppEnvironment.production) ...[
@@ -301,7 +359,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                   await ref
                                       .read(demoModeProvider.notifier)
                                       .setEnabled(true);
-                                  _phone.text = '+7 999 000-00-00';
+                                  _phone.text = '999 000-00-00';
                                 },
                                 icon: const Icon(Icons.offline_bolt_outlined),
                                 label: const Text(

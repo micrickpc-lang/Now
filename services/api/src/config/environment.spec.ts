@@ -14,7 +14,75 @@ const safeProduction = {
   SMS_RU_API_ID: "unit-test-provider-credential",
 };
 
+const localTestEnvironment = {
+  NODE_ENV: "development",
+  APP_ENV: "development",
+  DATABASE_URL: "postgresql://db/app",
+  REDIS_URL: "redis://redis",
+  AUTH_MODE: "local_test",
+  ALLOW_LOCAL_TEST_OTP: "true",
+  LOCAL_TEST_OTP: "123456",
+};
+
+const realSmsEnvironment = {
+  ...safeProduction,
+  AUTH_MODE: "real_sms",
+  SMS_PROVIDER: "http",
+  SMS_API_BASE_URL: "https://sms.example.invalid/v1/messages",
+  SMS_API_KEY: "real-provider-credential-for-tests",
+  SMS_SENDER: "Seichas",
+  SMS_TEMPLATE: "Your code is {code}",
+  SMS_TIMEOUT_MS: "10000",
+};
+
 describe("validateEnvironment", () => {
+  it("accepts local_test only with its explicit development guard", () => {
+    const value = validateEnvironment(localTestEnvironment);
+    expect(value.AUTH_MODE).toBe("local_test");
+    expect(value.SMS_PROVIDER).toBe("local_test");
+  });
+
+  it.each([
+    {
+      NODE_ENV: "production",
+      APP_ENV: "production",
+      error: "allowed only",
+    },
+    { ALLOW_LOCAL_TEST_OTP: "false", error: "ALLOW_LOCAL_TEST_OTP" },
+    { LOCAL_TEST_OTP: "invalid", error: "LOCAL_TEST_OTP" },
+    { SMS_PROVIDER: "http", error: "external SMS_PROVIDER" },
+  ])("rejects unsafe local_test configuration", (override) => {
+    const { error, ...environment } = override;
+    expect(() =>
+      validateEnvironment({ ...localTestEnvironment, ...environment }),
+    ).toThrow(error);
+  });
+
+  it("validates the provider-neutral real SMS configuration", () => {
+    expect(validateEnvironment(realSmsEnvironment).SMS_PROVIDER).toBe("http");
+  });
+
+  it.each([
+    { SMS_API_BASE_URL: "not-a-url", error: "SMS_API_BASE_URL" },
+    { SMS_API_KEY: "too-short", error: "SMS_API_KEY" },
+    { SMS_TEMPLATE: "No code placeholder", error: "SMS_TEMPLATE" },
+    { SMS_PROVIDER: "smsru", error: "SMS_PROVIDER=http" },
+  ])("rejects incomplete real SMS configuration", (override) => {
+    const { error, ...environment } = override;
+    expect(() =>
+      validateEnvironment({ ...realSmsEnvironment, ...environment }),
+    ).toThrow(error);
+  });
+
+  it("requires HTTPS for a production real SMS endpoint", () => {
+    expect(() =>
+      validateEnvironment({
+        ...realSmsEnvironment,
+        SMS_API_BASE_URL: "http://sms.example.invalid/v1/messages",
+      }),
+    ).toThrow("HTTPS");
+  });
+
   it("rejects development OTP in production", () => {
     expect(() =>
       validateEnvironment({ ...safeProduction, ALLOW_DEV_OTP: "true" }),
@@ -36,7 +104,7 @@ describe("validateEnvironment", () => {
     ).toThrow("SMS_RU_API_ID");
   });
 
-  it("requires a usable development OTP configuration", () => {
+  it("requires an explicit auth mode for development", () => {
     expect(() =>
       validateEnvironment({
         NODE_ENV: "development",
@@ -46,18 +114,7 @@ describe("validateEnvironment", () => {
         SMS_PROVIDER: "development",
         ALLOW_DEV_OTP: "false",
       }),
-    ).toThrow("six-digit DEV_OTP_CODE");
-    expect(
-      validateEnvironment({
-        NODE_ENV: "development",
-        APP_ENV: "development",
-        DATABASE_URL: "postgresql://db/app",
-        REDIS_URL: "redis://redis",
-        SMS_PROVIDER: "development",
-        ALLOW_DEV_OTP: "true",
-        DEV_OTP_CODE: "123456",
-      }).SMS_PROVIDER,
-    ).toBe("development");
+    ).toThrow("AUTH_MODE");
   });
 
   it("validates the OTP lifetime", () => {
@@ -150,5 +207,32 @@ describe("validateEnvironment", () => {
         STAGING_TEST_OTP: "654321",
       }),
     ).toThrow("APP_ENV=production");
+  });
+
+  it("requires fixed HTTPS upstreams in global map mode", () => {
+    expect(() =>
+      validateEnvironment({
+        ...safeProduction,
+        MAP_MODE: "global_provider",
+      }),
+    ).toThrow("GEOCODING_BASE_URL");
+
+    expect(
+      validateEnvironment({
+        ...safeProduction,
+        MAP_MODE: "global_provider",
+        GEOCODING_BASE_URL: "https://geocoder.example.invalid/search",
+        REVERSE_GEOCODING_BASE_URL: "https://geocoder.example.invalid/reverse",
+      }).MAP_MODE,
+    ).toBe("global_provider");
+  });
+
+  it("rejects malformed global geocoder credential settings", () => {
+    expect(() =>
+      validateEnvironment({
+        ...safeProduction,
+        GEOCODING_API_KEY_HEADER: "invalid header",
+      }),
+    ).toThrow("GEOCODING_API_KEY_HEADER");
   });
 });

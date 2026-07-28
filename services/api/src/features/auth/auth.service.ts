@@ -56,7 +56,11 @@ export class AuthService {
       },
     });
     try {
-      await this.otp.send(phone, code, { requestIp: ip });
+      await this.otp.sendOtp({
+        phoneE164: phone,
+        code,
+        requestId: challenge.id,
+      });
     } catch {
       await this.prisma.otpChallenge.deleteMany({
         where: { id: challenge.id, consumedAt: null },
@@ -66,6 +70,10 @@ export class AuthService {
       );
     }
     return GENERIC_OTP_RESPONSE;
+  }
+
+  resendOtp(rawPhone: string, ip: string) {
+    return this.requestOtp(rawPhone, ip);
   }
 
   async verifyOtp(dto: VerifyOtpDto, ip: string, userAgent?: string) {
@@ -245,6 +253,29 @@ export class AuthService {
     });
   }
 
+  async session(userId: string, sessionId: string) {
+    const session = await this.prisma.authSession.findFirst({
+      where: {
+        id: sessionId,
+        userId,
+        revokedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        lastUsedAt: true,
+        expiresAt: true,
+        device: {
+          select: { platform: true, label: true, installationId: true },
+        },
+      },
+    });
+    if (!session)
+      throw new UnauthorizedException("Session is no longer active");
+    return session;
+  }
+
   async revokeSession(userId: string, sessionId: string) {
     const result = await this.prisma.authSession.updateMany({
       where: { id: sessionId, userId, revokedAt: null },
@@ -269,6 +300,10 @@ export class AuthService {
   }
 
   private normalizePhone(input: string): string {
+    if (this.config.get<string>("AUTH_MODE") === "local_test") {
+      const normalized = input.trim().replace(/[\s().-]/gu, "");
+      if (/^\+[1-9]\d{7,14}$/u.test(normalized)) return normalized;
+    }
     const parsed = parsePhoneNumberFromString(input, "RU");
     if (!parsed?.isValid())
       throw new BadRequestException("Некорректный номер телефона");
@@ -278,10 +313,12 @@ export class AuthService {
   private issueOtpCode(phone: string): string {
     const appEnvironment = this.config.get<string>("APP_ENV");
     if (
-      this.config.get<string>("SMS_PROVIDER") === "development" &&
-      this.config.get("DEV_OTP_CODE")
+      this.config.get<string>("AUTH_MODE") === "local_test" &&
+      this.config.get("NODE_ENV") === "development" &&
+      appEnvironment === "development" &&
+      this.config.get("ALLOW_LOCAL_TEST_OTP") === "true"
     ) {
-      return this.config.getOrThrow<string>("DEV_OTP_CODE");
+      return this.config.getOrThrow<string>("LOCAL_TEST_OTP");
     }
     if (
       appEnvironment === "staging" &&
