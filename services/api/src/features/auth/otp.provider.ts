@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
 export const OTP_PROVIDER = Symbol("OTP_PROVIDER");
@@ -9,8 +9,6 @@ export interface OtpProvider {
 
 @Injectable()
 export class DevelopmentOtpProvider implements OtpProvider {
-  private readonly logger = new Logger("DevelopmentOtpProvider");
-
   constructor(private readonly config: ConfigService) {}
 
   send(phone: string, code: string): Promise<void> {
@@ -20,10 +18,8 @@ export class DevelopmentOtpProvider implements OtpProvider {
     ) {
       throw new Error("Development OTP provider is disabled");
     }
-    const masked = `${phone.slice(0, 3)}***${phone.slice(-2)}`;
-    this.logger.warn(
-      JSON.stringify({ event: "development_otp", phone: masked, code }),
-    );
+    void phone;
+    void code;
     return Promise.resolve();
   }
 }

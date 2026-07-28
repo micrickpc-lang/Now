@@ -33,9 +33,12 @@ jobs:
       JWT_SECRET: ci-only-jwt-secret-at-least-thirty-two-bytes
       TOKEN_HASH_SECRET: ci-only-token-hash-secret-at-least-thirty-two-bytes
       PHONE_HASH_SECRET: ci-only-phone-hash-secret-at-least-thirty-two-bytes
+      EMAIL_HASH_SECRET: ci-only-email-hash-secret-at-least-thirty-two-bytes
       LOCATION_MASTER_KEY_BASE64: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
       ALLOW_DEV_OTP: "true"
       DEV_OTP_CODE: "123456"
+      ALLOW_LEGACY_SMS_TEST_MODE: "true"
+      EMAIL_DELIVERY_MODE: disabled
       APP_ORIGINS: http://localhost:3001
       ADMIN_SESSION_SECRET: ci-only-admin-session-secret-at-least-thirty-two
       MINIO_ACCESS_KEY: ci-minio
@@ -62,7 +65,15 @@ jobs:
           NODE_ENV: production
       - run: npm run security:maps
       - run: npm run security:secrets
-      - run: npm audit --audit-level=high
+      - name: Audit production dependency graph
+        run: npm audit --omit=dev --audit-level=high
+      - name: Generate production SBOM
+        run: npm sbom --omit=dev --sbom-format cyclonedx > sbom.cyclonedx.json
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-sbom
+          path: sbom.cyclonedx.json
 
   flutter:
     runs-on: ubuntu-24.04

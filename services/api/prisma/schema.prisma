@@ -14,6 +14,16 @@ enum UserStatus {
   DELETING
 }
 
+enum AuthIdentityProvider {
+  EMAIL
+  GOOGLE
+}
+
+enum EmailLoginCodePurpose {
+  LOGIN
+  LINK_IDENTITY
+}
+
 enum FriendshipStatus {
   PENDING
   ACCEPTED
@@ -46,6 +56,16 @@ enum LocationMode {
   DISTRICT
   APPROXIMATE
   EXACT_ROOM
+}
+
+enum GlobalLocationShareAudience {
+  FRIENDS
+  SELECTED
+}
+
+enum GlobalLocationPrecision {
+  APPROXIMATE
+  EXACT
 }
 
 enum JoinRequestState {
@@ -121,9 +141,14 @@ enum MessageDeliveryState {
 
 model User {
   id                          String               @id @default(uuid()) @db.Uuid
-  phoneHash                   String               @unique @map("phone_hash")
-  phoneCiphertext             String               @map("phone_ciphertext")
-  birthDate                   DateTime             @map("birth_date") @db.Date
+  phoneHash                   String?              @unique @map("phone_hash")
+  phoneCiphertext             String?              @map("phone_ciphertext")
+  emailHash                   String?              @unique @map("email_hash")
+  emailCiphertext             String?              @map("email_ciphertext")
+  emailVerifiedAt             DateTime?            @map("email_verified_at")
+  username                    String?              @unique @db.VarChar(32)
+  profileCompletedAt          DateTime?            @map("profile_completed_at")
+  birthDate                   DateTime?            @map("birth_date") @db.Date
   limitedMode                 Boolean              @default(false) @map("limited_mode")
   status                      UserStatus           @default(ACTIVE)
   createdAt                   DateTime             @default(now()) @map("created_at")
@@ -132,6 +157,8 @@ model User {
   profile                     UserProfile?
   devices                     Device[]
   sessions                    AuthSession[]
+  identities                  AuthIdentity[]
+  emailLoginCodes             EmailLoginCode[]
   circlesOwned                Circle[]             @relation("CircleOwner")
   circleMemberships           CircleMember[]
   invitesCreated              FriendshipInvite[]   @relation("InviteCreator")
@@ -148,6 +175,9 @@ model User {
   reactions                   RoomReaction[]
   pollVotes                   RoomPollVote[]
   locationShares              LocationShare[]
+  currentLocation             UserLocation?
+  globalLocationSharesOwned   GlobalLocationShare[]          @relation("GlobalLocationShareOwner")
+  globalLocationShareRecipients GlobalLocationShareRecipient[] @relation("GlobalLocationShareRecipient")
   memories                    Memory[]             @relation("MemoryOwner")
   memoryParticipants          MemoryParticipant[]
   media                       MediaFile[]
@@ -201,6 +231,7 @@ model Device {
   installationId String        @map("installation_id") @db.VarChar(128)
   platform       String        @db.VarChar(16)
   label          String?       @db.VarChar(80)
+  appVersion     String?       @map("app_version") @db.VarChar(40)
   lastSeenAt     DateTime      @default(now()) @map("last_seen_at")
   createdAt      DateTime      @default(now()) @map("created_at")
   user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -212,23 +243,81 @@ model Device {
 }
 
 model AuthSession {
-  id               String    @id @default(uuid()) @db.Uuid
-  userId           String    @map("user_id") @db.Uuid
-  deviceId         String?   @map("device_id") @db.Uuid
-  refreshTokenHash String    @map("refresh_token_hash")
-  rotationCounter  Int       @default(0) @map("rotation_counter")
-  ipHash           String?   @map("ip_hash")
-  userAgent        String?   @map("user_agent") @db.VarChar(255)
-  expiresAt        DateTime  @map("expires_at")
-  lastUsedAt       DateTime  @default(now()) @map("last_used_at")
-  revokedAt        DateTime? @map("revoked_at")
-  createdAt        DateTime  @default(now()) @map("created_at")
-  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  device           Device?   @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  id               String         @id @default(uuid()) @db.Uuid
+  userId           String         @map("user_id") @db.Uuid
+  deviceId         String?        @map("device_id") @db.Uuid
+  refreshTokenHash String         @map("refresh_token_hash")
+  tokenFamilyId    String         @default(uuid()) @map("token_family_id") @db.Uuid
+  rotationCounter  Int            @default(0) @map("rotation_counter")
+  ipHash           String?        @map("ip_hash")
+  userAgent        String?        @map("user_agent") @db.VarChar(255)
+  expiresAt        DateTime       @map("expires_at")
+  lastUsedAt       DateTime       @default(now()) @map("last_used_at")
+  revokedAt        DateTime?      @map("revoked_at")
+  revokeReason     String?        @map("revoke_reason") @db.VarChar(64)
+  appVersion       String?        @map("app_version") @db.VarChar(40)
+  createdAt        DateTime       @default(now()) @map("created_at")
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device           Device?        @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  refreshTokens    RefreshToken[]
 
   @@index([userId, revokedAt])
+  @@index([tokenFamilyId, revokedAt])
   @@index([expiresAt])
   @@map("auth_sessions")
+}
+
+model RefreshToken {
+  id           String        @id @default(uuid()) @db.Uuid
+  sessionId    String        @map("session_id") @db.Uuid
+  tokenHash    String        @unique @map("token_hash")
+  issuedAt     DateTime      @default(now()) @map("issued_at")
+  usedAt       DateTime?     @map("used_at")
+  revokedAt    DateTime?     @map("revoked_at")
+  expiresAt    DateTime      @map("expires_at")
+  replacedById String?       @unique @map("replaced_by_id") @db.Uuid
+  session      AuthSession   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  replacedBy   RefreshToken? @relation("RefreshTokenReplacement", fields: [replacedById], references: [id], onDelete: SetNull)
+  replaces     RefreshToken? @relation("RefreshTokenReplacement")
+
+  @@index([sessionId, revokedAt])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+model AuthIdentity {
+  id          String               @id @default(uuid()) @db.Uuid
+  userId      String               @map("user_id") @db.Uuid
+  provider    AuthIdentityProvider
+  subjectHash String               @map("subject_hash") @db.VarChar(96)
+  createdAt   DateTime             @default(now()) @map("created_at")
+  updatedAt   DateTime             @updatedAt @map("updated_at")
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, subjectHash])
+  @@index([userId])
+  @@map("auth_identities")
+}
+
+model EmailLoginCode {
+  id                String                @id @default(uuid()) @db.Uuid
+  emailHash         String                @map("email_hash") @db.VarChar(96)
+  codeHash          String                @map("code_hash") @db.VarChar(96)
+  purpose           EmailLoginCodePurpose @default(LOGIN)
+  requestedByUserId String?               @map("requested_by_user_id") @db.Uuid
+  requestIpHash     String                @map("request_ip_hash") @db.VarChar(96)
+  installationId    String?               @map("installation_id") @db.VarChar(128)
+  attemptCount      Int                   @default(0) @map("attempt_count")
+  resendCount       Int                   @default(0) @map("resend_count")
+  expiresAt         DateTime              @map("expires_at")
+  consumedAt        DateTime?             @map("consumed_at")
+  createdAt         DateTime              @default(now()) @map("created_at")
+  user              User?                 @relation(fields: [requestedByUserId], references: [id], onDelete: Cascade)
+
+  @@index([emailHash, purpose, createdAt])
+  @@index([requestIpHash, createdAt])
+  @@index([expiresAt])
+  @@map("email_login_codes")
 }
 
 model OtpChallenge {
@@ -500,6 +589,54 @@ model LocationShare {
   @@unique([roomId, ownerId])
   @@index([expiresAt])
   @@map("location_shares")
+}
+
+// Global map sharing is deliberately separate from the ephemeral room share above.
+// Recipients are snapshotted when consent is granted, so re-friending never restores
+// a previously revoked share.
+model UserLocation {
+  ownerId          String   @id @map("owner_id") @db.Uuid
+  ciphertext       String
+  iv               String
+  authTag          String   @map("auth_tag")
+  encryptedDataKey String   @map("encrypted_data_key")
+  keyIv            String   @map("key_iv")
+  keyAuthTag       String   @map("key_auth_tag")
+  capturedAt       DateTime @map("captured_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+  owner            User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([updatedAt])
+  @@map("user_locations")
+}
+
+model GlobalLocationShare {
+  id                String                      @id @default(uuid()) @db.Uuid
+  ownerId           String                      @map("owner_id") @db.Uuid
+  audience          GlobalLocationShareAudience
+  precision         GlobalLocationPrecision
+  explicitConsentAt DateTime                    @map("explicit_consent_at")
+  expiresAt         DateTime                    @map("expires_at")
+  revokedAt         DateTime?                   @map("revoked_at")
+  createdAt         DateTime                    @default(now()) @map("created_at")
+  owner             User                        @relation("GlobalLocationShareOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  recipients        GlobalLocationShareRecipient[]
+
+  @@index([ownerId, expiresAt])
+  @@index([expiresAt])
+  @@map("global_location_shares")
+}
+
+model GlobalLocationShareRecipient {
+  shareId     String              @map("share_id") @db.Uuid
+  recipientId String              @map("recipient_id") @db.Uuid
+  createdAt   DateTime            @default(now()) @map("created_at")
+  share       GlobalLocationShare @relation(fields: [shareId], references: [id], onDelete: Cascade)
+  recipient   User                @relation("GlobalLocationShareRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@id([shareId, recipientId])
+  @@index([recipientId, shareId])
+  @@map("global_location_share_recipients")
 }
 
 model Conversation {

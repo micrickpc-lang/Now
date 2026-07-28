@@ -7,9 +7,12 @@ x-app-env: &app-env
   JWT_SECRET: development-only-change-to-at-least-32-bytes
   TOKEN_HASH_SECRET: development-only-change-to-at-least-32-bytes
   PHONE_HASH_SECRET: development-only-change-to-at-least-32-bytes
+  EMAIL_HASH_SECRET: development-only-change-to-at-least-32-bytes
   LOCATION_MASTER_KEY_BASE64: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-  ALLOW_DEV_OTP: "true"
-  DEV_OTP_CODE: "123456"
+  ALLOW_LEGACY_SMS_TEST_MODE: "false"
+  EMAIL_CODE_TTL_SECONDS: "600"
+  SMTP_URL: smtp://mailpit:1025
+  EMAIL_FROM: noreply@local.seychas.test
   APP_ORIGINS: http://localhost:3001,http://localhost:8080
   TRUST_PROXY_HOPS: "1"
   INTERNAL_MARTIN_URL: http://martin:3000
@@ -35,7 +38,6 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./infra/docker/postgres/init:/docker-entrypoint-initdb.d:ro
-    ports: ["5432:5432"]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U seychas_owner -d seychas"]
       interval: 5s
@@ -53,7 +55,6 @@ services:
         "noeviction",
       ]
     volumes: ["redis-data:/data"]
-    ports: ["6379:6379"]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -72,6 +73,16 @@ services:
       test: ["CMD", "mc", "ready", "local"]
       interval: 10s
       timeout: 5s
+      retries: 20
+
+  mailpit:
+    image: axllent/mailpit:v1.27.4
+    ports: ["8025:8025"]
+    expose: ["1025"]
+    healthcheck:
+      test: ["CMD", "/mailpit", "readyz"]
+      interval: 5s
+      timeout: 3s
       retries: 20
 
   minio-init:
@@ -115,6 +126,7 @@ services:
       minio: { condition: service_healthy }
       minio-init: { condition: service_completed_successfully }
       clamav: { condition: service_healthy }
+      mailpit: { condition: service_healthy }
     ports: ["3000:3000"]
     healthcheck:
       test:
@@ -135,6 +147,7 @@ services:
     depends_on:
       migrate: { condition: service_completed_successfully }
       redis: { condition: service_healthy }
+      mailpit: { condition: service_healthy }
     stop_grace_period: 30s
 
   admin:
@@ -204,10 +217,14 @@ services:
     environment:
       <<: *app-env
       NODE_ENV: development
+      ALLOW_DEV_OTP: "true"
+      DEV_OTP_CODE: "123456"
+      ALLOW_LEGACY_SMS_TEST_MODE: "true"
     command: ["npm", "run", "test:integration"]
     depends_on:
       migrate: { condition: service_completed_successfully }
       redis: { condition: service_healthy }
+      mailpit: { condition: service_healthy }
 
 volumes:
   postgres-data:

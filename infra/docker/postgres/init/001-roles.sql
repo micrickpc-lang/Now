@@ -8,7 +8,8 @@ DO $$ BEGIN
     CREATE ROLE seychas_app LOGIN PASSWORD 'local_app_password' NOSUPERUSER NOCREATEDB NOCREATEROLE;
   END IF;
 END $$;
-GRANT CONNECT ON DATABASE seychas TO seychas_migrator, seychas_app;
+GRANT CONNECT, CREATE ON DATABASE seychas TO seychas_migrator;
+GRANT CONNECT ON DATABASE seychas TO seychas_app;
 GRANT USAGE, CREATE ON SCHEMA public TO seychas_migrator;
 GRANT USAGE ON SCHEMA public TO seychas_app;
 ALTER DEFAULT PRIVILEGES FOR ROLE seychas_migrator IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO seychas_app;

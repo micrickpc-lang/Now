@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../storage/app_mode_store.dart';
@@ -22,14 +23,17 @@ class AppConfig {
       (value) => value.name == rawEnvironment,
       orElse: () => throw StateError('Unknown APP_ENV'),
     );
-    const api = String.fromEnvironment(
-      'API_BASE_URL',
-      defaultValue: 'http://10.0.2.2:3000/api/v1',
+    const configuredApi = String.fromEnvironment('API_BASE_URL');
+    const configuredWs = String.fromEnvironment('WS_BASE_URL');
+    final developmentHost = developmentHostFor(
+      kIsWeb ? TargetPlatform.windows : defaultTargetPlatform,
     );
-    const ws = String.fromEnvironment(
-      'WS_BASE_URL',
-      defaultValue: 'http://10.0.2.2:3000',
-    );
+    final api = configuredApi.isEmpty
+        ? 'http://$developmentHost:3000/api/v1'
+        : configuredApi;
+    final ws = configuredWs.isEmpty
+        ? 'http://$developmentHost:3000'
+        : configuredWs;
     const domains = String.fromEnvironment(
       'FIRST_PARTY_DOMAINS',
       defaultValue: 'api.example.invalid,maps.example.invalid',
@@ -67,6 +71,9 @@ class AppConfig {
   final String wsBaseUrl;
   final Set<String> firstPartyDomains;
   final bool demoMode;
+
+  static String developmentHostFor(TargetPlatform platform) =>
+      platform == TargetPlatform.android ? '10.0.2.2' : '127.0.0.1';
 
   AppConfig copyWith({bool? demoMode}) => AppConfig(
     environment: environment,

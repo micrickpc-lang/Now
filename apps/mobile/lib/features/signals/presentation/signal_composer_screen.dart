@@ -217,7 +217,9 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
             groupValue: _location,
             onChanged: (value) async {
               if (value == 'APPROXIMATE') {
-                final point = await context.push<Map<String, double>>('/map');
+                final point = await context.push<Map<String, double>>(
+                  '/map/pick',
+                );
                 if (!mounted || point == null) return;
                 setState(() {
                   _location = value!;

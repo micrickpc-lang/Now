@@ -5,7 +5,7 @@ import 'package:seychas/core/theme/app_theme.dart';
 import 'package:seychas/features/auth/presentation/onboarding_screen.dart';
 
 void main() {
-  testWidgets('onboarding starts with phone and privacy promise', (
+  testWidgets('authentication starts with email and Google entry points', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -16,8 +16,10 @@ void main() {
         ),
       ),
     );
-    expect(find.text('Ближе — прямо сейчас'), findsOneWidget);
-    expect(find.text('Номер телефона'), findsOneWidget);
-    expect(find.text('Продолжить'), findsOneWidget);
+
+    expect(find.text('Sign in to Seychas'), findsOneWidget);
+    expect(find.text('Email'), findsOneWidget);
+    expect(find.text('Continue with email'), findsOneWidget);
+    expect(find.text('Continue with Google'), findsOneWidget);
   });
 }

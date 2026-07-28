@@ -225,6 +225,9 @@ const _eventNames = [
   'room.poll.updated',
   'location.share.updated',
   'location.share.revoked',
+  'location.share.available',
+  'location.updated',
+  'location.access.revoked',
   'conversation.created',
   'conversation.updated',
   'conversation.deleted',
@@ -235,8 +238,13 @@ const _eventNames = [
   'message.deleted',
   'message.delivered',
   'message.read',
+  'message.reaction.added',
+  'message.reaction.removed',
   'typing.started',
   'typing.stopped',
+  'friendship.removed',
+  'user.blocked',
+  'room.access.revoked',
 ];
 
 final realtimeClientProvider = Provider<RealtimeClient>((ref) {

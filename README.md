@@ -36,7 +36,7 @@ Development OTP — значение `DEV_OTP_CODE` из локального `.
 ```bash
 cd apps/mobile
 flutter pub get
-flutter run --dart-define=APP_ENV=development --dart-define=API_BASE_URL=http://10.0.2.2:3000/api/v1 --dart-define=WS_BASE_URL=http://10.0.2.2:3000
+flutter run --dart-define=APP_ENV=development
 ```
 
 Автономная демонстрация на телефоне без backend, Docker и WSL:
@@ -47,7 +47,7 @@ flutter run --dart-define=APP_ENV=development --dart-define=DEMO_MODE=true
 
 В этом режиме OTP `123456`, а список чатов, история сообщений, черновики и очередь отправки сохраняются локально и переживают перезапуск приложения. Выбранный Demo Mode также сохраняется на устройстве. Production-конфигурация отклоняет `DEMO_MODE` при запуске.
 
-Для проверки с реальным API на физическом Android используй LAN-адрес компьютера с Windows (телефон и компьютер должны быть в одной доверенной Wi-Fi-сети). `10.0.2.2` работает только в Android Emulator:
+По умолчанию Android Emulator использует `10.0.2.2`, а iOS Simulator - `127.0.0.1`. Для физического Android или iPhone используй LAN-адрес компьютера с API: телефон и компьютер должны быть в одной доверенной Wi-Fi-сети. Локальный HTTP разрешён только в debug-сборках; release требует HTTPS.
 
 ```powershell
 flutter run --dart-define=APP_ENV=development --dart-define=API_BASE_URL=http://192.168.1.10:3000/api/v1 --dart-define=WS_BASE_URL=http://192.168.1.10:3000

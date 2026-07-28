@@ -8,6 +8,7 @@ import { validateEnvironment } from "./config/environment";
 import { AuthModule } from "./features/auth/auth.module";
 import { ConversationsModule } from "./features/conversations/conversations.module";
 import { MapsModule } from "./features/maps/maps.module";
+import { LocationsModule } from "./features/locations/locations.module";
 import { MemoriesModule } from "./features/memories/memories.module";
 import { MediaModule } from "./features/media/media.module";
 import { ModerationModule } from "./features/moderation/moderation.module";
@@ -31,6 +32,7 @@ import { RealtimeModule } from "./realtime/realtime.module";
     SignalsModule,
     RoomsModule,
     MapsModule,
+    LocationsModule,
     MemoriesModule,
     MediaModule,
     ModerationModule,

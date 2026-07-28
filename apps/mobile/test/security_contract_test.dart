@@ -10,6 +10,13 @@ void main() {
       ).readAsStringSync();
       expect(manifest, isNot(contains('ACCESS_BACKGROUND_LOCATION')));
       expect(manifest, contains('android:usesCleartextTraffic="false"'));
+      expect(manifest, contains('android:allowBackup="false"'));
+      expect(
+        File(
+          'android/app/src/main/res/xml/network_security_config.xml',
+        ).readAsStringSync(),
+        contains('cleartextTrafficPermitted="false"'),
+      );
     },
   );
 }

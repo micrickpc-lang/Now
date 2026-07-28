@@ -11,7 +11,7 @@
     "test": "node --test"
   },
   "dependencies": {
-    "next": "16.2.11",
+    "next": "16.2.12",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
@@ -21,7 +21,7 @@
     "@types/react": "19.1.14",
     "@types/react-dom": "19.1.9",
     "eslint": "9.36.0",
-    "eslint-config-next": "16.2.11",
+    "eslint-config-next": "16.2.12",
     "typescript": "5.9.2"
   }
 }

@@ -1,5 +1,8 @@
 FROM node:24-bookworm-slim AS build
 WORKDIR /workspace
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends openssl \
+  && rm -rf /var/lib/apt/lists/*
 COPY package.json package-lock.json ./
 COPY services/api/package.json services/api/package.json
 COPY services/worker/package.json services/worker/package.json
@@ -14,6 +17,9 @@ RUN npm run db:generate --workspace=@seychas/api && npm run build --workspace=@s
 
 FROM node:24-bookworm-slim AS production-dependencies
 WORKDIR /workspace
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends openssl \
+  && rm -rf /var/lib/apt/lists/*
 COPY package.json package-lock.json ./
 COPY services/api/package.json services/api/package.json
 COPY services/worker/package.json services/worker/package.json
@@ -28,7 +34,10 @@ RUN npm ci --omit=dev --workspace=@seychas/api --include-workspace-root \
 FROM node:24-bookworm-slim AS runtime
 ENV NODE_ENV=production
 WORKDIR /workspace
-RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx /root/.npm \
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends openssl \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx /root/.npm \
   && groupadd --system --gid 10001 app \
   && useradd --system --uid 10001 --gid app app
 COPY --from=production-dependencies /workspace/node_modules ./node_modules

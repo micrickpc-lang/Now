@@ -55,6 +55,9 @@ export const ModelName = {
   UserProfile: 'UserProfile',
   Device: 'Device',
   AuthSession: 'AuthSession',
+  RefreshToken: 'RefreshToken',
+  AuthIdentity: 'AuthIdentity',
+  EmailLoginCode: 'EmailLoginCode',
   OtpChallenge: 'OtpChallenge',
   Friendship: 'Friendship',
   FriendshipInvite: 'FriendshipInvite',
@@ -72,6 +75,9 @@ export const ModelName = {
   RoomPollOption: 'RoomPollOption',
   RoomPollVote: 'RoomPollVote',
   LocationShare: 'LocationShare',
+  UserLocation: 'UserLocation',
+  GlobalLocationShare: 'GlobalLocationShare',
+  GlobalLocationShareRecipient: 'GlobalLocationShareRecipient',
   Conversation: 'Conversation',
   ConversationMember: 'ConversationMember',
   ConversationInvite: 'ConversationInvite',
@@ -121,6 +127,11 @@ export const UserScalarFieldEnum = {
   id: 'id',
   phoneHash: 'phoneHash',
   phoneCiphertext: 'phoneCiphertext',
+  emailHash: 'emailHash',
+  emailCiphertext: 'emailCiphertext',
+  emailVerifiedAt: 'emailVerifiedAt',
+  username: 'username',
+  profileCompletedAt: 'profileCompletedAt',
   birthDate: 'birthDate',
   limitedMode: 'limitedMode',
   status: 'status',
@@ -154,6 +165,7 @@ export const DeviceScalarFieldEnum = {
   installationId: 'installationId',
   platform: 'platform',
   label: 'label',
+  appVersion: 'appVersion',
   lastSeenAt: 'lastSeenAt',
   createdAt: 'createdAt'
 } as const
@@ -166,16 +178,63 @@ export const AuthSessionScalarFieldEnum = {
   userId: 'userId',
   deviceId: 'deviceId',
   refreshTokenHash: 'refreshTokenHash',
+  tokenFamilyId: 'tokenFamilyId',
   rotationCounter: 'rotationCounter',
   ipHash: 'ipHash',
   userAgent: 'userAgent',
   expiresAt: 'expiresAt',
   lastUsedAt: 'lastUsedAt',
   revokedAt: 'revokedAt',
+  revokeReason: 'revokeReason',
+  appVersion: 'appVersion',
   createdAt: 'createdAt'
 } as const
 
 export type AuthSessionScalarFieldEnum = (typeof AuthSessionScalarFieldEnum)[keyof typeof AuthSessionScalarFieldEnum]
+
+
+export const RefreshTokenScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  tokenHash: 'tokenHash',
+  issuedAt: 'issuedAt',
+  usedAt: 'usedAt',
+  revokedAt: 'revokedAt',
+  expiresAt: 'expiresAt',
+  replacedById: 'replacedById'
+} as const
+
+export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
+
+
+export const AuthIdentityScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  provider: 'provider',
+  subjectHash: 'subjectHash',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuthIdentityScalarFieldEnum = (typeof AuthIdentityScalarFieldEnum)[keyof typeof AuthIdentityScalarFieldEnum]
+
+
+export const EmailLoginCodeScalarFieldEnum = {
+  id: 'id',
+  emailHash: 'emailHash',
+  codeHash: 'codeHash',
+  purpose: 'purpose',
+  requestedByUserId: 'requestedByUserId',
+  requestIpHash: 'requestIpHash',
+  installationId: 'installationId',
+  attemptCount: 'attemptCount',
+  resendCount: 'resendCount',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type EmailLoginCodeScalarFieldEnum = (typeof EmailLoginCodeScalarFieldEnum)[keyof typeof EmailLoginCodeScalarFieldEnum]
 
 
 export const OtpChallengeScalarFieldEnum = {
@@ -388,6 +447,44 @@ export const LocationShareScalarFieldEnum = {
 } as const
 
 export type LocationShareScalarFieldEnum = (typeof LocationShareScalarFieldEnum)[keyof typeof LocationShareScalarFieldEnum]
+
+
+export const UserLocationScalarFieldEnum = {
+  ownerId: 'ownerId',
+  ciphertext: 'ciphertext',
+  iv: 'iv',
+  authTag: 'authTag',
+  encryptedDataKey: 'encryptedDataKey',
+  keyIv: 'keyIv',
+  keyAuthTag: 'keyAuthTag',
+  capturedAt: 'capturedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserLocationScalarFieldEnum = (typeof UserLocationScalarFieldEnum)[keyof typeof UserLocationScalarFieldEnum]
+
+
+export const GlobalLocationShareScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  audience: 'audience',
+  precision: 'precision',
+  explicitConsentAt: 'explicitConsentAt',
+  expiresAt: 'expiresAt',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type GlobalLocationShareScalarFieldEnum = (typeof GlobalLocationShareScalarFieldEnum)[keyof typeof GlobalLocationShareScalarFieldEnum]
+
+
+export const GlobalLocationShareRecipientScalarFieldEnum = {
+  shareId: 'shareId',
+  recipientId: 'recipientId',
+  createdAt: 'createdAt'
+} as const
+
+export type GlobalLocationShareRecipientScalarFieldEnum = (typeof GlobalLocationShareRecipientScalarFieldEnum)[keyof typeof GlobalLocationShareRecipientScalarFieldEnum]
 
 
 export const ConversationScalarFieldEnum = {

@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { ContentPolicyService } from "../../common/content-policy.service";
 import { RealtimeModule } from "../../realtime/realtime.module";
@@ -12,7 +12,7 @@ import {
 } from "./typing.store";
 
 @Module({
-  imports: [RealtimeModule],
+  imports: [forwardRef(() => RealtimeModule)],
   controllers: [ConversationsController],
   providers: [
     ConversationsService,
@@ -30,5 +30,6 @@ import {
       ) => (config.get("NODE_ENV") === "test" ? memory : redis),
     },
   ],
+  exports: [ConversationsService],
 })
 export class ConversationsModule {}

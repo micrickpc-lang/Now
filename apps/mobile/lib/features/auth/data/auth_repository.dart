@@ -1,11 +1,13 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../core/config/app_config.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/network/realtime_client.dart';
-import '../../../core/config/app_config.dart';
 import '../../../core/storage/local_cache.dart';
 import '../../../core/storage/token_store.dart';
 
@@ -16,63 +18,126 @@ class AuthRepository {
   final LocalCache _cache;
   final bool _demoMode;
 
-  Future<void> requestOtp(String phone) async {
+  static const profileCompletionTimeout = Duration(seconds: 15);
+
+  Future<void> requestEmailCode(String email) async {
     if (_demoMode) return;
     await _api.dio.post<void>(
-      '/auth/otp/request',
-      data: {'phone': phone},
+      '/auth/email/request-code',
+      data: {'email': email},
       options: Options(extra: {'skipAuth': true}),
     );
   }
 
-  Future<void> verify({
-    required String phone,
+  Future<void> resendEmailCode(String email) async {
+    if (_demoMode) return;
+    await _api.dio.post<void>(
+      '/auth/email/resend-code',
+      data: {'email': email},
+      options: Options(extra: {'skipAuth': true}),
+    );
+  }
+
+  Future<bool> verifyEmailCode({
+    required String email,
     required String code,
-    required DateTime birthDate,
-    required String displayName,
   }) async {
-    var installation = await _tokens.installationId();
-    if (installation == null) {
-      installation = const Uuid().v4();
-      await _tokens.writeInstallationId(installation);
-    }
     if (_demoMode) {
       if (code != '123456') {
         throw DioException(
-          requestOptions: RequestOptions(path: '/auth/otp/verify'),
+          requestOptions: RequestOptions(path: '/auth/email/verify-code'),
           response: Response<Map<String, dynamic>>(
-            requestOptions: RequestOptions(path: '/auth/otp/verify'),
+            requestOptions: RequestOptions(path: '/auth/email/verify-code'),
             statusCode: 401,
-            data: {'message': 'В демо-режиме используй код 123456'},
+            data: {'message': 'Use code 123456 in demo mode'},
           ),
         );
       }
       await _tokens.write(
         accessToken: 'demo-access-token',
         refreshToken: 'demo-refresh-token',
+        profileComplete: false,
       );
-      return;
+      return false;
     }
     final response = await _api.dio.post<Map<String, dynamic>>(
-      '/auth/otp/verify',
-      data: {
-        'phone': phone,
-        'code': code,
-        'birthDate': birthDate.toIso8601String(),
-        'displayName': displayName,
-        'installationId': installation,
-        'platform': Platform.isIOS ? 'ios' : 'android',
-        'deviceLabel': Platform.operatingSystemVersion,
-      },
+      '/auth/email/verify-code',
+      data: {'email': email, 'code': code, ...await _devicePayload()},
       options: Options(extra: {'skipAuth': true}),
     );
-    await _tokens.write(
-      accessToken: response.data!['accessToken'] as String,
-      refreshToken: response.data!['refreshToken'] as String,
+    return _storeTokens(response.data!);
+  }
+
+  Future<bool> signInWithGoogle() async {
+    if (_demoMode) {
+      await _tokens.write(
+        accessToken: 'demo-access-token',
+        refreshToken: 'demo-refresh-token',
+        profileComplete: false,
+      );
+      return false;
+    }
+    const serverClientId = String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');
+    final account = await GoogleSignIn(
+      scopes: const ['email'],
+      serverClientId: serverClientId.isEmpty ? null : serverClientId,
+    ).signIn();
+    if (account == null) throw const _AuthCancelled();
+    final authentication = await account.authentication;
+    final idToken = authentication.idToken;
+    if (idToken == null) {
+      throw StateError('Google did not return an ID token');
+    }
+    final response = await _api.dio.post<Map<String, dynamic>>(
+      '/auth/google',
+      data: {'idToken': idToken, ...await _devicePayload()},
+      options: Options(extra: {'skipAuth': true}),
     );
+    return _storeTokens(response.data!);
+  }
+
+  Future<void> completeProfile({
+    required String displayName,
+    required String username,
+  }) async {
+    if (!_demoMode) {
+      await _api.dio
+          .post<void>(
+            '/auth/profile',
+            data: {'displayName': displayName, 'username': username},
+          )
+          .timeout(profileCompletionTimeout);
+    }
+    await _tokens.writeProfileComplete(true);
   }
 
   Future<bool> hasSession() async => await _tokens.refresh() != null;
+  Future<bool> profileComplete() => _tokens.profileComplete();
+
+  Future<Map<String, String>> _devicePayload() async {
+    var installation = await _tokens.installationId();
+    if (installation == null) {
+      installation = const Uuid().v4();
+      await _tokens.writeInstallationId(installation);
+    }
+    return {
+      'installationId': installation,
+      'platform': Platform.isIOS ? 'ios' : 'android',
+      'deviceLabel': Platform.operatingSystemVersion,
+      'appVersion': '0.1.0',
+    };
+  }
+
+  Future<bool> _storeTokens(Map<String, dynamic> response) async {
+    final user = response['user'] as Map<String, dynamic>?;
+    final profileComplete = user?['profileComplete'] == true;
+    await _tokens.write(
+      accessToken: response['accessToken'] as String,
+      refreshToken: response['refreshToken'] as String,
+      profileComplete: profileComplete,
+    );
+    return profileComplete;
+  }
 
   Future<void> logout() async {
     final refresh = await _tokens.refresh();
@@ -83,12 +148,16 @@ class AuthRepository {
           data: {'refreshToken': refresh},
         );
       } catch (_) {
-        /* Local logout still proceeds. */
+        // Local logout still proceeds when the network is unavailable.
       }
     }
     await _tokens.clear();
     await _cache.clearSensitive();
   }
+}
+
+class _AuthCancelled implements Exception {
+  const _AuthCancelled();
 }
 
 final authRepositoryProvider = Provider<AuthRepository>(

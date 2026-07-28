@@ -258,7 +258,9 @@ class ChatMessagesController extends AsyncNotifier<ChatTimeline> {
       }
     } else if (event.type == 'message.read' ||
         event.type == 'message.updated' ||
-        event.type == 'message.deleted') {
+        event.type == 'message.deleted' ||
+        event.type == 'message.reaction.added' ||
+        event.type == 'message.reaction.removed') {
       final page = await repository.messages(conversationId);
       final current = state.value;
       if (current != null) {

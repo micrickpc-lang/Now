@@ -30,6 +30,7 @@ export type DeviceMinAggregateOutputType = {
   installationId: string | null
   platform: string | null
   label: string | null
+  appVersion: string | null
   lastSeenAt: Date | null
   createdAt: Date | null
 }
@@ -40,6 +41,7 @@ export type DeviceMaxAggregateOutputType = {
   installationId: string | null
   platform: string | null
   label: string | null
+  appVersion: string | null
   lastSeenAt: Date | null
   createdAt: Date | null
 }
@@ -50,6 +52,7 @@ export type DeviceCountAggregateOutputType = {
   installationId: number
   platform: number
   label: number
+  appVersion: number
   lastSeenAt: number
   createdAt: number
   _all: number
@@ -62,6 +65,7 @@ export type DeviceMinAggregateInputType = {
   installationId?: true
   platform?: true
   label?: true
+  appVersion?: true
   lastSeenAt?: true
   createdAt?: true
 }
@@ -72,6 +76,7 @@ export type DeviceMaxAggregateInputType = {
   installationId?: true
   platform?: true
   label?: true
+  appVersion?: true
   lastSeenAt?: true
   createdAt?: true
 }
@@ -82,6 +87,7 @@ export type DeviceCountAggregateInputType = {
   installationId?: true
   platform?: true
   label?: true
+  appVersion?: true
   lastSeenAt?: true
   createdAt?: true
   _all?: true
@@ -165,6 +171,7 @@ export type DeviceGroupByOutputType = {
   installationId: string
   platform: string
   label: string | null
+  appVersion: string | null
   lastSeenAt: Date
   createdAt: Date
   _count: DeviceCountAggregateOutputType | null
@@ -196,6 +203,7 @@ export type DeviceWhereInput = {
   installationId?: Prisma.StringFilter<"Device"> | string
   platform?: Prisma.StringFilter<"Device"> | string
   label?: Prisma.StringNullableFilter<"Device"> | string | null
+  appVersion?: Prisma.StringNullableFilter<"Device"> | string | null
   lastSeenAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -208,6 +216,7 @@ export type DeviceOrderByWithRelationInput = {
   installationId?: Prisma.SortOrder
   platform?: Prisma.SortOrder
   label?: Prisma.SortOrderInput | Prisma.SortOrder
+  appVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -224,6 +233,7 @@ export type DeviceWhereUniqueInput = Prisma.AtLeast<{
   installationId?: Prisma.StringFilter<"Device"> | string
   platform?: Prisma.StringFilter<"Device"> | string
   label?: Prisma.StringNullableFilter<"Device"> | string | null
+  appVersion?: Prisma.StringNullableFilter<"Device"> | string | null
   lastSeenAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -236,6 +246,7 @@ export type DeviceOrderByWithAggregationInput = {
   installationId?: Prisma.SortOrder
   platform?: Prisma.SortOrder
   label?: Prisma.SortOrderInput | Prisma.SortOrder
+  appVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.DeviceCountOrderByAggregateInput
@@ -252,6 +263,7 @@ export type DeviceScalarWhereWithAggregatesInput = {
   installationId?: Prisma.StringWithAggregatesFilter<"Device"> | string
   platform?: Prisma.StringWithAggregatesFilter<"Device"> | string
   label?: Prisma.StringNullableWithAggregatesFilter<"Device"> | string | null
+  appVersion?: Prisma.StringNullableWithAggregatesFilter<"Device"> | string | null
   lastSeenAt?: Prisma.DateTimeWithAggregatesFilter<"Device"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Device"> | Date | string
 }
@@ -261,6 +273,7 @@ export type DeviceCreateInput = {
   installationId: string
   platform: string
   label?: string | null
+  appVersion?: string | null
   lastSeenAt?: Date | string
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDevicesInput
@@ -273,6 +286,7 @@ export type DeviceUncheckedCreateInput = {
   installationId: string
   platform: string
   label?: string | null
+  appVersion?: string | null
   lastSeenAt?: Date | string
   createdAt?: Date | string
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutDeviceInput
@@ -283,6 +297,7 @@ export type DeviceUpdateInput = {
   installationId?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDevicesNestedInput
@@ -295,6 +310,7 @@ export type DeviceUncheckedUpdateInput = {
   installationId?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutDeviceNestedInput
@@ -306,6 +322,7 @@ export type DeviceCreateManyInput = {
   installationId: string
   platform: string
   label?: string | null
+  appVersion?: string | null
   lastSeenAt?: Date | string
   createdAt?: Date | string
 }
@@ -315,6 +332,7 @@ export type DeviceUpdateManyMutationInput = {
   installationId?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -325,6 +343,7 @@ export type DeviceUncheckedUpdateManyInput = {
   installationId?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -350,6 +369,7 @@ export type DeviceCountOrderByAggregateInput = {
   installationId?: Prisma.SortOrder
   platform?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  appVersion?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -360,6 +380,7 @@ export type DeviceMaxOrderByAggregateInput = {
   installationId?: Prisma.SortOrder
   platform?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  appVersion?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -370,6 +391,7 @@ export type DeviceMinOrderByAggregateInput = {
   installationId?: Prisma.SortOrder
   platform?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  appVersion?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -442,6 +464,7 @@ export type DeviceCreateWithoutUserInput = {
   installationId: string
   platform: string
   label?: string | null
+  appVersion?: string | null
   lastSeenAt?: Date | string
   createdAt?: Date | string
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutDeviceInput
@@ -452,6 +475,7 @@ export type DeviceUncheckedCreateWithoutUserInput = {
   installationId: string
   platform: string
   label?: string | null
+  appVersion?: string | null
   lastSeenAt?: Date | string
   createdAt?: Date | string
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutDeviceInput
@@ -492,6 +516,7 @@ export type DeviceScalarWhereInput = {
   installationId?: Prisma.StringFilter<"Device"> | string
   platform?: Prisma.StringFilter<"Device"> | string
   label?: Prisma.StringNullableFilter<"Device"> | string | null
+  appVersion?: Prisma.StringNullableFilter<"Device"> | string | null
   lastSeenAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Device"> | Date | string
 }
@@ -501,6 +526,7 @@ export type DeviceCreateWithoutSessionsInput = {
   installationId: string
   platform: string
   label?: string | null
+  appVersion?: string | null
   lastSeenAt?: Date | string
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDevicesInput
@@ -512,6 +538,7 @@ export type DeviceUncheckedCreateWithoutSessionsInput = {
   installationId: string
   platform: string
   label?: string | null
+  appVersion?: string | null
   lastSeenAt?: Date | string
   createdAt?: Date | string
 }
@@ -537,6 +564,7 @@ export type DeviceUpdateWithoutSessionsInput = {
   installationId?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDevicesNestedInput
@@ -548,6 +576,7 @@ export type DeviceUncheckedUpdateWithoutSessionsInput = {
   installationId?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -557,6 +586,7 @@ export type DeviceCreateManyUserInput = {
   installationId: string
   platform: string
   label?: string | null
+  appVersion?: string | null
   lastSeenAt?: Date | string
   createdAt?: Date | string
 }
@@ -566,6 +596,7 @@ export type DeviceUpdateWithoutUserInput = {
   installationId?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AuthSessionUpdateManyWithoutDeviceNestedInput
@@ -576,6 +607,7 @@ export type DeviceUncheckedUpdateWithoutUserInput = {
   installationId?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutDeviceNestedInput
@@ -586,6 +618,7 @@ export type DeviceUncheckedUpdateManyWithoutUserInput = {
   installationId?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -627,6 +660,7 @@ export type DeviceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   installationId?: boolean
   platform?: boolean
   label?: boolean
+  appVersion?: boolean
   lastSeenAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -640,6 +674,7 @@ export type DeviceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   installationId?: boolean
   platform?: boolean
   label?: boolean
+  appVersion?: boolean
   lastSeenAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -651,6 +686,7 @@ export type DeviceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   installationId?: boolean
   platform?: boolean
   label?: boolean
+  appVersion?: boolean
   lastSeenAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -662,11 +698,12 @@ export type DeviceSelectScalar = {
   installationId?: boolean
   platform?: boolean
   label?: boolean
+  appVersion?: boolean
   lastSeenAt?: boolean
   createdAt?: boolean
 }
 
-export type DeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "installationId" | "platform" | "label" | "lastSeenAt" | "createdAt", ExtArgs["result"]["device"]>
+export type DeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "installationId" | "platform" | "label" | "appVersion" | "lastSeenAt" | "createdAt", ExtArgs["result"]["device"]>
 export type DeviceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sessions?: boolean | Prisma.Device$sessionsArgs<ExtArgs>
@@ -691,6 +728,7 @@ export type $DevicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     installationId: string
     platform: string
     label: string | null
+    appVersion: string | null
     lastSeenAt: Date
     createdAt: Date
   }, ExtArgs["result"]["device"]>
@@ -1123,6 +1161,7 @@ export interface DeviceFieldRefs {
   readonly installationId: Prisma.FieldRef<"Device", 'String'>
   readonly platform: Prisma.FieldRef<"Device", 'String'>
   readonly label: Prisma.FieldRef<"Device", 'String'>
+  readonly appVersion: Prisma.FieldRef<"Device", 'String'>
   readonly lastSeenAt: Prisma.FieldRef<"Device", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Device", 'DateTime'>
 }

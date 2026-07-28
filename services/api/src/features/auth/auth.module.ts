@@ -3,6 +3,13 @@ import { ConfigService } from "@nestjs/config";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import {
+  DisabledEmailProvider,
+  EMAIL_PROVIDER,
+  EmailDispatcher,
+  SmtpEmailProvider,
+} from "./email.provider";
+import { GoogleTokenVerifier } from "./google-token-verifier";
+import {
   DevelopmentOtpProvider,
   OTP_PROVIDER,
   OtpDispatcher,
@@ -15,9 +22,22 @@ import { TokenService } from "./token.service";
   providers: [
     AuthService,
     TokenService,
+    GoogleTokenVerifier,
+    EmailDispatcher,
+    SmtpEmailProvider,
+    DisabledEmailProvider,
     OtpDispatcher,
     DevelopmentOtpProvider,
     UnconfiguredProductionOtpProvider,
+    {
+      provide: EMAIL_PROVIDER,
+      inject: [ConfigService, SmtpEmailProvider, DisabledEmailProvider],
+      useFactory: (
+        config: ConfigService,
+        smtp: SmtpEmailProvider,
+        disabled: DisabledEmailProvider,
+      ) => (config.get("EMAIL_DELIVERY_MODE") === "disabled" ? disabled : smtp),
+    },
     {
       provide: OTP_PROVIDER,
       inject: [

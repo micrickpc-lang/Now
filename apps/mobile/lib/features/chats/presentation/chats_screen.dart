@@ -135,7 +135,7 @@ class _ChatTile extends StatelessWidget {
           '${conversation.displayTitle(currentUserId)}, ${conversation.unreadCount} непрочитанных',
       child: ListTile(
         key: ValueKey('chat-${conversation.id}'),
-        onTap: () => context.push('/chats/${conversation.id}'),
+        onTap: () => context.push('/app/chats/${conversation.id}'),
         minVerticalPadding: 13,
         leading: Stack(
           clipBehavior: Clip.none,
