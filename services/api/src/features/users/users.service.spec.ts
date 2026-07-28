@@ -15,6 +15,7 @@ describe("UsersService account deletion", () => {
     authSession: { updateMany: jest.fn() },
     notificationToken: { deleteMany: jest.fn() },
     locationShare: { deleteMany: jest.fn() },
+    exactLocationShare: { deleteMany: jest.fn() },
     roomMessage: { updateMany: jest.fn() },
     message: { updateMany: jest.fn() },
     conversation: {

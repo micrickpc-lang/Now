@@ -20,7 +20,7 @@ class _MockConnectivity extends Mock implements Connectivity {}
 
 class _SocketHarness {
   _SocketHarness() {
-    when(() => socket.connected).thenReturn(false);
+    when(() => socket.connected).thenAnswer((_) => connected);
     when(() => socket.connect()).thenReturn(socket);
     when(() => socket.on(any(), any())).thenAnswer((invocation) {
       final event = invocation.positionalArguments[0] as String;
@@ -28,13 +28,43 @@ class _SocketHarness {
       handlers[event] = handler;
       return () => handlers.remove(event);
     });
+    when(
+      () => socket.emitWithAck(any(), any(), ack: any(named: 'ack')),
+    ).thenAnswer((invocation) {
+      final event = invocation.positionalArguments[0] as String;
+      final data = invocation.positionalArguments[1];
+      final ack = invocation.namedArguments[#ack] as Function?;
+      emissions.add((event: event, data: data));
+      final responses = ackResponses[event];
+      if (ack != null && responses != null && responses.isNotEmpty) {
+        final response = responses.removeAt(0);
+        scheduleMicrotask(
+          () => Function.apply(ack, [
+            {'ok': response},
+          ]),
+        );
+      }
+    });
   }
 
   final socket = _MockSocket();
   final handlers = <String, Function>{};
+  final emissions = <({String event, dynamic data})>[];
+  final ackResponses = <String, List<bool>>{};
+  bool connected = false;
   late Map<String, dynamic> options;
 
+  void queueAcks(String event, List<bool> responses) {
+    ackResponses[event] = [...responses];
+  }
+
   void fire(String event, [dynamic data]) {
+    if (event == 'connect') connected = true;
+    if (event == 'disconnect' ||
+        event == 'connect_error' ||
+        event == 'auth.error') {
+      connected = false;
+    }
     final handler = handlers[event];
     if (handler == null) throw StateError('No handler for $event');
     Function.apply(handler, [data]);
@@ -161,6 +191,142 @@ void main() {
       await Future<void>.delayed(Duration.zero);
       await client.connect();
       expect(sockets, hasLength(3));
+    },
+  );
+
+  test('client reports connected only after authenticated ready', () async {
+    final tokens = _MockTokenStore();
+    when(() => tokens.access()).thenAnswer((_) async => 'access-token');
+    late final _SocketHarness socket;
+    final client = RealtimeClient(
+      _productionConfig,
+      tokens,
+      socketFactory: (uri, options) {
+        socket = _SocketHarness()..options = options;
+        return socket.socket;
+      },
+    );
+    final statuses = <RealtimeConnectionStatus>[];
+    final subscription = client.statuses.listen(statuses.add);
+    addTearDown(() async {
+      await subscription.cancel();
+      await client.dispose();
+    });
+
+    await client.connect();
+    await Future<void>.delayed(Duration.zero);
+    expect(statuses, [RealtimeConnectionStatus.connecting]);
+    expect(client.isConnected, isFalse);
+
+    socket.fire('connect');
+    await Future<void>.delayed(Duration.zero);
+    expect(statuses, [RealtimeConnectionStatus.connecting]);
+    expect(client.isConnected, isFalse);
+
+    socket.fire('ready', {'heartbeatSeconds': 25});
+    await Future<void>.delayed(Duration.zero);
+    expect(statuses, [
+      RealtimeConnectionStatus.connecting,
+      RealtimeConnectionStatus.connected,
+    ]);
+    expect(client.isConnected, isTrue);
+
+    socket.fire('ready', {'heartbeatSeconds': 25});
+    await Future<void>.delayed(Duration.zero);
+    expect(
+      statuses.where((status) => status == RealtimeConnectionStatus.connected),
+      hasLength(1),
+    );
+  });
+
+  test(
+    'coordinator retries rejected acks and recreates subscriptions after ready',
+    () async {
+      final tokens = _MockTokenStore();
+      when(() => tokens.access()).thenAnswer((_) async => 'access-token');
+      final sockets = <_SocketHarness>[];
+      final client = RealtimeClient(
+        _productionConfig,
+        tokens,
+        ackTimeout: const Duration(milliseconds: 50),
+        socketFactory: (uri, options) {
+          final harness = _SocketHarness()..options = options;
+          sockets.add(harness);
+          return harness.socket;
+        },
+      );
+      final api = _MockApiClient();
+      final refreshes = StreamController<void>.broadcast();
+      when(() => api.sessionRefreshes).thenAnswer((_) => refreshes.stream);
+      final connectivity = _MockConnectivity();
+      final connectivityChanges =
+          StreamController<List<ConnectivityResult>>.broadcast();
+      when(
+        () => connectivity.onConnectivityChanged,
+      ).thenAnswer((_) => connectivityChanges.stream);
+      when(
+        () => connectivity.checkConnectivity(),
+      ).thenAnswer((_) async => [ConnectivityResult.wifi]);
+      final coordinator = RealtimeCoordinator(
+        client,
+        api,
+        connectivity,
+        false,
+        reconnectBaseDelay: const Duration(milliseconds: 5),
+      );
+      final lease = coordinator.subscribeConversation('conversation-1');
+      addTearDown(() async {
+        lease.close();
+        await coordinator.dispose();
+        await client.dispose();
+        await refreshes.close();
+        await connectivityChanges.close();
+      });
+
+      await coordinator.start();
+      expect(sockets, hasLength(1));
+      sockets.first.queueAcks('conversation.subscribe', [false, true]);
+      sockets.first.fire('connect');
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+      expect(sockets.first.emissions, isEmpty);
+
+      sockets.first.fire('ready', {'heartbeatSeconds': 25});
+      await _eventually(
+        () =>
+            sockets.first.emissions
+                .where((emission) => emission.event == 'conversation.subscribe')
+                .length ==
+            2,
+      );
+      expect(sockets.first.emissions.last.data, {
+        'conversationId': 'conversation-1',
+      });
+
+      sockets.first.fire('disconnect', 'transport close');
+      await _eventually(() => sockets.length == 2);
+      sockets[1].queueAcks('conversation.subscribe', [true]);
+      sockets[1].fire('connect');
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+      expect(sockets[1].emissions, isEmpty);
+
+      sockets[1].fire('ready', {'heartbeatSeconds': 25});
+      await _eventually(
+        () => sockets[1].emissions.any(
+          (emission) => emission.event == 'conversation.subscribe',
+        ),
+      );
+
+      sockets[1].queueAcks('conversation.unsubscribe', [false, true]);
+      lease.close();
+      await _eventually(
+        () =>
+            sockets[1].emissions
+                .where(
+                  (emission) => emission.event == 'conversation.unsubscribe',
+                )
+                .length ==
+            2,
+      );
     },
   );
 

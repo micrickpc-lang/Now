@@ -8,6 +8,7 @@ import '../../../core/network/realtime_client.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/storage/local_cache.dart';
 import '../../../core/storage/token_store.dart';
+import '../../rooms/data/room_location_share_coordinator.dart';
 
 class AuthRepository {
   AuthRepository(this._api, this._tokens, this._cache, this._demoMode);
@@ -16,13 +17,24 @@ class AuthRepository {
   final LocalCache _cache;
   final bool _demoMode;
 
-  Future<void> requestOtp(String phone) async {
-    if (_demoMode) return;
-    await _api.dio.post<void>(
-      '/auth/otp/request',
+  Future<int> requestOtp(String phone) async {
+    if (_demoMode) return 60;
+    return _sendOtp('/auth/otp/request', phone);
+  }
+
+  Future<int> resendOtp(String phone) async {
+    if (_demoMode) return 60;
+    return _sendOtp('/auth/otp/resend', phone);
+  }
+
+  Future<int> _sendOtp(String endpoint, String phone) async {
+    final response = await _api.dio.post<Map<String, dynamic>>(
+      endpoint,
       data: {'phone': phone},
       options: Options(extra: {'skipAuth': true}),
     );
+    final retryAfter = response.data?['retryAfterSeconds'];
+    return retryAfter is int && retryAfter > 0 ? retryAfter : 60;
   }
 
   Future<void> verify({
@@ -107,6 +119,7 @@ class SessionController extends AsyncNotifier<bool> {
   Future<void> signedIn() async => state = const AsyncData(true);
   Future<void> logout() async {
     state = const AsyncLoading();
+    await ref.read(roomLocationShareCoordinatorProvider).stop();
     await ref.read(realtimeCoordinatorProvider).stop();
     await ref.read(authRepositoryProvider).logout();
     state = const AsyncData(false);

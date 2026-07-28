@@ -61,10 +61,31 @@ export const LocationMode = {
   CITY: 'CITY',
   DISTRICT: 'DISTRICT',
   APPROXIMATE: 'APPROXIMATE',
-  EXACT_ROOM: 'EXACT_ROOM'
+  EXACT_ROOM: 'EXACT_ROOM',
+  EXACT_PIN: 'EXACT_PIN',
+  EXACT_LIVE: 'EXACT_LIVE'
 } as const
 
 export type LocationMode = (typeof LocationMode)[keyof typeof LocationMode]
+
+
+export const ExactLocationAudience = {
+  SELECTED_FRIENDS: 'SELECTED_FRIENDS',
+  CIRCLE: 'CIRCLE',
+  ROOM: 'ROOM'
+} as const
+
+export type ExactLocationAudience = (typeof ExactLocationAudience)[keyof typeof ExactLocationAudience]
+
+
+export const ExactLocationExpiry = {
+  THIRTY_MINUTES: 'THIRTY_MINUTES',
+  ONE_HOUR: 'ONE_HOUR',
+  MEETING_END: 'MEETING_END',
+  MANUAL: 'MANUAL'
+} as const
+
+export type ExactLocationExpiry = (typeof ExactLocationExpiry)[keyof typeof ExactLocationExpiry]
 
 
 export const JoinRequestState = {

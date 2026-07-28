@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -6,12 +7,18 @@ import {
   Param,
   Post,
   Query,
+  Req,
   Res,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import type { Response } from "express";
-import { Public } from "../../common/http";
-import { ApproximateLocationDto } from "./maps.dto";
+import { Throttle } from "@nestjs/throttler";
+import type { Request, Response } from "express";
+import { CurrentAuth, Public } from "../../common/http";
+import {
+  ApproximateLocationDto,
+  MapSearchDto,
+  ReverseLocationDto,
+} from "./maps.dto";
 import { MapsService } from "./maps.service";
 
 @ApiTags("maps")
@@ -22,8 +29,14 @@ export class MapsController {
 
   @Get("style.json")
   @Public()
-  style() {
-    return this.maps.style();
+  style(@Req() request: Request) {
+    return this.maps.style(this.requestMapBaseUrl(request));
+  }
+
+  @Get("tilejson.json")
+  @Public()
+  tileJson(@Req() request: Request) {
+    return this.maps.tileJson(this.requestMapBaseUrl(request));
   }
 
   @Get("tiles/:z/:x/:y")
@@ -44,17 +57,53 @@ export class MapsController {
   }
 
   @Get("search")
-  search(@Query("q") query: string) {
-    return this.maps.search(query ?? "");
+  @Throttle({ default: { limit: 30, ttl: 60_000 } })
+  search(@Query() query: MapSearchDto) {
+    return this.maps.search(query.q);
   }
 
   @Get("reverse")
-  reverse(@Query("lat") lat: string, @Query("lon") lon: string) {
-    return this.maps.reverse(Number(lat), Number(lon));
+  @Throttle({ default: { limit: 30, ttl: 60_000 } })
+  reverse(@Query() query: ReverseLocationDto) {
+    if (query.lon === undefined && query.lng === undefined) {
+      throw new BadRequestException("Either lon or lng is required");
+    }
+    if (
+      query.lon !== undefined &&
+      query.lng !== undefined &&
+      query.lon !== query.lng
+    ) {
+      throw new BadRequestException("lon and lng must match when both are set");
+    }
+    return this.maps.reverse(query.lat, query.lon ?? query.lng!);
   }
 
   @Post("approximate-location")
-  approximate(@Body() dto: ApproximateLocationDto) {
-    return this.maps.approximate(dto.latitude, dto.longitude);
+  approximate(
+    @CurrentAuth() auth: { userId: string },
+    @Body() dto: ApproximateLocationDto,
+  ) {
+    return this.maps.createSafeLocation(auth.userId, dto);
+  }
+
+  private requestMapBaseUrl(request: Request): string | undefined {
+    const host = request.get("host");
+    if (!host) return undefined;
+
+    try {
+      const origin = new URL(`${request.protocol}://${host}`);
+      if (
+        origin.username ||
+        origin.password ||
+        origin.pathname !== "/" ||
+        origin.search ||
+        origin.hash
+      ) {
+        return undefined;
+      }
+      return `${origin.origin}/api/v1/maps`;
+    } catch {
+      return undefined;
+    }
   }
 }

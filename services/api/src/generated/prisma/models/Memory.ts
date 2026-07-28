@@ -532,14 +532,6 @@ export type MemoryUncheckedUpdateManyWithoutOwnerNestedInput = {
   deleteMany?: Prisma.MemoryScalarWhereInput | Prisma.MemoryScalarWhereInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type MemoryCreateNestedOneWithoutParticipantsInput = {
   create?: Prisma.XOR<Prisma.MemoryCreateWithoutParticipantsInput, Prisma.MemoryUncheckedCreateWithoutParticipantsInput>
   connectOrCreate?: Prisma.MemoryCreateOrConnectWithoutParticipantsInput

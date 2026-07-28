@@ -26,6 +26,12 @@ export class AuthController {
   }
 
   @Public()
+  @Post("otp/resend")
+  resendOtp(@Body() dto: RequestOtpDto, @Req() request: Request) {
+    return this.auth.resendOtp(dto.phone, requestIp(request));
+  }
+
+  @Public()
   @Post("otp/verify")
   verifyOtp(
     @Body() dto: VerifyOtpDto,
@@ -51,6 +57,12 @@ export class AuthController {
   @Post("logout-all")
   logoutAll(@CurrentAuth() current: { userId: string }) {
     return this.auth.logoutAll(current.userId);
+  }
+
+  @ApiBearerAuth()
+  @Get("session")
+  session(@CurrentAuth() current: { userId: string; sessionId: string }) {
+    return this.auth.session(current.userId, current.sessionId);
   }
 
   @ApiBearerAuth()

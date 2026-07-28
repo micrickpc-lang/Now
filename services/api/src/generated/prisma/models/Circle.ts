@@ -193,6 +193,7 @@ export type CircleWhereInput = {
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   members?: Prisma.CircleMemberListRelationFilter
   visibility?: Prisma.SignalVisibilityListRelationFilter
+  exactLocationShares?: Prisma.ExactLocationShareListRelationFilter
 }
 
 export type CircleOrderByWithRelationInput = {
@@ -205,6 +206,7 @@ export type CircleOrderByWithRelationInput = {
   owner?: Prisma.UserOrderByWithRelationInput
   members?: Prisma.CircleMemberOrderByRelationAggregateInput
   visibility?: Prisma.SignalVisibilityOrderByRelationAggregateInput
+  exactLocationShares?: Prisma.ExactLocationShareOrderByRelationAggregateInput
 }
 
 export type CircleWhereUniqueInput = Prisma.AtLeast<{
@@ -220,6 +222,7 @@ export type CircleWhereUniqueInput = Prisma.AtLeast<{
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   members?: Prisma.CircleMemberListRelationFilter
   visibility?: Prisma.SignalVisibilityListRelationFilter
+  exactLocationShares?: Prisma.ExactLocationShareListRelationFilter
 }, "id">
 
 export type CircleOrderByWithAggregationInput = {
@@ -255,6 +258,7 @@ export type CircleCreateInput = {
   owner: Prisma.UserCreateNestedOneWithoutCirclesOwnedInput
   members?: Prisma.CircleMemberCreateNestedManyWithoutCircleInput
   visibility?: Prisma.SignalVisibilityCreateNestedManyWithoutCircleInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutCircleInput
 }
 
 export type CircleUncheckedCreateInput = {
@@ -266,6 +270,7 @@ export type CircleUncheckedCreateInput = {
   updatedAt?: Date | string
   members?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutCircleInput
   visibility?: Prisma.SignalVisibilityUncheckedCreateNestedManyWithoutCircleInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutCircleInput
 }
 
 export type CircleUpdateInput = {
@@ -277,6 +282,7 @@ export type CircleUpdateInput = {
   owner?: Prisma.UserUpdateOneRequiredWithoutCirclesOwnedNestedInput
   members?: Prisma.CircleMemberUpdateManyWithoutCircleNestedInput
   visibility?: Prisma.SignalVisibilityUpdateManyWithoutCircleNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutCircleNestedInput
 }
 
 export type CircleUncheckedUpdateInput = {
@@ -288,6 +294,7 @@ export type CircleUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.CircleMemberUncheckedUpdateManyWithoutCircleNestedInput
   visibility?: Prisma.SignalVisibilityUncheckedUpdateManyWithoutCircleNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutCircleNestedInput
 }
 
 export type CircleCreateManyInput = {
@@ -435,6 +442,22 @@ export type CircleUpdateOneWithoutVisibilityNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CircleUpdateToOneWithWhereWithoutVisibilityInput, Prisma.CircleUpdateWithoutVisibilityInput>, Prisma.CircleUncheckedUpdateWithoutVisibilityInput>
 }
 
+export type CircleCreateNestedOneWithoutExactLocationSharesInput = {
+  create?: Prisma.XOR<Prisma.CircleCreateWithoutExactLocationSharesInput, Prisma.CircleUncheckedCreateWithoutExactLocationSharesInput>
+  connectOrCreate?: Prisma.CircleCreateOrConnectWithoutExactLocationSharesInput
+  connect?: Prisma.CircleWhereUniqueInput
+}
+
+export type CircleUpdateOneWithoutExactLocationSharesNestedInput = {
+  create?: Prisma.XOR<Prisma.CircleCreateWithoutExactLocationSharesInput, Prisma.CircleUncheckedCreateWithoutExactLocationSharesInput>
+  connectOrCreate?: Prisma.CircleCreateOrConnectWithoutExactLocationSharesInput
+  upsert?: Prisma.CircleUpsertWithoutExactLocationSharesInput
+  disconnect?: Prisma.CircleWhereInput | boolean
+  delete?: Prisma.CircleWhereInput | boolean
+  connect?: Prisma.CircleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CircleUpdateToOneWithWhereWithoutExactLocationSharesInput, Prisma.CircleUpdateWithoutExactLocationSharesInput>, Prisma.CircleUncheckedUpdateWithoutExactLocationSharesInput>
+}
+
 export type CircleCreateWithoutOwnerInput = {
   id?: string
   name: string
@@ -443,6 +466,7 @@ export type CircleCreateWithoutOwnerInput = {
   updatedAt?: Date | string
   members?: Prisma.CircleMemberCreateNestedManyWithoutCircleInput
   visibility?: Prisma.SignalVisibilityCreateNestedManyWithoutCircleInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutCircleInput
 }
 
 export type CircleUncheckedCreateWithoutOwnerInput = {
@@ -453,6 +477,7 @@ export type CircleUncheckedCreateWithoutOwnerInput = {
   updatedAt?: Date | string
   members?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutCircleInput
   visibility?: Prisma.SignalVisibilityUncheckedCreateNestedManyWithoutCircleInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutCircleInput
 }
 
 export type CircleCreateOrConnectWithoutOwnerInput = {
@@ -501,6 +526,7 @@ export type CircleCreateWithoutMembersInput = {
   updatedAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutCirclesOwnedInput
   visibility?: Prisma.SignalVisibilityCreateNestedManyWithoutCircleInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutCircleInput
 }
 
 export type CircleUncheckedCreateWithoutMembersInput = {
@@ -511,6 +537,7 @@ export type CircleUncheckedCreateWithoutMembersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   visibility?: Prisma.SignalVisibilityUncheckedCreateNestedManyWithoutCircleInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutCircleInput
 }
 
 export type CircleCreateOrConnectWithoutMembersInput = {
@@ -537,6 +564,7 @@ export type CircleUpdateWithoutMembersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutCirclesOwnedNestedInput
   visibility?: Prisma.SignalVisibilityUpdateManyWithoutCircleNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutCircleNestedInput
 }
 
 export type CircleUncheckedUpdateWithoutMembersInput = {
@@ -547,6 +575,7 @@ export type CircleUncheckedUpdateWithoutMembersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   visibility?: Prisma.SignalVisibilityUncheckedUpdateManyWithoutCircleNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutCircleNestedInput
 }
 
 export type CircleCreateWithoutVisibilityInput = {
@@ -557,6 +586,7 @@ export type CircleCreateWithoutVisibilityInput = {
   updatedAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutCirclesOwnedInput
   members?: Prisma.CircleMemberCreateNestedManyWithoutCircleInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutCircleInput
 }
 
 export type CircleUncheckedCreateWithoutVisibilityInput = {
@@ -567,6 +597,7 @@ export type CircleUncheckedCreateWithoutVisibilityInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutCircleInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutCircleInput
 }
 
 export type CircleCreateOrConnectWithoutVisibilityInput = {
@@ -593,6 +624,7 @@ export type CircleUpdateWithoutVisibilityInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutCirclesOwnedNestedInput
   members?: Prisma.CircleMemberUpdateManyWithoutCircleNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutCircleNestedInput
 }
 
 export type CircleUncheckedUpdateWithoutVisibilityInput = {
@@ -603,6 +635,67 @@ export type CircleUncheckedUpdateWithoutVisibilityInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.CircleMemberUncheckedUpdateManyWithoutCircleNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutCircleNestedInput
+}
+
+export type CircleCreateWithoutExactLocationSharesInput = {
+  id?: string
+  name: string
+  emoji?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  owner: Prisma.UserCreateNestedOneWithoutCirclesOwnedInput
+  members?: Prisma.CircleMemberCreateNestedManyWithoutCircleInput
+  visibility?: Prisma.SignalVisibilityCreateNestedManyWithoutCircleInput
+}
+
+export type CircleUncheckedCreateWithoutExactLocationSharesInput = {
+  id?: string
+  ownerId: string
+  name: string
+  emoji?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutCircleInput
+  visibility?: Prisma.SignalVisibilityUncheckedCreateNestedManyWithoutCircleInput
+}
+
+export type CircleCreateOrConnectWithoutExactLocationSharesInput = {
+  where: Prisma.CircleWhereUniqueInput
+  create: Prisma.XOR<Prisma.CircleCreateWithoutExactLocationSharesInput, Prisma.CircleUncheckedCreateWithoutExactLocationSharesInput>
+}
+
+export type CircleUpsertWithoutExactLocationSharesInput = {
+  update: Prisma.XOR<Prisma.CircleUpdateWithoutExactLocationSharesInput, Prisma.CircleUncheckedUpdateWithoutExactLocationSharesInput>
+  create: Prisma.XOR<Prisma.CircleCreateWithoutExactLocationSharesInput, Prisma.CircleUncheckedCreateWithoutExactLocationSharesInput>
+  where?: Prisma.CircleWhereInput
+}
+
+export type CircleUpdateToOneWithWhereWithoutExactLocationSharesInput = {
+  where?: Prisma.CircleWhereInput
+  data: Prisma.XOR<Prisma.CircleUpdateWithoutExactLocationSharesInput, Prisma.CircleUncheckedUpdateWithoutExactLocationSharesInput>
+}
+
+export type CircleUpdateWithoutExactLocationSharesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  emoji?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owner?: Prisma.UserUpdateOneRequiredWithoutCirclesOwnedNestedInput
+  members?: Prisma.CircleMemberUpdateManyWithoutCircleNestedInput
+  visibility?: Prisma.SignalVisibilityUpdateManyWithoutCircleNestedInput
+}
+
+export type CircleUncheckedUpdateWithoutExactLocationSharesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  emoji?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.CircleMemberUncheckedUpdateManyWithoutCircleNestedInput
+  visibility?: Prisma.SignalVisibilityUncheckedUpdateManyWithoutCircleNestedInput
 }
 
 export type CircleCreateManyOwnerInput = {
@@ -621,6 +714,7 @@ export type CircleUpdateWithoutOwnerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.CircleMemberUpdateManyWithoutCircleNestedInput
   visibility?: Prisma.SignalVisibilityUpdateManyWithoutCircleNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutCircleNestedInput
 }
 
 export type CircleUncheckedUpdateWithoutOwnerInput = {
@@ -631,6 +725,7 @@ export type CircleUncheckedUpdateWithoutOwnerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.CircleMemberUncheckedUpdateManyWithoutCircleNestedInput
   visibility?: Prisma.SignalVisibilityUncheckedUpdateManyWithoutCircleNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutCircleNestedInput
 }
 
 export type CircleUncheckedUpdateManyWithoutOwnerInput = {
@@ -649,11 +744,13 @@ export type CircleUncheckedUpdateManyWithoutOwnerInput = {
 export type CircleCountOutputType = {
   members: number
   visibility: number
+  exactLocationShares: number
 }
 
 export type CircleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | CircleCountOutputTypeCountMembersArgs
   visibility?: boolean | CircleCountOutputTypeCountVisibilityArgs
+  exactLocationShares?: boolean | CircleCountOutputTypeCountExactLocationSharesArgs
 }
 
 /**
@@ -680,6 +777,13 @@ export type CircleCountOutputTypeCountVisibilityArgs<ExtArgs extends runtime.Typ
   where?: Prisma.SignalVisibilityWhereInput
 }
 
+/**
+ * CircleCountOutputType without action
+ */
+export type CircleCountOutputTypeCountExactLocationSharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExactLocationShareWhereInput
+}
+
 
 export type CircleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -691,6 +795,7 @@ export type CircleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   members?: boolean | Prisma.Circle$membersArgs<ExtArgs>
   visibility?: boolean | Prisma.Circle$visibilityArgs<ExtArgs>
+  exactLocationShares?: boolean | Prisma.Circle$exactLocationSharesArgs<ExtArgs>
   _count?: boolean | Prisma.CircleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["circle"]>
 
@@ -728,6 +833,7 @@ export type CircleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   members?: boolean | Prisma.Circle$membersArgs<ExtArgs>
   visibility?: boolean | Prisma.Circle$visibilityArgs<ExtArgs>
+  exactLocationShares?: boolean | Prisma.Circle$exactLocationSharesArgs<ExtArgs>
   _count?: boolean | Prisma.CircleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CircleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -743,6 +849,7 @@ export type $CirclePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     owner: Prisma.$UserPayload<ExtArgs>
     members: Prisma.$CircleMemberPayload<ExtArgs>[]
     visibility: Prisma.$SignalVisibilityPayload<ExtArgs>[]
+    exactLocationShares: Prisma.$ExactLocationSharePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1148,6 +1255,7 @@ export interface Prisma__CircleClient<T, Null = never, ExtArgs extends runtime.T
   owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   members<T extends Prisma.Circle$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Circle$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CircleMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   visibility<T extends Prisma.Circle$visibilityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Circle$visibilityArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SignalVisibilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  exactLocationShares<T extends Prisma.Circle$exactLocationSharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Circle$exactLocationSharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExactLocationSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1629,6 +1737,30 @@ export type Circle$visibilityArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.SignalVisibilityScalarFieldEnum | Prisma.SignalVisibilityScalarFieldEnum[]
+}
+
+/**
+ * Circle.exactLocationShares
+ */
+export type Circle$exactLocationSharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExactLocationShare
+   */
+  select?: Prisma.ExactLocationShareSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExactLocationShare
+   */
+  omit?: Prisma.ExactLocationShareOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExactLocationShareInclude<ExtArgs> | null
+  where?: Prisma.ExactLocationShareWhereInput
+  orderBy?: Prisma.ExactLocationShareOrderByWithRelationInput | Prisma.ExactLocationShareOrderByWithRelationInput[]
+  cursor?: Prisma.ExactLocationShareWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExactLocationShareScalarFieldEnum | Prisma.ExactLocationShareScalarFieldEnum[]
 }
 
 /**

@@ -418,6 +418,9 @@ export const ModelName = {
   RoomPollOption: 'RoomPollOption',
   RoomPollVote: 'RoomPollVote',
   LocationShare: 'LocationShare',
+  ExactLocationShare: 'ExactLocationShare',
+  ExactLocationRecipient: 'ExactLocationRecipient',
+  SafeLocationZone: 'SafeLocationZone',
   Conversation: 'Conversation',
   ConversationMember: 'ConversationMember',
   ConversationInvite: 'ConversationInvite',
@@ -460,7 +463,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userProfile" | "device" | "authSession" | "otpChallenge" | "friendship" | "friendshipInvite" | "circle" | "circleMember" | "signal" | "signalVisibility" | "signalJoinRequest" | "signalParticipant" | "temporaryRoom" | "roomMember" | "roomMessage" | "roomReaction" | "roomPoll" | "roomPollOption" | "roomPollVote" | "locationShare" | "conversation" | "conversationMember" | "conversationInvite" | "message" | "messageEdit" | "messageAttachment" | "messageReaction" | "messageReadReceipt" | "messageDelivery" | "pinnedMessage" | "conversationDraft" | "chatMute" | "chatAuditEvent" | "memory" | "memoryParticipant" | "mediaFile" | "block" | "report" | "adminUser" | "moderationAction" | "notificationToken" | "consentRecord" | "auditLog" | "featureFlag" | "forbiddenWord" | "analyticsEvent" | "deletionReport"
+    modelProps: "user" | "userProfile" | "device" | "authSession" | "otpChallenge" | "friendship" | "friendshipInvite" | "circle" | "circleMember" | "signal" | "signalVisibility" | "signalJoinRequest" | "signalParticipant" | "temporaryRoom" | "roomMember" | "roomMessage" | "roomReaction" | "roomPoll" | "roomPollOption" | "roomPollVote" | "locationShare" | "exactLocationShare" | "exactLocationRecipient" | "safeLocationZone" | "conversation" | "conversationMember" | "conversationInvite" | "message" | "messageEdit" | "messageAttachment" | "messageReaction" | "messageReadReceipt" | "messageDelivery" | "pinnedMessage" | "conversationDraft" | "chatMute" | "chatAuditEvent" | "memory" | "memoryParticipant" | "mediaFile" | "block" | "report" | "adminUser" | "moderationAction" | "notificationToken" | "consentRecord" | "auditLog" | "featureFlag" | "forbiddenWord" | "analyticsEvent" | "deletionReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2015,6 +2018,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LocationShareCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LocationShareCountAggregateOutputType> | number
+        }
+      }
+    }
+    ExactLocationShare: {
+      payload: Prisma.$ExactLocationSharePayload<ExtArgs>
+      fields: Prisma.ExactLocationShareFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExactLocationShareFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationSharePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExactLocationShareFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationSharePayload>
+        }
+        findFirst: {
+          args: Prisma.ExactLocationShareFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationSharePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExactLocationShareFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationSharePayload>
+        }
+        findMany: {
+          args: Prisma.ExactLocationShareFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationSharePayload>[]
+        }
+        create: {
+          args: Prisma.ExactLocationShareCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationSharePayload>
+        }
+        createMany: {
+          args: Prisma.ExactLocationShareCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExactLocationShareCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationSharePayload>[]
+        }
+        delete: {
+          args: Prisma.ExactLocationShareDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationSharePayload>
+        }
+        update: {
+          args: Prisma.ExactLocationShareUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationSharePayload>
+        }
+        deleteMany: {
+          args: Prisma.ExactLocationShareDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExactLocationShareUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExactLocationShareUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationSharePayload>[]
+        }
+        upsert: {
+          args: Prisma.ExactLocationShareUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationSharePayload>
+        }
+        aggregate: {
+          args: Prisma.ExactLocationShareAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExactLocationShare>
+        }
+        groupBy: {
+          args: Prisma.ExactLocationShareGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExactLocationShareGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExactLocationShareCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExactLocationShareCountAggregateOutputType> | number
+        }
+      }
+    }
+    ExactLocationRecipient: {
+      payload: Prisma.$ExactLocationRecipientPayload<ExtArgs>
+      fields: Prisma.ExactLocationRecipientFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExactLocationRecipientFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationRecipientPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExactLocationRecipientFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationRecipientPayload>
+        }
+        findFirst: {
+          args: Prisma.ExactLocationRecipientFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationRecipientPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExactLocationRecipientFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationRecipientPayload>
+        }
+        findMany: {
+          args: Prisma.ExactLocationRecipientFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationRecipientPayload>[]
+        }
+        create: {
+          args: Prisma.ExactLocationRecipientCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationRecipientPayload>
+        }
+        createMany: {
+          args: Prisma.ExactLocationRecipientCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExactLocationRecipientCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationRecipientPayload>[]
+        }
+        delete: {
+          args: Prisma.ExactLocationRecipientDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationRecipientPayload>
+        }
+        update: {
+          args: Prisma.ExactLocationRecipientUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationRecipientPayload>
+        }
+        deleteMany: {
+          args: Prisma.ExactLocationRecipientDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExactLocationRecipientUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExactLocationRecipientUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationRecipientPayload>[]
+        }
+        upsert: {
+          args: Prisma.ExactLocationRecipientUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExactLocationRecipientPayload>
+        }
+        aggregate: {
+          args: Prisma.ExactLocationRecipientAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExactLocationRecipient>
+        }
+        groupBy: {
+          args: Prisma.ExactLocationRecipientGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExactLocationRecipientGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExactLocationRecipientCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExactLocationRecipientCountAggregateOutputType> | number
+        }
+      }
+    }
+    SafeLocationZone: {
+      payload: Prisma.$SafeLocationZonePayload<ExtArgs>
+      fields: Prisma.SafeLocationZoneFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SafeLocationZoneFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SafeLocationZoneFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>
+        }
+        findFirst: {
+          args: Prisma.SafeLocationZoneFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SafeLocationZoneFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>
+        }
+        findMany: {
+          args: Prisma.SafeLocationZoneFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>[]
+        }
+        create: {
+          args: Prisma.SafeLocationZoneCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>
+        }
+        createMany: {
+          args: Prisma.SafeLocationZoneCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SafeLocationZoneCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>[]
+        }
+        delete: {
+          args: Prisma.SafeLocationZoneDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>
+        }
+        update: {
+          args: Prisma.SafeLocationZoneUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>
+        }
+        deleteMany: {
+          args: Prisma.SafeLocationZoneDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SafeLocationZoneUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SafeLocationZoneUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>[]
+        }
+        upsert: {
+          args: Prisma.SafeLocationZoneUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SafeLocationZonePayload>
+        }
+        aggregate: {
+          args: Prisma.SafeLocationZoneAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSafeLocationZone>
+        }
+        groupBy: {
+          args: Prisma.SafeLocationZoneGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SafeLocationZoneGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SafeLocationZoneCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SafeLocationZoneCountAggregateOutputType> | number
         }
       }
     }
@@ -4191,6 +4416,7 @@ export const SignalScalarFieldEnum = {
   locationMode: 'locationMode',
   cityLabel: 'cityLabel',
   districtLabel: 'districtLabel',
+  exactLocationShareId: 'exactLocationShareId',
   maxParticipants: 'maxParticipants',
   state: 'state',
   extendedAt: 'extendedAt',
@@ -4326,6 +4552,54 @@ export const LocationShareScalarFieldEnum = {
 } as const
 
 export type LocationShareScalarFieldEnum = (typeof LocationShareScalarFieldEnum)[keyof typeof LocationShareScalarFieldEnum]
+
+
+export const ExactLocationShareScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  audience: 'audience',
+  expiryMode: 'expiryMode',
+  circleId: 'circleId',
+  roomId: 'roomId',
+  backgroundUpdatesEnabled: 'backgroundUpdatesEnabled',
+  ciphertext: 'ciphertext',
+  iv: 'iv',
+  authTag: 'authTag',
+  encryptedDataKey: 'encryptedDataKey',
+  keyIv: 'keyIv',
+  keyAuthTag: 'keyAuthTag',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExactLocationShareScalarFieldEnum = (typeof ExactLocationShareScalarFieldEnum)[keyof typeof ExactLocationShareScalarFieldEnum]
+
+
+export const ExactLocationRecipientScalarFieldEnum = {
+  shareId: 'shareId',
+  viewerId: 'viewerId'
+} as const
+
+export type ExactLocationRecipientScalarFieldEnum = (typeof ExactLocationRecipientScalarFieldEnum)[keyof typeof ExactLocationRecipientScalarFieldEnum]
+
+
+export const SafeLocationZoneScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  signalId: 'signalId',
+  mode: 'mode',
+  radiusMeters: 'radiusMeters',
+  description: 'description',
+  cityLabel: 'cityLabel',
+  districtLabel: 'districtLabel',
+  expiresAt: 'expiresAt',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SafeLocationZoneScalarFieldEnum = (typeof SafeLocationZoneScalarFieldEnum)[keyof typeof SafeLocationZoneScalarFieldEnum]
 
 
 export const ConversationScalarFieldEnum = {
@@ -4892,6 +5166,34 @@ export type ListEnumRoomStateFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
 
 
 /**
+ * Reference to a field of type 'ExactLocationAudience'
+ */
+export type EnumExactLocationAudienceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExactLocationAudience'>
+    
+
+
+/**
+ * Reference to a field of type 'ExactLocationAudience[]'
+ */
+export type ListEnumExactLocationAudienceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExactLocationAudience[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ExactLocationExpiry'
+ */
+export type EnumExactLocationExpiryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExactLocationExpiry'>
+    
+
+
+/**
+ * Reference to a field of type 'ExactLocationExpiry[]'
+ */
+export type ListEnumExactLocationExpiryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExactLocationExpiry[]'>
+    
+
+
+/**
  * Reference to a field of type 'ConversationType'
  */
 export type EnumConversationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversationType'>
@@ -5188,6 +5490,9 @@ export type GlobalOmitConfig = {
   roomPollOption?: Prisma.RoomPollOptionOmit
   roomPollVote?: Prisma.RoomPollVoteOmit
   locationShare?: Prisma.LocationShareOmit
+  exactLocationShare?: Prisma.ExactLocationShareOmit
+  exactLocationRecipient?: Prisma.ExactLocationRecipientOmit
+  safeLocationZone?: Prisma.SafeLocationZoneOmit
   conversation?: Prisma.ConversationOmit
   conversationMember?: Prisma.ConversationMemberOmit
   conversationInvite?: Prisma.ConversationInviteOmit

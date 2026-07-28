@@ -67,22 +67,27 @@ class RealtimeClient {
     this._config,
     this._tokens, {
     RealtimeSocketFactory? socketFactory,
+    this._ackTimeout = const Duration(seconds: 5),
   }) : _socketFactory = socketFactory ?? _defaultSocketFactory;
 
   final AppConfig _config;
   final TokenStore _tokens;
   final RealtimeSocketFactory _socketFactory;
+  final Duration _ackTimeout;
   io.Socket? _socket;
+  io.Socket? _readySocket;
   final _events = StreamController<RealtimeEvent>.broadcast();
   final _statuses = StreamController<RealtimeConnectionStatus>.broadcast();
   final _authenticationErrors = StreamController<String>.broadcast();
+  final Map<io.Socket, Set<Completer<bool>>> _pendingAcks = {};
+  final Map<Completer<bool>, Timer> _ackTimers = {};
   Future<void>? _connectInFlight;
   int _connectionGeneration = 0;
 
   Stream<RealtimeEvent> get events => _events.stream;
   Stream<RealtimeConnectionStatus> get statuses => _statuses.stream;
   Stream<String> get authenticationErrors => _authenticationErrors.stream;
-  bool get isConnected => _socket?.connected ?? false;
+  bool get isConnected => _socket != null && identical(_readySocket, _socket);
 
   Future<void> connect() {
     if (_config.demoMode) {
@@ -136,7 +141,15 @@ class RealtimeClient {
       });
     }
     socket.onConnect((_) {
-      if (identical(_socket, socket) && !_statuses.isClosed) {
+      if (identical(_socket, socket)) {
+        _readySocket = null;
+      }
+    });
+    socket.on('ready', (_) {
+      if (identical(_socket, socket) &&
+          !identical(_readySocket, socket) &&
+          !_statuses.isClosed) {
+        _readySocket = socket;
         _statuses.add(RealtimeConnectionStatus.connected);
       }
     });
@@ -167,7 +180,9 @@ class RealtimeClient {
   bool _releaseSocket(io.Socket socket) {
     if (!identical(_socket, socket)) return false;
     _socket = null;
+    _readySocket = null;
     _connectionGeneration += 1;
+    _failPendingAcks(socket);
     scheduleMicrotask(socket.dispose);
     return true;
   }
@@ -177,26 +192,79 @@ class RealtimeClient {
     await connect();
   }
 
-  void subscribeRoom(String roomId) =>
-      _socket?.emit('room.subscribe', {'roomId': roomId});
+  Future<bool> subscribeRoom(String roomId) =>
+      _emitWithAck('room.subscribe', {'roomId': roomId});
 
-  void unsubscribeRoom(String roomId) =>
-      _socket?.emit('room.unsubscribe', {'roomId': roomId});
+  Future<bool> unsubscribeRoom(String roomId) =>
+      _emitWithAck('room.unsubscribe', {'roomId': roomId});
 
-  void subscribeConversation(String conversationId) => _socket?.emit(
+  Future<bool> subscribeConversation(String conversationId) => _emitWithAck(
     'conversation.subscribe',
     {'conversationId': conversationId},
   );
 
-  void unsubscribeConversation(String conversationId) => _socket?.emit(
+  Future<bool> unsubscribeConversation(String conversationId) => _emitWithAck(
     'conversation.unsubscribe',
     {'conversationId': conversationId},
   );
+
+  Future<bool> _emitWithAck(String event, Map<String, dynamic> payload) async {
+    final socket = _socket;
+    if (socket == null || !identical(_readySocket, socket)) return false;
+
+    final completer = Completer<bool>();
+    _pendingAcks.putIfAbsent(socket, () => <Completer<bool>>{}).add(completer);
+    _ackTimers[completer] = Timer(
+      _ackTimeout,
+      () => _completeAck(completer, false),
+    );
+    try {
+      socket.emitWithAck(
+        event,
+        payload,
+        ack: ([dynamic response]) {
+          _completeAck(completer, _isSuccessfulAck(response));
+        },
+      );
+      final acknowledged = await completer.future;
+      return acknowledged &&
+          identical(_socket, socket) &&
+          identical(_readySocket, socket);
+    } catch (_) {
+      _completeAck(completer, false);
+      return false;
+    } finally {
+      _ackTimers.remove(completer)?.cancel();
+      final pending = _pendingAcks[socket];
+      pending?.remove(completer);
+      if (pending?.isEmpty ?? false) {
+        _pendingAcks.remove(socket);
+      }
+    }
+  }
+
+  bool _isSuccessfulAck(dynamic response) =>
+      response == true || (response is Map && response['ok'] == true);
+
+  void _completeAck(Completer<bool> completer, bool acknowledged) {
+    _ackTimers.remove(completer)?.cancel();
+    if (!completer.isCompleted) completer.complete(acknowledged);
+  }
+
+  void _failPendingAcks(io.Socket socket) {
+    final pending = _pendingAcks.remove(socket);
+    if (pending == null) return;
+    for (final completer in pending) {
+      _completeAck(completer, false);
+    }
+  }
 
   Future<void> disconnect() async {
     _connectionGeneration += 1;
     final socket = _socket;
     _socket = null;
+    _readySocket = null;
+    if (socket != null) _failPendingAcks(socket);
     socket?.dispose();
     if (!_statuses.isClosed) {
       _statuses.add(RealtimeConnectionStatus.disconnected);
@@ -225,6 +293,8 @@ const _eventNames = [
   'room.poll.updated',
   'location.share.updated',
   'location.share.revoked',
+  'location.exact.updated',
+  'location.exact.revoked',
   'conversation.created',
   'conversation.updated',
   'conversation.deleted',
@@ -286,11 +356,18 @@ class RealtimeCoordinator with WidgetsBindingObserver {
   StreamSubscription<void>? _refreshSubscription;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   Timer? _reconnectTimer;
+  Timer? _subscriptionRetryTimer;
   Future<void>? _authenticationRecovery;
   Future<void>? _freshReconnect;
+  Future<void>? _subscriptionSync;
+  final Set<String> _serverRoomSubscriptions = {};
+  final Set<String> _serverConversationSubscriptions = {};
   int _lifecycleGeneration = 0;
+  int _subscriptionGeneration = 0;
   int _reconnectAttempts = 0;
+  int _subscriptionRetryAttempts = 0;
   bool _authenticationRecoveryAttempted = false;
+  bool _subscriptionSyncRequested = false;
   bool _started = false;
   bool _foreground = true;
   bool _online = true;
@@ -329,6 +406,7 @@ class RealtimeCoordinator with WidgetsBindingObserver {
     final authenticationRecovery = _authenticationRecovery;
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
+    _resetSubscriptionState();
     WidgetsBinding.instance.removeObserver(this);
     await _eventSubscription?.cancel();
     await _statusSubscription?.cancel();
@@ -351,16 +429,17 @@ class RealtimeCoordinator with WidgetsBindingObserver {
     // the local logout has already completed.
     await authenticationRecovery;
     await _client.disconnect();
+    await _subscriptionSync;
   }
 
   RealtimeLease subscribeRoom(String roomId) {
     _roomReferences.update(roomId, (value) => value + 1, ifAbsent: () => 1);
-    if (_client.isConnected) _client.subscribeRoom(roomId);
+    _requestSubscriptionSync();
     return RealtimeLease(() {
       final remaining = (_roomReferences[roomId] ?? 1) - 1;
       if (remaining <= 0) {
         _roomReferences.remove(roomId);
-        if (_client.isConnected) _client.unsubscribeRoom(roomId);
+        _requestSubscriptionSync();
       } else {
         _roomReferences[roomId] = remaining;
       }
@@ -373,16 +452,12 @@ class RealtimeCoordinator with WidgetsBindingObserver {
       (value) => value + 1,
       ifAbsent: () => 1,
     );
-    if (_client.isConnected) {
-      _client.subscribeConversation(conversationId);
-    }
+    _requestSubscriptionSync();
     return RealtimeLease(() {
       final remaining = (_conversationReferences[conversationId] ?? 1) - 1;
       if (remaining <= 0) {
         _conversationReferences.remove(conversationId);
-        if (_client.isConnected) {
-          _client.unsubscribeConversation(conversationId);
-        }
+        _requestSubscriptionSync();
       } else {
         _conversationReferences[conversationId] = remaining;
       }
@@ -427,14 +502,17 @@ class RealtimeCoordinator with WidgetsBindingObserver {
         _reconnectAttempts = 0;
         _authenticationRecoveryAttempted = false;
         beginConnectionGeneration();
-        _resubscribe();
+        _resetSubscriptionState();
+        _requestSubscriptionSync();
         break;
       case RealtimeConnectionStatus.disconnected:
+        _resetSubscriptionState();
         _scheduleReconnect();
         break;
       case RealtimeConnectionStatus.unauthenticated:
         _reconnectTimer?.cancel();
         _reconnectTimer = null;
+        _resetSubscriptionState();
         break;
       case RealtimeConnectionStatus.connecting:
       case RealtimeConnectionStatus.offline:
@@ -530,13 +608,141 @@ class RealtimeCoordinator with WidgetsBindingObserver {
     }
   }
 
-  void _resubscribe() {
-    for (final roomId in _roomReferences.keys) {
-      _client.subscribeRoom(roomId);
+  void _resetSubscriptionState() {
+    _subscriptionGeneration += 1;
+    _subscriptionRetryTimer?.cancel();
+    _subscriptionRetryTimer = null;
+    _subscriptionRetryAttempts = 0;
+    _subscriptionSyncRequested = false;
+    _serverRoomSubscriptions.clear();
+    _serverConversationSubscriptions.clear();
+  }
+
+  bool get _canSynchronizeSubscriptions =>
+      _started && _client.isConnected && !_demoMode;
+
+  bool _isCurrentSubscriptionGeneration(int generation) =>
+      generation == _subscriptionGeneration && _canSynchronizeSubscriptions;
+
+  bool get _subscriptionsOutOfSync =>
+      _roomReferences.keys.any(
+        (roomId) => !_serverRoomSubscriptions.contains(roomId),
+      ) ||
+      _serverRoomSubscriptions.any(
+        (roomId) => !_roomReferences.containsKey(roomId),
+      ) ||
+      _conversationReferences.keys.any(
+        (conversationId) =>
+            !_serverConversationSubscriptions.contains(conversationId),
+      ) ||
+      _serverConversationSubscriptions.any(
+        (conversationId) =>
+            !_conversationReferences.containsKey(conversationId),
+      );
+
+  void _requestSubscriptionSync() {
+    if (!_canSynchronizeSubscriptions) return;
+    _subscriptionRetryTimer?.cancel();
+    _subscriptionRetryTimer = null;
+    if (_subscriptionSync != null) {
+      _subscriptionSyncRequested = true;
+      return;
     }
-    for (final conversationId in _conversationReferences.keys) {
-      _client.subscribeConversation(conversationId);
+
+    final generation = _subscriptionGeneration;
+    late final Future<void> sync;
+    sync = _synchronizeSubscriptions(generation).whenComplete(() {
+      if (identical(_subscriptionSync, sync)) {
+        _subscriptionSync = null;
+      }
+      if (!_canSynchronizeSubscriptions) return;
+      if (_subscriptionsOutOfSync) {
+        if (_subscriptionSyncRequested) {
+          _subscriptionSyncRequested = false;
+          _requestSubscriptionSync();
+        } else {
+          _scheduleSubscriptionRetry();
+        }
+      } else {
+        _subscriptionRetryAttempts = 0;
+      }
+    });
+    _subscriptionSync = sync;
+    unawaited(sync);
+  }
+
+  Future<void> _synchronizeSubscriptions(int generation) async {
+    do {
+      _subscriptionSyncRequested = false;
+      if (!_isCurrentSubscriptionGeneration(generation)) return;
+
+      for (final roomId
+          in _serverRoomSubscriptions
+              .where((roomId) => !_roomReferences.containsKey(roomId))
+              .toList()) {
+        final acknowledged = await _client.unsubscribeRoom(roomId);
+        if (!_isCurrentSubscriptionGeneration(generation)) return;
+        if (acknowledged) _serverRoomSubscriptions.remove(roomId);
+      }
+      for (final conversationId
+          in _serverConversationSubscriptions
+              .where(
+                (conversationId) =>
+                    !_conversationReferences.containsKey(conversationId),
+              )
+              .toList()) {
+        final acknowledged = await _client.unsubscribeConversation(
+          conversationId,
+        );
+        if (!_isCurrentSubscriptionGeneration(generation)) return;
+        if (acknowledged) {
+          _serverConversationSubscriptions.remove(conversationId);
+        }
+      }
+      for (final roomId
+          in _roomReferences.keys
+              .where((roomId) => !_serverRoomSubscriptions.contains(roomId))
+              .toList()) {
+        final acknowledged = await _client.subscribeRoom(roomId);
+        if (!_isCurrentSubscriptionGeneration(generation)) return;
+        if (acknowledged) _serverRoomSubscriptions.add(roomId);
+      }
+      for (final conversationId
+          in _conversationReferences.keys
+              .where(
+                (conversationId) =>
+                    !_serverConversationSubscriptions.contains(conversationId),
+              )
+              .toList()) {
+        final acknowledged = await _client.subscribeConversation(
+          conversationId,
+        );
+        if (!_isCurrentSubscriptionGeneration(generation)) return;
+        if (acknowledged) {
+          _serverConversationSubscriptions.add(conversationId);
+        }
+      }
+    } while (_subscriptionSyncRequested &&
+        _isCurrentSubscriptionGeneration(generation));
+  }
+
+  void _scheduleSubscriptionRetry() {
+    if (!_canSynchronizeSubscriptions ||
+        !_subscriptionsOutOfSync ||
+        _subscriptionRetryTimer != null) {
+      return;
     }
+    final exponent = _subscriptionRetryAttempts > 4
+        ? 4
+        : _subscriptionRetryAttempts;
+    final delay = Duration(
+      milliseconds: _reconnectBaseDelay.inMilliseconds * (1 << exponent),
+    );
+    _subscriptionRetryAttempts += 1;
+    _subscriptionRetryTimer = Timer(delay, () {
+      _subscriptionRetryTimer = null;
+      _requestSubscriptionSync();
+    });
   }
 
   @override

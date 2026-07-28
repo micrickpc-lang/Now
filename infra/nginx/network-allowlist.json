@@ -2,9 +2,15 @@
   "productionMobileDomains": ["api.example.invalid", "maps.example.invalid"],
   "mapResourcePaths": [
     "/api/v1/maps/style.json",
+    "/api/v1/maps/tilejson.json",
     "/api/v1/maps/tiles/",
     "/api/v1/maps/search",
-    "/api/v1/maps/reverse"
+    "/api/v1/maps/reverse",
+    "/maps/v1/style.json",
+    "/maps/v1/tiles/",
+    "/maps/v1/sprites/",
+    "/maps/v1/glyphs/"
   ],
-  "requiresHttps": true
+  "requiresHttps": true,
+  "stagingBareIpHttpOnly": true
 }

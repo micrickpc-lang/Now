@@ -1,6 +1,22 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { extname, relative, resolve } from "node:path";
 
+if (process.argv.includes("--help") || process.argv.includes("-h")) {
+  process.stdout
+    .write(`Usage: node scripts/security/check-forbidden-map-dependencies.mjs
+
+Scan source and network configuration for forbidden external map SDKs and
+runtime endpoints. This command performs no network requests or file writes.
+
+Options:
+  --help  Show this help
+`);
+  process.exit(0);
+}
+if (process.argv.length > 2) {
+  throw new Error(`Unknown option: ${process.argv[2]}`);
+}
+
 const root = resolve(import.meta.dirname, "../..");
 const forbidden = [
   "googleapis.com",

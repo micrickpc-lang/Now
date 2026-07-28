@@ -43,6 +43,7 @@ dependencies:
   path: ^1.9.1
   web_socket_channel: ^3.0.3
   maplibre_gl: ^0.26.2
+  geolocator: ^14.0.3
   connectivity_plus: ^7.3.0
   intl: ^0.20.3
   socket_io_client: ^3.1.6

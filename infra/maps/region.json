@@ -1,8 +1,15 @@
 {
-  "id": "monaco-demo",
-  "name": "Monaco demonstration extract",
-  "pbfUrl": "https://download.geofabrik.de/europe/monaco-latest.osm.pbf",
-  "sha256Url": "https://download.geofabrik.de/europe/monaco-latest.osm.pbf.md5",
+  "schemaVersion": 1,
+  "id": "monaco-bbbike",
+  "name": "Monaco PC pilot extract",
+  "datasetVersion": "v1",
+  "pbfUrl": "https://data.bbbike.org/osm/pbf/region/europe/monaco.osm.pbf",
+  "checksumUrl": "https://data.bbbike.org/osm/pbf/region/europe/monaco.osm.pbf.md5",
+  "checksumAlgorithm": "md5",
+  "checksumFileName": "monaco.osm.pbf",
+  "pinnedSha256": "70fc6526220503965c0a8fdde3c1988838792c4081c6837fee6c082b65f039ab",
   "output": "infra/maps/data/region.osm.pbf",
+  "metadataOutput": "infra/maps/data/region.osm.pbf.metadata.json",
+  "mbtilesOutput": "infra/maps/data/seychas-v1.mbtiles",
   "maxBytes": 10000000
 }

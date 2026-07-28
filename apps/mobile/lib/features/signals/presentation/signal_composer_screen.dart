@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../chats/data/chats_repository.dart';
+import '../../location_sharing/data/exact_location_share_coordinator.dart';
+import '../../location_sharing/data/exact_location_shares_repository.dart';
+import '../../location_sharing/domain/exact_location_models.dart';
+import '../../map/domain/map_models.dart';
 import '../../social/data/social_repository.dart';
 import '../data/signals_repository.dart';
 import '../domain/signal.dart';
+import '../domain/signal_location_payload.dart';
 
 class SignalComposerScreen extends ConsumerStatefulWidget {
   const SignalComposerScreen({this.conversationId, super.key});
@@ -20,12 +26,10 @@ class SignalComposerScreen extends ConsumerStatefulWidget {
 
 class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
   String _category = 'walk';
-  String _location = 'NONE';
+  MapSelectionResult _location = const MapSelectionResult.none();
   String? _circleId;
   int _duration = 60;
   bool _publishing = false;
-  double? _latitude;
-  double? _longitude;
   final _text = TextEditingController();
   @override
   void dispose() {
@@ -37,6 +41,8 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
     final circles = ref.read(circlesProvider).value ?? const <CircleModel>[];
     final friends = ref.read(friendsProvider).value ?? const <FriendModel>[];
     setState(() => _publishing = true);
+    ExactLocationShare? exactShare;
+    var signalCreated = false;
     try {
       final selected =
           _circleId ?? (circles.isNotEmpty ? circles.first.id : null);
@@ -64,6 +70,40 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
       if (circleIds.isEmpty && userIds.isEmpty) {
         throw StateError('Сначала добавь друга или создай круг');
       }
+      final exactMode =
+          _location.mode == LocationPrivacyMode.exactPin ||
+          _location.mode == LocationPrivacyMode.exactLive;
+      if (exactMode) {
+        final point = _location.sourcePoint;
+        if (point == null) {
+          throw StateError('Выбери точную точку перед публикацией.');
+        }
+        final audience = circleIds.length == 1 && userIds.isEmpty
+            ? ExactLocationAudience.circle
+            : ExactLocationAudience.selectedFriends;
+        if (!await _confirmExactShare(
+          audience: audience,
+          live: _location.mode == LocationPrivacyMode.exactLive,
+        )) {
+          return;
+        }
+        exactShare = await ref
+            .read(exactLocationShareRepositoryProvider)
+            .create(
+              point: point,
+              audience: audience,
+              expiryMode: ExactLocationExpiry.manual,
+              explicitConsent: true,
+              backgroundUpdatesEnabled: false,
+              recipientIds: audience == ExactLocationAudience.selectedFriends
+                  ? userIds
+                  : const [],
+              circleId: audience == ExactLocationAudience.circle
+                  ? circleIds.single
+                  : null,
+              label: _location.label,
+            );
+      }
       final payload = <String, dynamic>{
         'category': _category,
         'text': _text.text.trim().isEmpty ? null : _text.text.trim(),
@@ -73,23 +113,28 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
         'format': _category == 'game' || _category == 'movie'
             ? 'ONLINE'
             : 'OFFLINE',
-        'locationMode': _location,
+        ...buildSignalLocationPayload(_location),
+        if (exactShare != null) 'exactLocationShareId': exactShare.id,
         'maxParticipants': widget.conversationId == null
             ? 4
             : (userIds.length + 1).clamp(2, 20),
         'circleIds': circleIds,
         'userIds': userIds,
       };
-      if (_location == 'APPROXIMATE') {
-        if (_latitude == null || _longitude == null) {
-          throw StateError('Выбери приблизительную зону на карте');
-        }
-        payload['latitude'] = _latitude;
-        payload['longitude'] = _longitude;
-      }
       final signal = await ref.read(signalsRepositoryProvider).create(payload);
+      signalCreated = true;
+      if (_location.mode == LocationPrivacyMode.exactLive &&
+          exactShare != null) {
+        await ref.read(exactLocationShareCoordinatorProvider).start(exactShare);
+      }
       await HapticFeedback.mediumImpact();
-      if (mounted) context.pop(signal);
+      if (!mounted) return;
+      final roomId = signal['roomId']?.toString();
+      if (roomId != null && roomId.isNotEmpty) {
+        context.go('/rooms/$roomId');
+      } else {
+        context.pop(signal);
+      }
     } on DioException catch (error) {
       if (mounted)
         ScaffoldMessenger.of(context).showSnackBar(
@@ -106,13 +151,54 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
         ).showSnackBar(SnackBar(content: Text(error.message)));
       }
     } finally {
+      if (!signalCreated && exactShare != null) {
+        try {
+          await ref
+              .read(exactLocationShareRepositoryProvider)
+              .revoke(exactShare.id);
+        } catch (_) {
+          // Server-side expiry remains the cleanup boundary while offline.
+        }
+      }
       if (mounted) setState(() => _publishing = false);
     }
+  }
+
+  Future<bool> _confirmExactShare({
+    required ExactLocationAudience audience,
+    required bool live,
+  }) async {
+    final approved = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: const Icon(Icons.share_location_rounded),
+        title: Text(
+          live
+              ? 'Делиться точной геолокацией в реальном времени?'
+              : 'Поделиться точной геолокацией?',
+        ),
+        content: Text(
+          '${audience == ExactLocationAudience.circle ? 'Все участники выбранного круга' : 'Выбранные друзья'} увидят эту точку. ${live ? 'Обновления работают, пока приложение открыто.' : 'Точка будет удалена после завершения или отмены сигнала.'}',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Отмена'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Подтвердить'),
+          ),
+        ],
+      ),
+    );
+    return approved == true;
   }
 
   @override
   Widget build(BuildContext context) {
     final circles = ref.watch(circlesProvider);
+    final exactEnabled = ref.watch(appConfigProvider).canShareExactLocation;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Новый сигнал'),
@@ -214,25 +300,47 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
           Text('Место', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 10),
           RadioGroup<String>(
-            groupValue: _location,
+            groupValue: _location.mode.apiValue,
             onChanged: (value) async {
-              if (value == 'APPROXIMATE') {
-                final point = await context.push<Map<String, double>>('/map');
-                if (!mounted || point == null) return;
-                setState(() {
-                  _location = value!;
-                  _latitude = point['latitude'];
-                  _longitude = point['longitude'];
-                });
-              } else {
-                setState(() {
-                  _location = value!;
-                  _latitude = null;
-                  _longitude = null;
-                });
+              final selectedMode = LocationPrivacyMode.values.firstWhere(
+                (mode) => mode.apiValue == value,
+              );
+              if (selectedMode == LocationPrivacyMode.none) {
+                setState(() => _location = const MapSelectionResult.none());
+                return;
               }
+              final exactMode =
+                  selectedMode == LocationPrivacyMode.exactPin ||
+                  selectedMode == LocationPrivacyMode.exactLive;
+              if (exactMode && !exactEnabled) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Точная геолокация требует защищённого HTTPS-соединения.',
+                    ),
+                  ),
+                );
+                return;
+              }
+              final result = await context.push<MapSelectionResult>(
+                '/map',
+                extra: exactMode
+                    ? const PlacePickerRequest.exactRoom()
+                    : PlacePickerRequest.signal(initialMode: selectedMode),
+              );
+              if (!mounted || result == null) return;
+              setState(
+                () => _location = exactMode
+                    ? MapSelectionResult(
+                        mode: selectedMode,
+                        sourcePoint: result.sourcePoint,
+                        accuracyMeters: result.accuracyMeters,
+                        label: result.label,
+                      )
+                    : result,
+              );
             },
-            child: const Column(
+            child: Column(
               children: [
                 RadioListTile(
                   value: 'NONE',
@@ -246,9 +354,28 @@ class _SignalComposerScreenState extends ConsumerState<SignalComposerScreen> {
                   title: Text('Приблизительная зона'),
                   subtitle: Text('Точность намеренно снижена'),
                 ),
+                const RadioListTile(
+                  value: 'EXACT_PIN',
+                  title: Text('Точная точка'),
+                  subtitle: Text('Её видят только получатели сигнала'),
+                ),
+                const RadioListTile(
+                  value: 'EXACT_LIVE',
+                  title: Text('Точная геолокация онлайн'),
+                  subtitle: Text('Обновляется, пока приложение открыто'),
+                ),
               ],
             ),
           ),
+          if (_location.safeLocation case final safeLocation?)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.shield_outlined),
+              title: Text(safeLocation.description),
+              subtitle: const Text(
+                'В сигнал уйдёт только безопасный идентификатор зоны',
+              ),
+            ),
           const SizedBox(height: 26),
           FilledButton.icon(
             onPressed: _publishing ? null : _publish,

@@ -104,6 +104,15 @@ export class UsersService {
           ],
         },
       });
+      await tx.exactLocationShare.deleteMany({
+        where: {
+          OR: [
+            { ownerId: userId },
+            { recipients: { some: { viewerId: userId } } },
+            { room: { members: { some: { userId } } } },
+          ],
+        },
+      });
       await tx.roomMessage.updateMany({
         where: { authorId: userId },
         data: { authorId: null, body: "[сообщение удалено]" },

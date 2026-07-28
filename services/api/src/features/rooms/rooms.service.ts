@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { AuditService } from "../../common/audit.service";
 import { ContentPolicyService } from "../../common/content-policy.service";
 import { CryptoService } from "../../common/crypto.service";
@@ -19,15 +20,38 @@ export class RoomsService {
     private readonly audit: AuditService,
     private readonly content: ContentPolicyService,
     private readonly realtime: RealtimeGateway,
+    private readonly config: ConfigService,
   ) {}
 
   async get(userId: string, roomId: string) {
-    const room = await this.assertMember(userId, roomId);
+    return this.assertMember(userId, roomId);
+  }
+
+  activeRooms(userId: string) {
+    return this.prisma.temporaryRoom.findMany({
+      where: {
+        state: "ACTIVE",
+        expiresAt: { gt: new Date() },
+        members: { some: { userId, leftAt: null } },
+      },
+      select: { id: true, title: true, expiresAt: true },
+      orderBy: { expiresAt: "asc" },
+      take: 20,
+    });
+  }
+
+  async locationShares(userId: string, roomId: string) {
+    if (this.config.get<string>("ALLOW_EXACT_LOCATION") !== "true") {
+      throw new ForbiddenException("Exact location sharing is disabled");
+    }
+    await this.assertMember(userId, roomId);
     const shares = await this.prisma.locationShare.findMany({
       where: {
         roomId,
         expiresAt: { gt: new Date() },
+        room: { members: { some: { userId: userId, leftAt: null } } },
         owner: {
+          roomMemberships: { some: { roomId, leftAt: null } },
           blocksCreated: { none: { blockedId: userId } },
           blocksReceived: { none: { blockerId: userId } },
         },
@@ -57,7 +81,7 @@ export class RoomsService {
         }),
       ),
     );
-    return { ...room, locationShares: locations };
+    return locations;
   }
 
   async messages(userId: string, roomId: string) {
@@ -107,6 +131,9 @@ export class RoomsService {
         data: { leftAt: new Date() },
       }),
       this.prisma.locationShare.deleteMany({
+        where: { roomId, ownerId: userId },
+      }),
+      this.prisma.exactLocationShare.deleteMany({
         where: { roomId, ownerId: userId },
       }),
     ]);
@@ -197,8 +224,14 @@ export class RoomsService {
   }
 
   async shareLocation(userId: string, roomId: string, dto: ShareLocationDto) {
+    if (this.config.get<string>("ALLOW_EXACT_LOCATION") !== "true")
+      throw new ForbiddenException("Exact location sharing is disabled");
     if (!dto.explicitConsent)
       throw new BadRequestException("Нужно явное подтверждение");
+    if (dto.ttlMinutes < 5 || dto.ttlMinutes > 60)
+      throw new BadRequestException(
+        "Exact location TTL must be between 5 and 60 minutes",
+      );
     const room = await this.assertMember(userId, roomId);
     const requestedExpiry = new Date(Date.now() + dto.ttlMinutes * 60_000);
     const expiresAt =
@@ -229,6 +262,7 @@ export class RoomsService {
   }
 
   async revokeLocation(userId: string, roomId: string) {
+    await this.assertMember(userId, roomId);
     const result = await this.prisma.locationShare.deleteMany({
       where: { roomId, ownerId: userId },
     });

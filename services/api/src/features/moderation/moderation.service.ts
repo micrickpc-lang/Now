@@ -116,6 +116,9 @@ export class ModerationService {
         await tx.locationShare.deleteMany({
           where: { ownerId: report.reportedUserId },
         });
+        await tx.exactLocationShare.deleteMany({
+          where: { ownerId: report.reportedUserId },
+        });
       }
       if (dto.action === "restore" && report.reportedUserId) {
         await tx.user.update({

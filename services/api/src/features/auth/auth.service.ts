@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  ServiceUnavailableException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
@@ -12,7 +13,7 @@ import { AuditService } from "../../common/audit.service";
 import { CryptoService } from "../../common/crypto.service";
 import { PrismaService } from "../../common/prisma.service";
 import type { VerifyOtpDto } from "./auth.dto";
-import { OtpDispatcher } from "./otp.provider";
+import { OtpDispatcher, stagingPhoneAllowlist } from "./otp.provider";
 import { TokenService } from "./token.service";
 
 const GENERIC_OTP_RESPONSE = { accepted: true, retryAfterSeconds: 60 } as const;
@@ -43,12 +44,8 @@ export class AuthService {
     ]);
     if (phoneRecent > 0 || ipRecent >= 5) return GENERIC_OTP_RESPONSE;
 
-    const code =
-      this.config.get("NODE_ENV") === "development" &&
-      this.config.get("DEV_OTP_CODE")
-        ? this.config.getOrThrow<string>("DEV_OTP_CODE")
-        : String(randomInt(100000, 1_000_000));
-    await this.prisma.otpChallenge.create({
+    const code = this.issueOtpCode(phone);
+    const challenge = await this.prisma.otpChallenge.create({
       data: {
         phoneHash,
         codeHash: this.crypto.hashToken(`${phoneHash}:${code}`),
@@ -58,8 +55,25 @@ export class AuthService {
         ),
       },
     });
-    await this.otp.send(phone, code);
+    try {
+      await this.otp.sendOtp({
+        phoneE164: phone,
+        code,
+        requestId: challenge.id,
+      });
+    } catch {
+      await this.prisma.otpChallenge.deleteMany({
+        where: { id: challenge.id, consumedAt: null },
+      });
+      throw new ServiceUnavailableException(
+        "Не удалось отправить SMS. Попробуйте позже",
+      );
+    }
     return GENERIC_OTP_RESPONSE;
+  }
+
+  resendOtp(rawPhone: string, ip: string) {
+    return this.requestOtp(rawPhone, ip);
   }
 
   async verifyOtp(dto: VerifyOtpDto, ip: string, userAgent?: string) {
@@ -89,10 +103,18 @@ export class AuthService {
     if (age > 120) throw new BadRequestException("Некорректная дата рождения");
 
     const result = await this.prisma.$transaction(async (tx) => {
-      await tx.otpChallenge.update({
-        where: { id: challenge.id },
+      const consumed = await tx.otpChallenge.updateMany({
+        where: {
+          id: challenge.id,
+          consumedAt: null,
+          expiresAt: { gt: new Date() },
+          attemptCount: { lt: 5 },
+        },
         data: { consumedAt: new Date() },
       });
+      if (consumed.count !== 1) {
+        throw new UnauthorizedException("Неверный или истёкший код");
+      }
       const user = await tx.user.upsert({
         where: { phoneHash },
         update: {},
@@ -231,6 +253,29 @@ export class AuthService {
     });
   }
 
+  async session(userId: string, sessionId: string) {
+    const session = await this.prisma.authSession.findFirst({
+      where: {
+        id: sessionId,
+        userId,
+        revokedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        lastUsedAt: true,
+        expiresAt: true,
+        device: {
+          select: { platform: true, label: true, installationId: true },
+        },
+      },
+    });
+    if (!session)
+      throw new UnauthorizedException("Session is no longer active");
+    return session;
+  }
+
   async revokeSession(userId: string, sessionId: string) {
     const result = await this.prisma.authSession.updateMany({
       where: { id: sessionId, userId, revokedAt: null },
@@ -255,9 +300,32 @@ export class AuthService {
   }
 
   private normalizePhone(input: string): string {
+    if (this.config.get<string>("AUTH_MODE") === "local_test") {
+      const normalized = input.trim().replace(/[\s().-]/gu, "");
+      if (/^\+[1-9]\d{7,14}$/u.test(normalized)) return normalized;
+    }
     const parsed = parsePhoneNumberFromString(input, "RU");
     if (!parsed?.isValid())
       throw new BadRequestException("Некорректный номер телефона");
     return parsed.number;
+  }
+
+  private issueOtpCode(phone: string): string {
+    const appEnvironment = this.config.get<string>("APP_ENV");
+    if (
+      this.config.get<string>("AUTH_MODE") === "local_test" &&
+      this.config.get("NODE_ENV") === "development" &&
+      appEnvironment === "development" &&
+      this.config.get("ALLOW_LOCAL_TEST_OTP") === "true"
+    ) {
+      return this.config.getOrThrow<string>("LOCAL_TEST_OTP");
+    }
+    if (
+      appEnvironment === "staging" &&
+      stagingPhoneAllowlist(this.config).has(phone)
+    ) {
+      return this.config.getOrThrow<string>("STAGING_TEST_OTP");
+    }
+    return String(randomInt(100000, 1_000_000));
   }
 }

@@ -5,8 +5,6 @@ import {
   IsDateString,
   IsIn,
   IsInt,
-  IsLatitude,
-  IsLongitude,
   IsOptional,
   IsString,
   IsUUID,
@@ -53,26 +51,29 @@ export class CreateSignalDto {
   @IsIn(["ONLINE", "OFFLINE"])
   format!: "ONLINE" | "OFFLINE";
 
-  @IsIn(["NONE", "CITY", "DISTRICT", "APPROXIMATE"])
-  locationMode!: "NONE" | "CITY" | "DISTRICT" | "APPROXIMATE";
+  @IsIn([
+    "NONE",
+    "CITY",
+    "DISTRICT",
+    "APPROXIMATE",
+    "EXACT_PIN",
+    "EXACT_LIVE",
+  ])
+  locationMode!:
+    | "NONE"
+    | "CITY"
+    | "DISTRICT"
+    | "APPROXIMATE"
+    | "EXACT_PIN"
+    | "EXACT_LIVE";
 
   @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  cityLabel?: string;
+  @IsUUID("4")
+  safeLocationId?: string;
 
   @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  districtLabel?: string;
-
-  @IsOptional()
-  @IsLatitude()
-  latitude?: number;
-
-  @IsOptional()
-  @IsLongitude()
-  longitude?: number;
+  @IsUUID("4")
+  exactLocationShareId?: string;
 
   @Type(() => Number)
   @IsInt()

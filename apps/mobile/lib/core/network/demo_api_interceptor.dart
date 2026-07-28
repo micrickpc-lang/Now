@@ -54,6 +54,8 @@ class DemoApiInterceptor extends Interceptor {
 
   final List<Map<String, dynamic>> _signals = [];
   final List<Map<String, dynamic>> _messages = [];
+  final Map<String, Map<String, dynamic>> _safeLocations = {};
+  int _safeLocationSequence = 0;
   final List<Map<String, dynamic>> _circles = [
     {
       'id': 'demo-circle-1',
@@ -66,7 +68,7 @@ class DemoApiInterceptor extends Interceptor {
       ],
     },
   ];
-  bool _locationShared = false;
+  final Map<String, Map<String, dynamic>> _roomLocationShares = {};
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
@@ -80,6 +82,10 @@ class DemoApiInterceptor extends Interceptor {
       final payload = Map<String, dynamic>.from(options.data as Map);
       final now = DateTime.now().toUtc();
       final duration = (payload['durationMinutes'] as num?)?.toInt() ?? 60;
+      final safeLocationId = payload['safeLocationId']?.toString();
+      final safeLocation = safeLocationId == null
+          ? null
+          : _safeLocations.remove(safeLocationId);
       final row = <String, dynamic>{
         ...payload,
         'id': 'demo-signal-${_signals.length + 1}',
@@ -87,6 +93,7 @@ class DemoApiInterceptor extends Interceptor {
         'startsAt': payload['startsAt'] ?? now.toIso8601String(),
         'expiresAt': now.add(Duration(minutes: duration)).toIso8601String(),
         'state': 'ACTIVE',
+        'safeLocation': safeLocation,
         '_count': {'participants': 1},
         'author': {
           'profile': {'displayName': 'Ты', 'emoji': '✨'},
@@ -161,10 +168,40 @@ class DemoApiInterceptor extends Interceptor {
       });
       return _resolve(handler, options, {'success': true}, 201);
     }
-    if (RegExp(r'^/rooms/[^/]+/location-share$').hasMatch(path)) {
-      if (method == 'POST') _locationShared = true;
-      if (method == 'DELETE') _locationShared = false;
-      return _resolve(handler, options, {'success': true});
+    final roomLocationShare = RegExp(r'^/rooms/([^/]+)/location-share$');
+    final roomLocationMatch = roomLocationShare.firstMatch(path);
+    if (roomLocationMatch != null) {
+      final roomId = roomLocationMatch.group(1)!;
+      if (method == 'GET') {
+        final share = _roomLocationShares[roomId];
+        return _resolve(
+          handler,
+          options,
+          share == null ? <dynamic>[] : [share],
+        );
+      }
+      if (method == 'POST') {
+        final body = Map<String, dynamic>.from(options.data as Map);
+        final share = <String, dynamic>{
+          'id': 'demo-location-$roomId',
+          'ownerId': 'demo-user',
+          'expiresAt': DateTime.now()
+              .toUtc()
+              .add(const Duration(minutes: 30))
+              .toIso8601String(),
+          'value': {
+            'latitude': body['latitude'],
+            'longitude': body['longitude'],
+            if (body['label'] != null) 'label': body['label'],
+          },
+        };
+        _roomLocationShares[roomId] = share;
+        return _resolve(handler, options, share, 201);
+      }
+      if (method == 'DELETE') {
+        _roomLocationShares.remove(roomId);
+        return _resolve(handler, options, {'success': true});
+      }
     }
     if (method == 'GET' && RegExp(r'^/rooms/[^/]+$').hasMatch(path)) {
       return _resolve(handler, options, {
@@ -174,17 +211,6 @@ class DemoApiInterceptor extends Interceptor {
             .toUtc()
             .add(const Duration(hours: 2))
             .toIso8601String(),
-        'locationShares': _locationShared
-            ? [
-                {
-                  'ownerId': 'demo-user',
-                  'expiresAt': DateTime.now()
-                      .toUtc()
-                      .add(const Duration(minutes: 30))
-                      .toIso8601String(),
-                },
-              ]
-            : <dynamic>[],
       });
     }
 
@@ -220,6 +246,38 @@ class DemoApiInterceptor extends Interceptor {
           'longitude': 7.4246,
         },
       ]);
+    }
+    if (method == 'GET' && path == '/maps/reverse') {
+      return _resolve(handler, options, {
+        'label': 'Демонстрационное место, Монако',
+        'address': {'city': 'Монако', 'city_district': 'Монте-Карло'},
+      });
+    }
+    if (method == 'POST' && path == '/maps/approximate-location') {
+      final body = Map<String, dynamic>.from(options.data as Map);
+      final mode = body['mode']?.toString() ?? 'APPROXIMATE';
+      final sequence = (++_safeLocationSequence).toString().padLeft(12, '0');
+      final id = '00000000-0000-4000-8000-$sequence';
+      final description = switch (mode) {
+        'CITY' => 'Город: Монако',
+        'DISTRICT' => 'Район: Монте-Карло',
+        _ => 'Примерно в радиусе 2 км',
+      };
+      final preview = <String, dynamic>{
+        'safeLocationId': id,
+        'mode': mode,
+        'description': description,
+        'expiresAt': DateTime.now()
+            .toUtc()
+            .add(const Duration(minutes: 15))
+            .toIso8601String(),
+        if (mode == 'APPROXIMATE') ...{
+          'center': {'latitude': 43.74, 'longitude': 7.42},
+          'radiusMeters': 2000,
+        },
+      };
+      _safeLocations[id] = preview;
+      return _resolve(handler, options, preview, 201);
     }
 
     // Mutations not carrying useful response data are acknowledged locally.

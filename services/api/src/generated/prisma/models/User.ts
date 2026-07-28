@@ -233,6 +233,8 @@ export type UserWhereInput = {
   reactions?: Prisma.RoomReactionListRelationFilter
   pollVotes?: Prisma.RoomPollVoteListRelationFilter
   locationShares?: Prisma.LocationShareListRelationFilter
+  exactLocationShares?: Prisma.ExactLocationShareListRelationFilter
+  exactLocationRecipients?: Prisma.ExactLocationRecipientListRelationFilter
   memories?: Prisma.MemoryListRelationFilter
   memoryParticipants?: Prisma.MemoryParticipantListRelationFilter
   media?: Prisma.MediaFileListRelationFilter
@@ -259,6 +261,7 @@ export type UserWhereInput = {
   chatMutes?: Prisma.ChatMuteListRelationFilter
   chatAuditEvents?: Prisma.ChatAuditEventListRelationFilter
   chatAuditTargets?: Prisma.ChatAuditEventListRelationFilter
+  safeLocationZones?: Prisma.SafeLocationZoneListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -290,6 +293,8 @@ export type UserOrderByWithRelationInput = {
   reactions?: Prisma.RoomReactionOrderByRelationAggregateInput
   pollVotes?: Prisma.RoomPollVoteOrderByRelationAggregateInput
   locationShares?: Prisma.LocationShareOrderByRelationAggregateInput
+  exactLocationShares?: Prisma.ExactLocationShareOrderByRelationAggregateInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientOrderByRelationAggregateInput
   memories?: Prisma.MemoryOrderByRelationAggregateInput
   memoryParticipants?: Prisma.MemoryParticipantOrderByRelationAggregateInput
   media?: Prisma.MediaFileOrderByRelationAggregateInput
@@ -316,6 +321,7 @@ export type UserOrderByWithRelationInput = {
   chatMutes?: Prisma.ChatMuteOrderByRelationAggregateInput
   chatAuditEvents?: Prisma.ChatAuditEventOrderByRelationAggregateInput
   chatAuditTargets?: Prisma.ChatAuditEventOrderByRelationAggregateInput
+  safeLocationZones?: Prisma.SafeLocationZoneOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -350,6 +356,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   reactions?: Prisma.RoomReactionListRelationFilter
   pollVotes?: Prisma.RoomPollVoteListRelationFilter
   locationShares?: Prisma.LocationShareListRelationFilter
+  exactLocationShares?: Prisma.ExactLocationShareListRelationFilter
+  exactLocationRecipients?: Prisma.ExactLocationRecipientListRelationFilter
   memories?: Prisma.MemoryListRelationFilter
   memoryParticipants?: Prisma.MemoryParticipantListRelationFilter
   media?: Prisma.MediaFileListRelationFilter
@@ -376,6 +384,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   chatMutes?: Prisma.ChatMuteListRelationFilter
   chatAuditEvents?: Prisma.ChatAuditEventListRelationFilter
   chatAuditTargets?: Prisma.ChatAuditEventListRelationFilter
+  safeLocationZones?: Prisma.SafeLocationZoneListRelationFilter
 }, "id" | "phoneHash">
 
 export type UserOrderByWithAggregationInput = {
@@ -437,6 +446,8 @@ export type UserCreateInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -463,6 +474,7 @@ export type UserCreateInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -494,6 +506,8 @@ export type UserUncheckedCreateInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -520,6 +534,7 @@ export type UserUncheckedCreateInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUpdateInput = {
@@ -551,6 +566,8 @@ export type UserUpdateInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -577,6 +594,7 @@ export type UserUpdateInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -608,6 +626,8 @@ export type UserUncheckedUpdateInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -634,6 +654,7 @@ export type UserUncheckedUpdateInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1006,6 +1027,48 @@ export type UserUpdateOneRequiredWithoutLocationSharesNestedInput = {
   upsert?: Prisma.UserUpsertWithoutLocationSharesInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLocationSharesInput, Prisma.UserUpdateWithoutLocationSharesInput>, Prisma.UserUncheckedUpdateWithoutLocationSharesInput>
+}
+
+export type UserCreateNestedOneWithoutExactLocationSharesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutExactLocationSharesInput, Prisma.UserUncheckedCreateWithoutExactLocationSharesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutExactLocationSharesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutExactLocationSharesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutExactLocationSharesInput, Prisma.UserUncheckedCreateWithoutExactLocationSharesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutExactLocationSharesInput
+  upsert?: Prisma.UserUpsertWithoutExactLocationSharesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutExactLocationSharesInput, Prisma.UserUpdateWithoutExactLocationSharesInput>, Prisma.UserUncheckedUpdateWithoutExactLocationSharesInput>
+}
+
+export type UserCreateNestedOneWithoutExactLocationRecipientsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutExactLocationRecipientsInput, Prisma.UserUncheckedCreateWithoutExactLocationRecipientsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutExactLocationRecipientsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutExactLocationRecipientsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutExactLocationRecipientsInput, Prisma.UserUncheckedCreateWithoutExactLocationRecipientsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutExactLocationRecipientsInput
+  upsert?: Prisma.UserUpsertWithoutExactLocationRecipientsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutExactLocationRecipientsInput, Prisma.UserUpdateWithoutExactLocationRecipientsInput>, Prisma.UserUncheckedUpdateWithoutExactLocationRecipientsInput>
+}
+
+export type UserCreateNestedOneWithoutSafeLocationZonesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSafeLocationZonesInput, Prisma.UserUncheckedCreateWithoutSafeLocationZonesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSafeLocationZonesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSafeLocationZonesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSafeLocationZonesInput, Prisma.UserUncheckedCreateWithoutSafeLocationZonesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSafeLocationZonesInput
+  upsert?: Prisma.UserUpsertWithoutSafeLocationZonesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSafeLocationZonesInput, Prisma.UserUpdateWithoutSafeLocationZonesInput>, Prisma.UserUncheckedUpdateWithoutSafeLocationZonesInput>
 }
 
 export type UserCreateNestedOneWithoutConversationsOwnedInput = {
@@ -1418,6 +1481,8 @@ export type UserCreateWithoutProfileInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -1444,6 +1509,7 @@ export type UserCreateWithoutProfileInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -1474,6 +1540,8 @@ export type UserUncheckedCreateWithoutProfileInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -1500,6 +1568,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -1546,6 +1615,8 @@ export type UserUpdateWithoutProfileInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -1572,6 +1643,7 @@ export type UserUpdateWithoutProfileInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -1602,6 +1674,8 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -1628,6 +1702,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutDevicesInput = {
@@ -1658,6 +1733,8 @@ export type UserCreateWithoutDevicesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -1684,6 +1761,7 @@ export type UserCreateWithoutDevicesInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutDevicesInput = {
@@ -1714,6 +1792,8 @@ export type UserUncheckedCreateWithoutDevicesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -1740,6 +1820,7 @@ export type UserUncheckedCreateWithoutDevicesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutDevicesInput = {
@@ -1786,6 +1867,8 @@ export type UserUpdateWithoutDevicesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -1812,6 +1895,7 @@ export type UserUpdateWithoutDevicesInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDevicesInput = {
@@ -1842,6 +1926,8 @@ export type UserUncheckedUpdateWithoutDevicesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -1868,6 +1954,7 @@ export type UserUncheckedUpdateWithoutDevicesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1898,6 +1985,8 @@ export type UserCreateWithoutSessionsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -1924,6 +2013,7 @@ export type UserCreateWithoutSessionsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1954,6 +2044,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -1980,6 +2072,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -2026,6 +2119,8 @@ export type UserUpdateWithoutSessionsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -2052,6 +2147,7 @@ export type UserUpdateWithoutSessionsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -2082,6 +2178,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2108,6 +2206,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutFriendshipsAInput = {
@@ -2138,6 +2237,8 @@ export type UserCreateWithoutFriendshipsAInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -2164,6 +2265,7 @@ export type UserCreateWithoutFriendshipsAInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutFriendshipsAInput = {
@@ -2194,6 +2296,8 @@ export type UserUncheckedCreateWithoutFriendshipsAInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -2220,6 +2324,7 @@ export type UserUncheckedCreateWithoutFriendshipsAInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutFriendshipsAInput = {
@@ -2255,6 +2360,8 @@ export type UserCreateWithoutFriendshipsBInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -2281,6 +2388,7 @@ export type UserCreateWithoutFriendshipsBInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutFriendshipsBInput = {
@@ -2311,6 +2419,8 @@ export type UserUncheckedCreateWithoutFriendshipsBInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -2337,6 +2447,7 @@ export type UserUncheckedCreateWithoutFriendshipsBInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutFriendshipsBInput = {
@@ -2372,6 +2483,8 @@ export type UserCreateWithoutFriendshipsAskedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -2398,6 +2511,7 @@ export type UserCreateWithoutFriendshipsAskedInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutFriendshipsAskedInput = {
@@ -2428,6 +2542,8 @@ export type UserUncheckedCreateWithoutFriendshipsAskedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -2454,6 +2570,7 @@ export type UserUncheckedCreateWithoutFriendshipsAskedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutFriendshipsAskedInput = {
@@ -2500,6 +2617,8 @@ export type UserUpdateWithoutFriendshipsAInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -2526,6 +2645,7 @@ export type UserUpdateWithoutFriendshipsAInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFriendshipsAInput = {
@@ -2556,6 +2676,8 @@ export type UserUncheckedUpdateWithoutFriendshipsAInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2582,6 +2704,7 @@ export type UserUncheckedUpdateWithoutFriendshipsAInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUpsertWithoutFriendshipsBInput = {
@@ -2623,6 +2746,8 @@ export type UserUpdateWithoutFriendshipsBInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -2649,6 +2774,7 @@ export type UserUpdateWithoutFriendshipsBInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFriendshipsBInput = {
@@ -2679,6 +2805,8 @@ export type UserUncheckedUpdateWithoutFriendshipsBInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2705,6 +2833,7 @@ export type UserUncheckedUpdateWithoutFriendshipsBInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUpsertWithoutFriendshipsAskedInput = {
@@ -2746,6 +2875,8 @@ export type UserUpdateWithoutFriendshipsAskedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -2772,6 +2903,7 @@ export type UserUpdateWithoutFriendshipsAskedInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFriendshipsAskedInput = {
@@ -2802,6 +2934,8 @@ export type UserUncheckedUpdateWithoutFriendshipsAskedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2828,6 +2962,7 @@ export type UserUncheckedUpdateWithoutFriendshipsAskedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutInvitesCreatedInput = {
@@ -2858,6 +2993,8 @@ export type UserCreateWithoutInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -2884,6 +3021,7 @@ export type UserCreateWithoutInvitesCreatedInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutInvitesCreatedInput = {
@@ -2914,6 +3052,8 @@ export type UserUncheckedCreateWithoutInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -2940,6 +3080,7 @@ export type UserUncheckedCreateWithoutInvitesCreatedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutInvitesCreatedInput = {
@@ -2975,6 +3116,8 @@ export type UserCreateWithoutInvitesConsumedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -3001,6 +3144,7 @@ export type UserCreateWithoutInvitesConsumedInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutInvitesConsumedInput = {
@@ -3031,6 +3175,8 @@ export type UserUncheckedCreateWithoutInvitesConsumedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -3057,6 +3203,7 @@ export type UserUncheckedCreateWithoutInvitesConsumedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutInvitesConsumedInput = {
@@ -3103,6 +3250,8 @@ export type UserUpdateWithoutInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -3129,6 +3278,7 @@ export type UserUpdateWithoutInvitesCreatedInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInvitesCreatedInput = {
@@ -3159,6 +3309,8 @@ export type UserUncheckedUpdateWithoutInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3185,6 +3337,7 @@ export type UserUncheckedUpdateWithoutInvitesCreatedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUpsertWithoutInvitesConsumedInput = {
@@ -3226,6 +3379,8 @@ export type UserUpdateWithoutInvitesConsumedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -3252,6 +3407,7 @@ export type UserUpdateWithoutInvitesConsumedInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInvitesConsumedInput = {
@@ -3282,6 +3438,8 @@ export type UserUncheckedUpdateWithoutInvitesConsumedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3308,6 +3466,7 @@ export type UserUncheckedUpdateWithoutInvitesConsumedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutCirclesOwnedInput = {
@@ -3338,6 +3497,8 @@ export type UserCreateWithoutCirclesOwnedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -3364,6 +3525,7 @@ export type UserCreateWithoutCirclesOwnedInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutCirclesOwnedInput = {
@@ -3394,6 +3556,8 @@ export type UserUncheckedCreateWithoutCirclesOwnedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -3420,6 +3584,7 @@ export type UserUncheckedCreateWithoutCirclesOwnedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutCirclesOwnedInput = {
@@ -3466,6 +3631,8 @@ export type UserUpdateWithoutCirclesOwnedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -3492,6 +3659,7 @@ export type UserUpdateWithoutCirclesOwnedInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCirclesOwnedInput = {
@@ -3522,6 +3690,8 @@ export type UserUncheckedUpdateWithoutCirclesOwnedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3548,6 +3718,7 @@ export type UserUncheckedUpdateWithoutCirclesOwnedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutCircleMembershipsInput = {
@@ -3578,6 +3749,8 @@ export type UserCreateWithoutCircleMembershipsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -3604,6 +3777,7 @@ export type UserCreateWithoutCircleMembershipsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutCircleMembershipsInput = {
@@ -3634,6 +3808,8 @@ export type UserUncheckedCreateWithoutCircleMembershipsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -3660,6 +3836,7 @@ export type UserUncheckedCreateWithoutCircleMembershipsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutCircleMembershipsInput = {
@@ -3706,6 +3883,8 @@ export type UserUpdateWithoutCircleMembershipsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -3732,6 +3911,7 @@ export type UserUpdateWithoutCircleMembershipsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCircleMembershipsInput = {
@@ -3762,6 +3942,8 @@ export type UserUncheckedUpdateWithoutCircleMembershipsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3788,6 +3970,7 @@ export type UserUncheckedUpdateWithoutCircleMembershipsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutSignalsInput = {
@@ -3818,6 +4001,8 @@ export type UserCreateWithoutSignalsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -3844,6 +4029,7 @@ export type UserCreateWithoutSignalsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutSignalsInput = {
@@ -3874,6 +4060,8 @@ export type UserUncheckedCreateWithoutSignalsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -3900,6 +4088,7 @@ export type UserUncheckedCreateWithoutSignalsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutSignalsInput = {
@@ -3946,6 +4135,8 @@ export type UserUpdateWithoutSignalsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -3972,6 +4163,7 @@ export type UserUpdateWithoutSignalsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSignalsInput = {
@@ -4002,6 +4194,8 @@ export type UserUncheckedUpdateWithoutSignalsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4028,6 +4222,7 @@ export type UserUncheckedUpdateWithoutSignalsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutJoinRequestsInput = {
@@ -4058,6 +4253,8 @@ export type UserCreateWithoutJoinRequestsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -4084,6 +4281,7 @@ export type UserCreateWithoutJoinRequestsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutJoinRequestsInput = {
@@ -4114,6 +4312,8 @@ export type UserUncheckedCreateWithoutJoinRequestsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -4140,6 +4340,7 @@ export type UserUncheckedCreateWithoutJoinRequestsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutJoinRequestsInput = {
@@ -4186,6 +4387,8 @@ export type UserUpdateWithoutJoinRequestsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -4212,6 +4415,7 @@ export type UserUpdateWithoutJoinRequestsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutJoinRequestsInput = {
@@ -4242,6 +4446,8 @@ export type UserUncheckedUpdateWithoutJoinRequestsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4268,6 +4474,7 @@ export type UserUncheckedUpdateWithoutJoinRequestsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutSignalParticipantsInput = {
@@ -4298,6 +4505,8 @@ export type UserCreateWithoutSignalParticipantsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -4324,6 +4533,7 @@ export type UserCreateWithoutSignalParticipantsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutSignalParticipantsInput = {
@@ -4354,6 +4564,8 @@ export type UserUncheckedCreateWithoutSignalParticipantsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -4380,6 +4592,7 @@ export type UserUncheckedCreateWithoutSignalParticipantsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutSignalParticipantsInput = {
@@ -4426,6 +4639,8 @@ export type UserUpdateWithoutSignalParticipantsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -4452,6 +4667,7 @@ export type UserUpdateWithoutSignalParticipantsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSignalParticipantsInput = {
@@ -4482,6 +4698,8 @@ export type UserUncheckedUpdateWithoutSignalParticipantsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4508,6 +4726,7 @@ export type UserUncheckedUpdateWithoutSignalParticipantsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutRoomsOwnedInput = {
@@ -4538,6 +4757,8 @@ export type UserCreateWithoutRoomsOwnedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -4564,6 +4785,7 @@ export type UserCreateWithoutRoomsOwnedInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutRoomsOwnedInput = {
@@ -4594,6 +4816,8 @@ export type UserUncheckedCreateWithoutRoomsOwnedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -4620,6 +4844,7 @@ export type UserUncheckedCreateWithoutRoomsOwnedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutRoomsOwnedInput = {
@@ -4666,6 +4891,8 @@ export type UserUpdateWithoutRoomsOwnedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -4692,6 +4919,7 @@ export type UserUpdateWithoutRoomsOwnedInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRoomsOwnedInput = {
@@ -4722,6 +4950,8 @@ export type UserUncheckedUpdateWithoutRoomsOwnedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4748,6 +4978,7 @@ export type UserUncheckedUpdateWithoutRoomsOwnedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutRoomMembershipsInput = {
@@ -4778,6 +5009,8 @@ export type UserCreateWithoutRoomMembershipsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -4804,6 +5037,7 @@ export type UserCreateWithoutRoomMembershipsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutRoomMembershipsInput = {
@@ -4834,6 +5068,8 @@ export type UserUncheckedCreateWithoutRoomMembershipsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -4860,6 +5096,7 @@ export type UserUncheckedCreateWithoutRoomMembershipsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutRoomMembershipsInput = {
@@ -4906,6 +5143,8 @@ export type UserUpdateWithoutRoomMembershipsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -4932,6 +5171,7 @@ export type UserUpdateWithoutRoomMembershipsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRoomMembershipsInput = {
@@ -4962,6 +5202,8 @@ export type UserUncheckedUpdateWithoutRoomMembershipsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4988,6 +5230,7 @@ export type UserUncheckedUpdateWithoutRoomMembershipsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
@@ -5018,6 +5261,8 @@ export type UserCreateWithoutMessagesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -5044,6 +5289,7 @@ export type UserCreateWithoutMessagesInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
@@ -5074,6 +5320,8 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -5100,6 +5348,7 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -5146,6 +5395,8 @@ export type UserUpdateWithoutMessagesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -5172,6 +5423,7 @@ export type UserUpdateWithoutMessagesInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -5202,6 +5454,8 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -5228,6 +5482,7 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutReactionsInput = {
@@ -5258,6 +5513,8 @@ export type UserCreateWithoutReactionsInput = {
   messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -5284,6 +5541,7 @@ export type UserCreateWithoutReactionsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutReactionsInput = {
@@ -5314,6 +5572,8 @@ export type UserUncheckedCreateWithoutReactionsInput = {
   messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -5340,6 +5600,7 @@ export type UserUncheckedCreateWithoutReactionsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutReactionsInput = {
@@ -5386,6 +5647,8 @@ export type UserUpdateWithoutReactionsInput = {
   messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -5412,6 +5675,7 @@ export type UserUpdateWithoutReactionsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReactionsInput = {
@@ -5442,6 +5706,8 @@ export type UserUncheckedUpdateWithoutReactionsInput = {
   messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -5468,6 +5734,7 @@ export type UserUncheckedUpdateWithoutReactionsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutPollVotesInput = {
@@ -5498,6 +5765,8 @@ export type UserCreateWithoutPollVotesInput = {
   messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -5524,6 +5793,7 @@ export type UserCreateWithoutPollVotesInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutPollVotesInput = {
@@ -5554,6 +5824,8 @@ export type UserUncheckedCreateWithoutPollVotesInput = {
   messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -5580,6 +5852,7 @@ export type UserUncheckedCreateWithoutPollVotesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutPollVotesInput = {
@@ -5626,6 +5899,8 @@ export type UserUpdateWithoutPollVotesInput = {
   messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -5652,6 +5927,7 @@ export type UserUpdateWithoutPollVotesInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPollVotesInput = {
@@ -5682,6 +5958,8 @@ export type UserUncheckedUpdateWithoutPollVotesInput = {
   messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -5708,6 +5986,7 @@ export type UserUncheckedUpdateWithoutPollVotesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutLocationSharesInput = {
@@ -5738,6 +6017,8 @@ export type UserCreateWithoutLocationSharesInput = {
   messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -5764,6 +6045,7 @@ export type UserCreateWithoutLocationSharesInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutLocationSharesInput = {
@@ -5794,6 +6076,8 @@ export type UserUncheckedCreateWithoutLocationSharesInput = {
   messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -5820,6 +6104,7 @@ export type UserUncheckedCreateWithoutLocationSharesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutLocationSharesInput = {
@@ -5866,6 +6151,8 @@ export type UserUpdateWithoutLocationSharesInput = {
   messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -5892,6 +6179,7 @@ export type UserUpdateWithoutLocationSharesInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLocationSharesInput = {
@@ -5922,6 +6210,765 @@ export type UserUncheckedUpdateWithoutLocationSharesInput = {
   messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
+  memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUncheckedUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUncheckedUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserCreateWithoutExactLocationSharesInput = {
+  id?: string
+  phoneHash: string
+  phoneCiphertext: string
+  birthDate: Date | string
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
+  memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutExactLocationSharesInput = {
+  id?: string
+  phoneHash: string
+  phoneCiphertext: string
+  birthDate: Date | string
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalUncheckedCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
+  memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportUncheckedCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationUncheckedCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditUncheckedCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutExactLocationSharesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutExactLocationSharesInput, Prisma.UserUncheckedCreateWithoutExactLocationSharesInput>
+}
+
+export type UserUpsertWithoutExactLocationSharesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutExactLocationSharesInput, Prisma.UserUncheckedUpdateWithoutExactLocationSharesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutExactLocationSharesInput, Prisma.UserUncheckedCreateWithoutExactLocationSharesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutExactLocationSharesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutExactLocationSharesInput, Prisma.UserUncheckedUpdateWithoutExactLocationSharesInput>
+}
+
+export type UserUpdateWithoutExactLocationSharesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
+  memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutExactLocationSharesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUncheckedUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUncheckedUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUncheckedUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
+  memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUncheckedUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUncheckedUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserCreateWithoutExactLocationRecipientsInput = {
+  id?: string
+  phoneHash: string
+  phoneCiphertext: string
+  birthDate: Date | string
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutExactLocationRecipientsInput = {
+  id?: string
+  phoneHash: string
+  phoneCiphertext: string
+  birthDate: Date | string
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalUncheckedCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportUncheckedCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationUncheckedCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditUncheckedCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutExactLocationRecipientsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutExactLocationRecipientsInput, Prisma.UserUncheckedCreateWithoutExactLocationRecipientsInput>
+}
+
+export type UserUpsertWithoutExactLocationRecipientsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutExactLocationRecipientsInput, Prisma.UserUncheckedUpdateWithoutExactLocationRecipientsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutExactLocationRecipientsInput, Prisma.UserUncheckedCreateWithoutExactLocationRecipientsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutExactLocationRecipientsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutExactLocationRecipientsInput, Prisma.UserUncheckedUpdateWithoutExactLocationRecipientsInput>
+}
+
+export type UserUpdateWithoutExactLocationRecipientsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutExactLocationRecipientsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUncheckedUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUncheckedUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUncheckedUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUncheckedUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUncheckedUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserCreateWithoutSafeLocationZonesInput = {
+  id?: string
+  phoneHash: string
+  phoneCiphertext: string
+  birthDate: Date | string
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
+  memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+}
+
+export type UserUncheckedCreateWithoutSafeLocationZonesInput = {
+  id?: string
+  phoneHash: string
+  phoneCiphertext: string
+  birthDate: Date | string
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalUncheckedCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
+  memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportUncheckedCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationUncheckedCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditUncheckedCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+}
+
+export type UserCreateOrConnectWithoutSafeLocationZonesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSafeLocationZonesInput, Prisma.UserUncheckedCreateWithoutSafeLocationZonesInput>
+}
+
+export type UserUpsertWithoutSafeLocationZonesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSafeLocationZonesInput, Prisma.UserUncheckedUpdateWithoutSafeLocationZonesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSafeLocationZonesInput, Prisma.UserUncheckedCreateWithoutSafeLocationZonesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSafeLocationZonesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSafeLocationZonesInput, Prisma.UserUncheckedUpdateWithoutSafeLocationZonesInput>
+}
+
+export type UserUpdateWithoutSafeLocationZonesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
+  memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSafeLocationZonesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUncheckedUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUncheckedUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUncheckedUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -5979,6 +7026,8 @@ export type UserCreateWithoutConversationsOwnedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -6004,6 +7053,7 @@ export type UserCreateWithoutConversationsOwnedInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutConversationsOwnedInput = {
@@ -6035,6 +7085,8 @@ export type UserUncheckedCreateWithoutConversationsOwnedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -6060,6 +7112,7 @@ export type UserUncheckedCreateWithoutConversationsOwnedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutConversationsOwnedInput = {
@@ -6107,6 +7160,8 @@ export type UserUpdateWithoutConversationsOwnedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -6132,6 +7187,7 @@ export type UserUpdateWithoutConversationsOwnedInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsOwnedInput = {
@@ -6163,6 +7219,8 @@ export type UserUncheckedUpdateWithoutConversationsOwnedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6188,6 +7246,7 @@ export type UserUncheckedUpdateWithoutConversationsOwnedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutConversationMembershipsInput = {
@@ -6219,6 +7278,8 @@ export type UserCreateWithoutConversationMembershipsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -6244,6 +7305,7 @@ export type UserCreateWithoutConversationMembershipsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutConversationMembershipsInput = {
@@ -6275,6 +7337,8 @@ export type UserUncheckedCreateWithoutConversationMembershipsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -6300,6 +7364,7 @@ export type UserUncheckedCreateWithoutConversationMembershipsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutConversationMembershipsInput = {
@@ -6347,6 +7412,8 @@ export type UserUpdateWithoutConversationMembershipsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -6372,6 +7439,7 @@ export type UserUpdateWithoutConversationMembershipsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationMembershipsInput = {
@@ -6403,6 +7471,8 @@ export type UserUncheckedUpdateWithoutConversationMembershipsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6428,6 +7498,7 @@ export type UserUncheckedUpdateWithoutConversationMembershipsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutConversationInvitesCreatedInput = {
@@ -6459,6 +7530,8 @@ export type UserCreateWithoutConversationInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -6484,6 +7557,7 @@ export type UserCreateWithoutConversationInvitesCreatedInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutConversationInvitesCreatedInput = {
@@ -6515,6 +7589,8 @@ export type UserUncheckedCreateWithoutConversationInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -6540,6 +7616,7 @@ export type UserUncheckedCreateWithoutConversationInvitesCreatedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutConversationInvitesCreatedInput = {
@@ -6576,6 +7653,8 @@ export type UserCreateWithoutConversationInvitesReceivedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -6601,6 +7680,7 @@ export type UserCreateWithoutConversationInvitesReceivedInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutConversationInvitesReceivedInput = {
@@ -6632,6 +7712,8 @@ export type UserUncheckedCreateWithoutConversationInvitesReceivedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -6657,6 +7739,7 @@ export type UserUncheckedCreateWithoutConversationInvitesReceivedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutConversationInvitesReceivedInput = {
@@ -6704,6 +7787,8 @@ export type UserUpdateWithoutConversationInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -6729,6 +7814,7 @@ export type UserUpdateWithoutConversationInvitesCreatedInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationInvitesCreatedInput = {
@@ -6760,6 +7846,8 @@ export type UserUncheckedUpdateWithoutConversationInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6785,6 +7873,7 @@ export type UserUncheckedUpdateWithoutConversationInvitesCreatedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUpsertWithoutConversationInvitesReceivedInput = {
@@ -6827,6 +7916,8 @@ export type UserUpdateWithoutConversationInvitesReceivedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -6852,6 +7943,7 @@ export type UserUpdateWithoutConversationInvitesReceivedInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationInvitesReceivedInput = {
@@ -6883,6 +7975,8 @@ export type UserUncheckedUpdateWithoutConversationInvitesReceivedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6908,6 +8002,7 @@ export type UserUncheckedUpdateWithoutConversationInvitesReceivedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutChatMessagesInput = {
@@ -6939,6 +8034,8 @@ export type UserCreateWithoutChatMessagesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -6964,6 +8061,7 @@ export type UserCreateWithoutChatMessagesInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutChatMessagesInput = {
@@ -6995,6 +8093,8 @@ export type UserUncheckedCreateWithoutChatMessagesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -7020,6 +8120,7 @@ export type UserUncheckedCreateWithoutChatMessagesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutChatMessagesInput = {
@@ -7067,6 +8168,8 @@ export type UserUpdateWithoutChatMessagesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -7092,6 +8195,7 @@ export type UserUpdateWithoutChatMessagesInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatMessagesInput = {
@@ -7123,6 +8227,8 @@ export type UserUncheckedUpdateWithoutChatMessagesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7148,6 +8254,7 @@ export type UserUncheckedUpdateWithoutChatMessagesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutMessageEditsInput = {
@@ -7179,6 +8286,8 @@ export type UserCreateWithoutMessageEditsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -7204,6 +8313,7 @@ export type UserCreateWithoutMessageEditsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutMessageEditsInput = {
@@ -7235,6 +8345,8 @@ export type UserUncheckedCreateWithoutMessageEditsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -7260,6 +8372,7 @@ export type UserUncheckedCreateWithoutMessageEditsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutMessageEditsInput = {
@@ -7307,6 +8420,8 @@ export type UserUpdateWithoutMessageEditsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -7332,6 +8447,7 @@ export type UserUpdateWithoutMessageEditsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessageEditsInput = {
@@ -7363,6 +8479,8 @@ export type UserUncheckedUpdateWithoutMessageEditsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7388,6 +8506,7 @@ export type UserUncheckedUpdateWithoutMessageEditsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutMessageReactionsInput = {
@@ -7419,6 +8538,8 @@ export type UserCreateWithoutMessageReactionsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -7444,6 +8565,7 @@ export type UserCreateWithoutMessageReactionsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutMessageReactionsInput = {
@@ -7475,6 +8597,8 @@ export type UserUncheckedCreateWithoutMessageReactionsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -7500,6 +8624,7 @@ export type UserUncheckedCreateWithoutMessageReactionsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutMessageReactionsInput = {
@@ -7547,6 +8672,8 @@ export type UserUpdateWithoutMessageReactionsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -7572,6 +8699,7 @@ export type UserUpdateWithoutMessageReactionsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessageReactionsInput = {
@@ -7603,6 +8731,8 @@ export type UserUncheckedUpdateWithoutMessageReactionsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7628,6 +8758,7 @@ export type UserUncheckedUpdateWithoutMessageReactionsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutMessageReadReceiptsInput = {
@@ -7659,6 +8790,8 @@ export type UserCreateWithoutMessageReadReceiptsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -7684,6 +8817,7 @@ export type UserCreateWithoutMessageReadReceiptsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutMessageReadReceiptsInput = {
@@ -7715,6 +8849,8 @@ export type UserUncheckedCreateWithoutMessageReadReceiptsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -7740,6 +8876,7 @@ export type UserUncheckedCreateWithoutMessageReadReceiptsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutMessageReadReceiptsInput = {
@@ -7787,6 +8924,8 @@ export type UserUpdateWithoutMessageReadReceiptsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -7812,6 +8951,7 @@ export type UserUpdateWithoutMessageReadReceiptsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessageReadReceiptsInput = {
@@ -7843,6 +8983,8 @@ export type UserUncheckedUpdateWithoutMessageReadReceiptsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7868,6 +9010,7 @@ export type UserUncheckedUpdateWithoutMessageReadReceiptsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutMessageDeliveriesInput = {
@@ -7899,6 +9042,8 @@ export type UserCreateWithoutMessageDeliveriesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -7924,6 +9069,7 @@ export type UserCreateWithoutMessageDeliveriesInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutMessageDeliveriesInput = {
@@ -7955,6 +9101,8 @@ export type UserUncheckedCreateWithoutMessageDeliveriesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -7980,6 +9128,7 @@ export type UserUncheckedCreateWithoutMessageDeliveriesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutMessageDeliveriesInput = {
@@ -8027,6 +9176,8 @@ export type UserUpdateWithoutMessageDeliveriesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -8052,6 +9203,7 @@ export type UserUpdateWithoutMessageDeliveriesInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessageDeliveriesInput = {
@@ -8083,6 +9235,8 @@ export type UserUncheckedUpdateWithoutMessageDeliveriesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8108,6 +9262,7 @@ export type UserUncheckedUpdateWithoutMessageDeliveriesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutPinnedMessagesInput = {
@@ -8139,6 +9294,8 @@ export type UserCreateWithoutPinnedMessagesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -8164,6 +9321,7 @@ export type UserCreateWithoutPinnedMessagesInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutPinnedMessagesInput = {
@@ -8195,6 +9353,8 @@ export type UserUncheckedCreateWithoutPinnedMessagesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -8220,6 +9380,7 @@ export type UserUncheckedCreateWithoutPinnedMessagesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutPinnedMessagesInput = {
@@ -8267,6 +9428,8 @@ export type UserUpdateWithoutPinnedMessagesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -8292,6 +9455,7 @@ export type UserUpdateWithoutPinnedMessagesInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPinnedMessagesInput = {
@@ -8323,6 +9487,8 @@ export type UserUncheckedUpdateWithoutPinnedMessagesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8348,6 +9514,7 @@ export type UserUncheckedUpdateWithoutPinnedMessagesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutConversationDraftsInput = {
@@ -8379,6 +9546,8 @@ export type UserCreateWithoutConversationDraftsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -8404,6 +9573,7 @@ export type UserCreateWithoutConversationDraftsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutConversationDraftsInput = {
@@ -8435,6 +9605,8 @@ export type UserUncheckedCreateWithoutConversationDraftsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -8460,6 +9632,7 @@ export type UserUncheckedCreateWithoutConversationDraftsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutConversationDraftsInput = {
@@ -8507,6 +9680,8 @@ export type UserUpdateWithoutConversationDraftsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -8532,6 +9707,7 @@ export type UserUpdateWithoutConversationDraftsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationDraftsInput = {
@@ -8563,6 +9739,8 @@ export type UserUncheckedUpdateWithoutConversationDraftsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8588,6 +9766,7 @@ export type UserUncheckedUpdateWithoutConversationDraftsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutChatMutesInput = {
@@ -8619,6 +9798,8 @@ export type UserCreateWithoutChatMutesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -8644,6 +9825,7 @@ export type UserCreateWithoutChatMutesInput = {
   conversationDrafts?: Prisma.ConversationDraftCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutChatMutesInput = {
@@ -8675,6 +9857,8 @@ export type UserUncheckedCreateWithoutChatMutesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -8700,6 +9884,7 @@ export type UserUncheckedCreateWithoutChatMutesInput = {
   conversationDrafts?: Prisma.ConversationDraftUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutChatMutesInput = {
@@ -8747,6 +9932,8 @@ export type UserUpdateWithoutChatMutesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -8772,6 +9959,7 @@ export type UserUpdateWithoutChatMutesInput = {
   conversationDrafts?: Prisma.ConversationDraftUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatMutesInput = {
@@ -8803,6 +9991,8 @@ export type UserUncheckedUpdateWithoutChatMutesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8828,6 +10018,7 @@ export type UserUncheckedUpdateWithoutChatMutesInput = {
   conversationDrafts?: Prisma.ConversationDraftUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutChatAuditEventsInput = {
@@ -8859,6 +10050,8 @@ export type UserCreateWithoutChatAuditEventsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -8884,6 +10077,7 @@ export type UserCreateWithoutChatAuditEventsInput = {
   conversationDrafts?: Prisma.ConversationDraftCreateNestedManyWithoutUserInput
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutChatAuditEventsInput = {
@@ -8915,6 +10109,8 @@ export type UserUncheckedCreateWithoutChatAuditEventsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -8940,6 +10136,7 @@ export type UserUncheckedCreateWithoutChatAuditEventsInput = {
   conversationDrafts?: Prisma.ConversationDraftUncheckedCreateNestedManyWithoutUserInput
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutChatAuditEventsInput = {
@@ -8976,6 +10173,8 @@ export type UserCreateWithoutChatAuditTargetsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -9001,6 +10200,7 @@ export type UserCreateWithoutChatAuditTargetsInput = {
   conversationDrafts?: Prisma.ConversationDraftCreateNestedManyWithoutUserInput
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutChatAuditTargetsInput = {
@@ -9032,6 +10232,8 @@ export type UserUncheckedCreateWithoutChatAuditTargetsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -9057,6 +10259,7 @@ export type UserUncheckedCreateWithoutChatAuditTargetsInput = {
   conversationDrafts?: Prisma.ConversationDraftUncheckedCreateNestedManyWithoutUserInput
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutChatAuditTargetsInput = {
@@ -9104,6 +10307,8 @@ export type UserUpdateWithoutChatAuditEventsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -9129,6 +10334,7 @@ export type UserUpdateWithoutChatAuditEventsInput = {
   conversationDrafts?: Prisma.ConversationDraftUpdateManyWithoutUserNestedInput
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatAuditEventsInput = {
@@ -9160,6 +10366,8 @@ export type UserUncheckedUpdateWithoutChatAuditEventsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -9185,6 +10393,7 @@ export type UserUncheckedUpdateWithoutChatAuditEventsInput = {
   conversationDrafts?: Prisma.ConversationDraftUncheckedUpdateManyWithoutUserNestedInput
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUpsertWithoutChatAuditTargetsInput = {
@@ -9227,6 +10436,8 @@ export type UserUpdateWithoutChatAuditTargetsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -9252,6 +10463,7 @@ export type UserUpdateWithoutChatAuditTargetsInput = {
   conversationDrafts?: Prisma.ConversationDraftUpdateManyWithoutUserNestedInput
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatAuditTargetsInput = {
@@ -9283,6 +10495,8 @@ export type UserUncheckedUpdateWithoutChatAuditTargetsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -9308,6 +10522,7 @@ export type UserUncheckedUpdateWithoutChatAuditTargetsInput = {
   conversationDrafts?: Prisma.ConversationDraftUncheckedUpdateManyWithoutUserNestedInput
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutMemoriesInput = {
@@ -9339,6 +10554,8 @@ export type UserCreateWithoutMemoriesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
   blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
@@ -9364,6 +10581,7 @@ export type UserCreateWithoutMemoriesInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutMemoriesInput = {
@@ -9395,6 +10613,8 @@ export type UserUncheckedCreateWithoutMemoriesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
   blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
@@ -9420,6 +10640,7 @@ export type UserUncheckedCreateWithoutMemoriesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutMemoriesInput = {
@@ -9467,6 +10688,8 @@ export type UserUpdateWithoutMemoriesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
   blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
@@ -9492,6 +10715,7 @@ export type UserUpdateWithoutMemoriesInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMemoriesInput = {
@@ -9523,6 +10747,8 @@ export type UserUncheckedUpdateWithoutMemoriesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
   blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
@@ -9548,6 +10774,7 @@ export type UserUncheckedUpdateWithoutMemoriesInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutMemoryParticipantsInput = {
@@ -9579,6 +10806,8 @@ export type UserCreateWithoutMemoryParticipantsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
   blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
@@ -9604,6 +10833,7 @@ export type UserCreateWithoutMemoryParticipantsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutMemoryParticipantsInput = {
@@ -9635,6 +10865,8 @@ export type UserUncheckedCreateWithoutMemoryParticipantsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
   blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
@@ -9660,6 +10892,7 @@ export type UserUncheckedCreateWithoutMemoryParticipantsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutMemoryParticipantsInput = {
@@ -9707,6 +10940,8 @@ export type UserUpdateWithoutMemoryParticipantsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
   blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
@@ -9732,6 +10967,7 @@ export type UserUpdateWithoutMemoryParticipantsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMemoryParticipantsInput = {
@@ -9763,6 +10999,8 @@ export type UserUncheckedUpdateWithoutMemoryParticipantsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
   blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
@@ -9788,6 +11026,7 @@ export type UserUncheckedUpdateWithoutMemoryParticipantsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutMediaInput = {
@@ -9819,6 +11058,8 @@ export type UserCreateWithoutMediaInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
@@ -9844,6 +11085,7 @@ export type UserCreateWithoutMediaInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutMediaInput = {
@@ -9875,6 +11117,8 @@ export type UserUncheckedCreateWithoutMediaInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
@@ -9900,6 +11144,7 @@ export type UserUncheckedCreateWithoutMediaInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutMediaInput = {
@@ -9947,6 +11192,8 @@ export type UserUpdateWithoutMediaInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
@@ -9972,6 +11219,7 @@ export type UserUpdateWithoutMediaInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMediaInput = {
@@ -10003,6 +11251,8 @@ export type UserUncheckedUpdateWithoutMediaInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
@@ -10028,6 +11278,7 @@ export type UserUncheckedUpdateWithoutMediaInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutBlocksCreatedInput = {
@@ -10059,6 +11310,8 @@ export type UserCreateWithoutBlocksCreatedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -10084,6 +11337,7 @@ export type UserCreateWithoutBlocksCreatedInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutBlocksCreatedInput = {
@@ -10115,6 +11369,8 @@ export type UserUncheckedCreateWithoutBlocksCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -10140,6 +11396,7 @@ export type UserUncheckedCreateWithoutBlocksCreatedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutBlocksCreatedInput = {
@@ -10176,6 +11433,8 @@ export type UserCreateWithoutBlocksReceivedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -10201,6 +11460,7 @@ export type UserCreateWithoutBlocksReceivedInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutBlocksReceivedInput = {
@@ -10232,6 +11492,8 @@ export type UserUncheckedCreateWithoutBlocksReceivedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -10257,6 +11519,7 @@ export type UserUncheckedCreateWithoutBlocksReceivedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutBlocksReceivedInput = {
@@ -10304,6 +11567,8 @@ export type UserUpdateWithoutBlocksCreatedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -10329,6 +11594,7 @@ export type UserUpdateWithoutBlocksCreatedInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBlocksCreatedInput = {
@@ -10360,6 +11626,8 @@ export type UserUncheckedUpdateWithoutBlocksCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10385,6 +11653,7 @@ export type UserUncheckedUpdateWithoutBlocksCreatedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUpsertWithoutBlocksReceivedInput = {
@@ -10427,6 +11696,8 @@ export type UserUpdateWithoutBlocksReceivedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -10452,6 +11723,7 @@ export type UserUpdateWithoutBlocksReceivedInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
@@ -10483,6 +11755,8 @@ export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10508,6 +11782,7 @@ export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutReportsCreatedInput = {
@@ -10539,6 +11814,8 @@ export type UserCreateWithoutReportsCreatedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -10564,6 +11841,7 @@ export type UserCreateWithoutReportsCreatedInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutReportsCreatedInput = {
@@ -10595,6 +11873,8 @@ export type UserUncheckedCreateWithoutReportsCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -10620,6 +11900,7 @@ export type UserUncheckedCreateWithoutReportsCreatedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutReportsCreatedInput = {
@@ -10656,6 +11937,8 @@ export type UserCreateWithoutReportsReceivedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -10681,6 +11964,7 @@ export type UserCreateWithoutReportsReceivedInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutReportsReceivedInput = {
@@ -10712,6 +11996,8 @@ export type UserUncheckedCreateWithoutReportsReceivedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -10737,6 +12023,7 @@ export type UserUncheckedCreateWithoutReportsReceivedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutReportsReceivedInput = {
@@ -10784,6 +12071,8 @@ export type UserUpdateWithoutReportsCreatedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -10809,6 +12098,7 @@ export type UserUpdateWithoutReportsCreatedInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReportsCreatedInput = {
@@ -10840,6 +12130,8 @@ export type UserUncheckedUpdateWithoutReportsCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10865,6 +12157,7 @@ export type UserUncheckedUpdateWithoutReportsCreatedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUpsertWithoutReportsReceivedInput = {
@@ -10907,6 +12200,8 @@ export type UserUpdateWithoutReportsReceivedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -10932,6 +12227,7 @@ export type UserUpdateWithoutReportsReceivedInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReportsReceivedInput = {
@@ -10963,6 +12259,8 @@ export type UserUncheckedUpdateWithoutReportsReceivedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10988,6 +12286,7 @@ export type UserUncheckedUpdateWithoutReportsReceivedInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutNotificationTokensInput = {
@@ -11019,6 +12318,8 @@ export type UserCreateWithoutNotificationTokensInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -11044,6 +12345,7 @@ export type UserCreateWithoutNotificationTokensInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutNotificationTokensInput = {
@@ -11075,6 +12377,8 @@ export type UserUncheckedCreateWithoutNotificationTokensInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -11100,6 +12404,7 @@ export type UserUncheckedCreateWithoutNotificationTokensInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutNotificationTokensInput = {
@@ -11147,6 +12452,8 @@ export type UserUpdateWithoutNotificationTokensInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -11172,6 +12479,7 @@ export type UserUpdateWithoutNotificationTokensInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationTokensInput = {
@@ -11203,6 +12511,8 @@ export type UserUncheckedUpdateWithoutNotificationTokensInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11228,6 +12538,7 @@ export type UserUncheckedUpdateWithoutNotificationTokensInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutConsentsInput = {
@@ -11259,6 +12570,8 @@ export type UserCreateWithoutConsentsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -11284,6 +12597,7 @@ export type UserCreateWithoutConsentsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutConsentsInput = {
@@ -11315,6 +12629,8 @@ export type UserUncheckedCreateWithoutConsentsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -11340,6 +12656,7 @@ export type UserUncheckedCreateWithoutConsentsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutConsentsInput = {
@@ -11387,6 +12704,8 @@ export type UserUpdateWithoutConsentsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -11412,6 +12731,7 @@ export type UserUpdateWithoutConsentsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConsentsInput = {
@@ -11443,6 +12763,8 @@ export type UserUncheckedUpdateWithoutConsentsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11468,6 +12790,7 @@ export type UserUncheckedUpdateWithoutConsentsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -11499,6 +12822,8 @@ export type UserCreateWithoutAuditLogsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -11524,6 +12849,7 @@ export type UserCreateWithoutAuditLogsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -11555,6 +12881,8 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -11580,6 +12908,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -11627,6 +12956,8 @@ export type UserUpdateWithoutAuditLogsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -11652,6 +12983,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -11683,6 +13015,8 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11708,6 +13042,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutAnalyticsEventsInput = {
@@ -11739,6 +13074,8 @@ export type UserCreateWithoutAnalyticsEventsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -11764,6 +13101,7 @@ export type UserCreateWithoutAnalyticsEventsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutAnalyticsEventsInput = {
@@ -11795,6 +13133,8 @@ export type UserUncheckedCreateWithoutAnalyticsEventsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -11820,6 +13160,7 @@ export type UserUncheckedCreateWithoutAnalyticsEventsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutAnalyticsEventsInput = {
@@ -11867,6 +13208,8 @@ export type UserUpdateWithoutAnalyticsEventsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -11892,6 +13235,7 @@ export type UserUpdateWithoutAnalyticsEventsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAnalyticsEventsInput = {
@@ -11923,6 +13267,8 @@ export type UserUncheckedUpdateWithoutAnalyticsEventsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11948,6 +13294,7 @@ export type UserUncheckedUpdateWithoutAnalyticsEventsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutDeletionReportsInput = {
@@ -11979,6 +13326,8 @@ export type UserCreateWithoutDeletionReportsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -12004,6 +13353,7 @@ export type UserCreateWithoutDeletionReportsInput = {
   chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutDeletionReportsInput = {
@@ -12035,6 +13385,8 @@ export type UserUncheckedCreateWithoutDeletionReportsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedCreateNestedManyWithoutViewerInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -12060,6 +13412,7 @@ export type UserUncheckedCreateWithoutDeletionReportsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutDeletionReportsInput = {
@@ -12107,6 +13460,8 @@ export type UserUpdateWithoutDeletionReportsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -12132,6 +13487,7 @@ export type UserUpdateWithoutDeletionReportsInput = {
   chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDeletionReportsInput = {
@@ -12163,6 +13519,8 @@ export type UserUncheckedUpdateWithoutDeletionReportsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  exactLocationRecipients?: Prisma.ExactLocationRecipientUncheckedUpdateManyWithoutViewerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -12188,6 +13546,7 @@ export type UserUncheckedUpdateWithoutDeletionReportsInput = {
   chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
   chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
   chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+  safeLocationZones?: Prisma.SafeLocationZoneUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 
@@ -12214,6 +13573,8 @@ export type UserCountOutputType = {
   reactions: number
   pollVotes: number
   locationShares: number
+  exactLocationShares: number
+  exactLocationRecipients: number
   memories: number
   memoryParticipants: number
   media: number
@@ -12240,6 +13601,7 @@ export type UserCountOutputType = {
   chatMutes: number
   chatAuditEvents: number
   chatAuditTargets: number
+  safeLocationZones: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -12261,6 +13623,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   reactions?: boolean | UserCountOutputTypeCountReactionsArgs
   pollVotes?: boolean | UserCountOutputTypeCountPollVotesArgs
   locationShares?: boolean | UserCountOutputTypeCountLocationSharesArgs
+  exactLocationShares?: boolean | UserCountOutputTypeCountExactLocationSharesArgs
+  exactLocationRecipients?: boolean | UserCountOutputTypeCountExactLocationRecipientsArgs
   memories?: boolean | UserCountOutputTypeCountMemoriesArgs
   memoryParticipants?: boolean | UserCountOutputTypeCountMemoryParticipantsArgs
   media?: boolean | UserCountOutputTypeCountMediaArgs
@@ -12287,6 +13651,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   chatMutes?: boolean | UserCountOutputTypeCountChatMutesArgs
   chatAuditEvents?: boolean | UserCountOutputTypeCountChatAuditEventsArgs
   chatAuditTargets?: boolean | UserCountOutputTypeCountChatAuditTargetsArgs
+  safeLocationZones?: boolean | UserCountOutputTypeCountSafeLocationZonesArgs
 }
 
 /**
@@ -12423,6 +13788,20 @@ export type UserCountOutputTypeCountPollVotesArgs<ExtArgs extends runtime.Types.
  */
 export type UserCountOutputTypeCountLocationSharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.LocationShareWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountExactLocationSharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExactLocationShareWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountExactLocationRecipientsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExactLocationRecipientWhereInput
 }
 
 /**
@@ -12607,6 +13986,13 @@ export type UserCountOutputTypeCountChatAuditTargetsArgs<ExtArgs extends runtime
   where?: Prisma.ChatAuditEventWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSafeLocationZonesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SafeLocationZoneWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -12637,6 +14023,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   reactions?: boolean | Prisma.User$reactionsArgs<ExtArgs>
   pollVotes?: boolean | Prisma.User$pollVotesArgs<ExtArgs>
   locationShares?: boolean | Prisma.User$locationSharesArgs<ExtArgs>
+  exactLocationShares?: boolean | Prisma.User$exactLocationSharesArgs<ExtArgs>
+  exactLocationRecipients?: boolean | Prisma.User$exactLocationRecipientsArgs<ExtArgs>
   memories?: boolean | Prisma.User$memoriesArgs<ExtArgs>
   memoryParticipants?: boolean | Prisma.User$memoryParticipantsArgs<ExtArgs>
   media?: boolean | Prisma.User$mediaArgs<ExtArgs>
@@ -12663,6 +14051,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   chatMutes?: boolean | Prisma.User$chatMutesArgs<ExtArgs>
   chatAuditEvents?: boolean | Prisma.User$chatAuditEventsArgs<ExtArgs>
   chatAuditTargets?: boolean | Prisma.User$chatAuditTargetsArgs<ExtArgs>
+  safeLocationZones?: boolean | Prisma.User$safeLocationZonesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -12723,6 +14112,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   reactions?: boolean | Prisma.User$reactionsArgs<ExtArgs>
   pollVotes?: boolean | Prisma.User$pollVotesArgs<ExtArgs>
   locationShares?: boolean | Prisma.User$locationSharesArgs<ExtArgs>
+  exactLocationShares?: boolean | Prisma.User$exactLocationSharesArgs<ExtArgs>
+  exactLocationRecipients?: boolean | Prisma.User$exactLocationRecipientsArgs<ExtArgs>
   memories?: boolean | Prisma.User$memoriesArgs<ExtArgs>
   memoryParticipants?: boolean | Prisma.User$memoryParticipantsArgs<ExtArgs>
   media?: boolean | Prisma.User$mediaArgs<ExtArgs>
@@ -12749,6 +14140,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   chatMutes?: boolean | Prisma.User$chatMutesArgs<ExtArgs>
   chatAuditEvents?: boolean | Prisma.User$chatAuditEventsArgs<ExtArgs>
   chatAuditTargets?: boolean | Prisma.User$chatAuditTargetsArgs<ExtArgs>
+  safeLocationZones?: boolean | Prisma.User$safeLocationZonesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -12776,6 +14168,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     reactions: Prisma.$RoomReactionPayload<ExtArgs>[]
     pollVotes: Prisma.$RoomPollVotePayload<ExtArgs>[]
     locationShares: Prisma.$LocationSharePayload<ExtArgs>[]
+    exactLocationShares: Prisma.$ExactLocationSharePayload<ExtArgs>[]
+    exactLocationRecipients: Prisma.$ExactLocationRecipientPayload<ExtArgs>[]
     memories: Prisma.$MemoryPayload<ExtArgs>[]
     memoryParticipants: Prisma.$MemoryParticipantPayload<ExtArgs>[]
     media: Prisma.$MediaFilePayload<ExtArgs>[]
@@ -12802,6 +14196,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     chatMutes: Prisma.$ChatMutePayload<ExtArgs>[]
     chatAuditEvents: Prisma.$ChatAuditEventPayload<ExtArgs>[]
     chatAuditTargets: Prisma.$ChatAuditEventPayload<ExtArgs>[]
+    safeLocationZones: Prisma.$SafeLocationZonePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -13226,6 +14621,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   reactions<T extends Prisma.User$reactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoomReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pollVotes<T extends Prisma.User$pollVotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pollVotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoomPollVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   locationShares<T extends Prisma.User$locationSharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$locationSharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LocationSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  exactLocationShares<T extends Prisma.User$exactLocationSharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$exactLocationSharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExactLocationSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  exactLocationRecipients<T extends Prisma.User$exactLocationRecipientsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$exactLocationRecipientsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExactLocationRecipientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   memories<T extends Prisma.User$memoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$memoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   memoryParticipants<T extends Prisma.User$memoryParticipantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$memoryParticipantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemoryParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   media<T extends Prisma.User$mediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13252,6 +14649,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   chatMutes<T extends Prisma.User$chatMutesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatMutesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatMutePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   chatAuditEvents<T extends Prisma.User$chatAuditEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatAuditEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatAuditEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   chatAuditTargets<T extends Prisma.User$chatAuditTargetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatAuditTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatAuditEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  safeLocationZones<T extends Prisma.User$safeLocationZonesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$safeLocationZonesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SafeLocationZonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14134,6 +15532,54 @@ export type User$locationSharesArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
+ * User.exactLocationShares
+ */
+export type User$exactLocationSharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExactLocationShare
+   */
+  select?: Prisma.ExactLocationShareSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExactLocationShare
+   */
+  omit?: Prisma.ExactLocationShareOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExactLocationShareInclude<ExtArgs> | null
+  where?: Prisma.ExactLocationShareWhereInput
+  orderBy?: Prisma.ExactLocationShareOrderByWithRelationInput | Prisma.ExactLocationShareOrderByWithRelationInput[]
+  cursor?: Prisma.ExactLocationShareWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExactLocationShareScalarFieldEnum | Prisma.ExactLocationShareScalarFieldEnum[]
+}
+
+/**
+ * User.exactLocationRecipients
+ */
+export type User$exactLocationRecipientsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExactLocationRecipient
+   */
+  select?: Prisma.ExactLocationRecipientSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExactLocationRecipient
+   */
+  omit?: Prisma.ExactLocationRecipientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExactLocationRecipientInclude<ExtArgs> | null
+  where?: Prisma.ExactLocationRecipientWhereInput
+  orderBy?: Prisma.ExactLocationRecipientOrderByWithRelationInput | Prisma.ExactLocationRecipientOrderByWithRelationInput[]
+  cursor?: Prisma.ExactLocationRecipientWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExactLocationRecipientScalarFieldEnum | Prisma.ExactLocationRecipientScalarFieldEnum[]
+}
+
+/**
  * User.memories
  */
 export type User$memoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -14755,6 +16201,30 @@ export type User$chatAuditTargetsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.ChatAuditEventScalarFieldEnum | Prisma.ChatAuditEventScalarFieldEnum[]
+}
+
+/**
+ * User.safeLocationZones
+ */
+export type User$safeLocationZonesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SafeLocationZone
+   */
+  select?: Prisma.SafeLocationZoneSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SafeLocationZone
+   */
+  omit?: Prisma.SafeLocationZoneOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SafeLocationZoneInclude<ExtArgs> | null
+  where?: Prisma.SafeLocationZoneWhereInput
+  orderBy?: Prisma.SafeLocationZoneOrderByWithRelationInput | Prisma.SafeLocationZoneOrderByWithRelationInput[]
+  cursor?: Prisma.SafeLocationZoneWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SafeLocationZoneScalarFieldEnum | Prisma.SafeLocationZoneScalarFieldEnum[]
 }
 
 /**

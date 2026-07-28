@@ -1,0 +1,192 @@
+name: seychas-local-test
+
+# Development-only LAN contour for a physical Android phone. PostgreSQL, Redis,
+# the worker and the API remain on an internal Docker network; Nginx is the
+# only published service.
+
+x-service-defaults: &service-defaults
+  init: true
+  restart: unless-stopped
+  security_opt:
+    - no-new-privileges:true
+
+x-api-environment: &api-environment
+  NODE_ENV: development
+  APP_ENV: development
+  PORT: "3000"
+  DATABASE_URL: postgresql://${POSTGRES_USER:-seychas}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-seychas}?schema=public
+  REDIS_URL: redis://redis:6379/0
+  JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET}
+  TOKEN_HASH_SECRET: ${TOKEN_HASH_SECRET:?set TOKEN_HASH_SECRET}
+  PHONE_HASH_SECRET: ${PHONE_HASH_SECRET:?set PHONE_HASH_SECRET}
+  LOCATION_MASTER_KEY_BASE64: ${LOCATION_MASTER_KEY_BASE64:?set LOCATION_MASTER_KEY_BASE64}
+  LOCATION_PRIVACY_SECRET: ${LOCATION_PRIVACY_SECRET:?set LOCATION_PRIVACY_SECRET}
+  ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:?set ADMIN_SESSION_SECRET}
+  APP_ORIGINS: http://localhost:8080,http://${LAN_IP:?set LAN_IP}:8080
+  PUBLIC_API_URL: http://${LAN_IP:?set LAN_IP}:8080/api/v1
+  TRUST_PROXY_HOPS: "1"
+  AUTH_MODE: ${AUTH_MODE:-local_test}
+  ALLOW_LOCAL_TEST_OTP: ${ALLOW_LOCAL_TEST_OTP:-true}
+  LOCAL_TEST_OTP: ${LOCAL_TEST_OTP:-123456}
+  SMS_PROVIDER: ${SMS_PROVIDER:-local_test}
+  SMS_API_BASE_URL: ${SMS_API_BASE_URL:-}
+  SMS_API_KEY: ${SMS_API_KEY:-}
+  SMS_SENDER: ${SMS_SENDER:-}
+  SMS_TEMPLATE: '${SMS_TEMPLATE:-Your verification code: {{code}}}'
+  SMS_TIMEOUT_MS: ${SMS_TIMEOUT_MS:-10000}
+  OTP_TTL_SECONDS: ${OTP_TTL_SECONDS:-300}
+  ACCESS_TOKEN_TTL_SECONDS: ${ACCESS_TOKEN_TTL_SECONDS:-900}
+  REFRESH_TOKEN_TTL_DAYS: ${REFRESH_TOKEN_TTL_DAYS:-30}
+  MAP_MODE: ${MAP_MODE:-global_provider}
+  MAP_PUBLIC_BASE_URL: http://${LAN_IP:?set LAN_IP}:8080/api/v1/maps
+  MAP_STYLE_URL: ${MAP_STYLE_URL:?set a global MapLibre style URL}
+  MAP_API_KEY: ${MAP_API_KEY:-}
+  GEOCODING_BASE_URL: ${GEOCODING_BASE_URL:?set a global geocoding endpoint}
+  REVERSE_GEOCODING_BASE_URL: ${REVERSE_GEOCODING_BASE_URL:?set a global reverse-geocoding endpoint}
+  GEOCODING_API_KEY: ${GEOCODING_API_KEY:-}
+  MAP_UPSTREAM_TIMEOUT_MS: ${MAP_UPSTREAM_TIMEOUT_MS:-10000}
+  MAP_GEOCODER_RETRY_DELAY_MS: ${MAP_GEOCODER_RETRY_DELAY_MS:-1200}
+  MINIO_ENDPOINT: media-disabled
+  MINIO_PORT: "9000"
+  MINIO_ACCESS_KEY: local-test-media-disabled
+  MINIO_SECRET_KEY: local-test-media-disabled
+  MINIO_BUCKET: seychas-media-disabled
+  CLAMAV_HOST: clamav-disabled
+  CLAMAV_PORT: "3310"
+  ALLOW_UNSCANNED_UPLOADS: "false"
+
+services:
+  postgres:
+    <<: *service-defaults
+    image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-seychas}
+      POSTGRES_USER: ${POSTGRES_USER:-seychas}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - local-test-postgres:/var/lib/postgresql/data
+    expose: ["5432"]
+    networks: [private]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  redis:
+    <<: *service-defaults
+    image: redis:8.2-alpine
+    command: [redis-server, --appendonly, "yes", --maxmemory-policy, noeviction]
+    volumes:
+      - local-test-redis:/data
+    expose: ["6379"]
+    networks: [private]
+    healthcheck:
+      test: ["CMD", redis-cli, ping]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
+  migrate:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+      target: build
+    restart: "no"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-seychas}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-seychas}?schema=public
+    command: [npm, run, db:migrate, --workspace=@seychas/api]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [private]
+
+  api:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    environment:
+      <<: *api-environment
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    expose: ["3000"]
+    networks: [edge, private]
+    healthcheck:
+      test: ["CMD", node, -e, "fetch('http://127.0.0.1:3000/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  worker:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: services/worker/Dockerfile
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://${POSTGRES_USER:-seychas}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-seychas}?schema=public
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    networks: [private]
+    healthcheck:
+      test: ["CMD", node, -e, "try { process.kill(1, 0) } catch { process.exit(1) }"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  nginx:
+    <<: *service-defaults
+    image: nginxinc/nginx-unprivileged:1.29-alpine
+    ports:
+      - target: 8080
+        published: "8080"
+        host_ip: "0.0.0.0"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: ./infra/nginx/staging.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./infra/maps/assets
+        target: /srv/maps
+        read_only: true
+        bind:
+          create_host_path: false
+      - local-test-nginx-cache:/var/cache/nginx/maps
+    depends_on:
+      api:
+        condition: service_healthy
+    networks: [edge]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/_edge/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+networks:
+  edge:
+    driver: bridge
+  private:
+    driver: bridge
+    internal: true
+
+volumes:
+  local-test-postgres:
+  local-test-redis:
+  local-test-nginx-cache:

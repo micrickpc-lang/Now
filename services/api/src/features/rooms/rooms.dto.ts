@@ -62,7 +62,7 @@ export class ShareLocationDto {
 
   @Type(() => Number)
   @Min(5)
-  @Max(180)
+  @Max(60)
   ttlMinutes!: number;
 
   @IsBoolean()

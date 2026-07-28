@@ -123,6 +123,21 @@ export type RoomPollVote = Prisma.RoomPollVoteModel
  */
 export type LocationShare = Prisma.LocationShareModel
 /**
+ * Model ExactLocationShare
+ * 
+ */
+export type ExactLocationShare = Prisma.ExactLocationShareModel
+/**
+ * Model ExactLocationRecipient
+ * 
+ */
+export type ExactLocationRecipient = Prisma.ExactLocationRecipientModel
+/**
+ * Model SafeLocationZone
+ * 
+ */
+export type SafeLocationZone = Prisma.SafeLocationZoneModel
+/**
  * Model Conversation
  * 
  */

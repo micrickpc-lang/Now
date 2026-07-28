@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/network/realtime_client.dart';
 import '../../../core/theme/app_theme.dart';
 import '../data/chat_controllers.dart';
 import '../data/chats_repository.dart';
@@ -100,6 +101,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final conversation = ref.watch(conversationProvider(widget.conversationId));
     final timeline = ref.watch(chatMessagesProvider(widget.conversationId));
     final userId = ref.watch(currentUserIdProvider).value ?? '';
+    final realtimeStatus = ref.watch(realtimeStatusProvider).value;
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -115,7 +117,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               Text(
                 chat.type == ConversationType.group
                     ? '${chat.members.length} участника'
-                    : 'только для вас двоих',
+                    : 'взаимный друг',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -144,6 +146,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       ),
       body: Column(
         children: [
+          if (realtimeStatus == RealtimeConnectionStatus.offline)
+            const _ChatOfflineBanner(),
           Expanded(
             child: timeline.when(
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -222,15 +226,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             top: false,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                border: Border(
-                  top: BorderSide(
-                    color: Theme.of(context).colorScheme.outlineVariant,
-                  ),
-                ),
+                color: Theme.of(context).scaffoldBackgroundColor,
               ),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 9, 12, 10),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -243,7 +242,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                               dimension: 18,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Icon(Icons.bolt_rounded),
+                          : const Icon(Icons.add_rounded),
                     ),
                     Expanded(
                       child: TextField(
@@ -257,6 +256,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         decoration: const InputDecoration(
                           counterText: '',
                           hintText: 'Сообщение',
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                         ),
                       ),
                     ),
@@ -310,52 +313,95 @@ class _MessageBubble extends StatelessWidget {
                 );
               }
             },
-      child: Container(
-        key: ValueKey('message-${message.id}'),
-        margin: EdgeInsets.only(
-          bottom: 5,
-          left: outgoing ? 54 : 0,
-          right: outgoing ? 0 : 54,
-        ),
-        padding: const EdgeInsets.fromLTRB(13, 9, 10, 7),
-        decoration: BoxDecoration(
-          color: outgoing
-              ? AppColors.mint.withValues(alpha: .18)
-              : Theme.of(context).colorScheme.surfaceContainer,
-          borderRadius: BorderRadius.circular(17),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Flexible(
-              child:
-                  message.deletedAt == null &&
-                      message.type == ChatMessageType.signal
-                  ? _SignalMessageContent(onOpen: onOpenSignal)
-                  : Text(
-                      message.deletedAt == null
-                          ? message.text ?? 'Неподдерживаемое сообщение'
-                          : 'Сообщение удалено',
-                      style: TextStyle(
-                        fontStyle: message.deletedAt == null
-                            ? FontStyle.normal
-                            : FontStyle.italic,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 300),
+        child: Container(
+          key: ValueKey('message-${message.id}'),
+          margin: const EdgeInsets.only(bottom: 6),
+          padding: const EdgeInsets.fromLTRB(13, 9, 10, 7),
+          decoration: BoxDecoration(
+            color: outgoing
+                ? AppColors.violet
+                : Theme.of(context).colorScheme.surfaceContainer,
+            borderRadius: BorderRadius.only(
+              topLeft: const Radius.circular(AppRadii.sm),
+              topRight: const Radius.circular(AppRadii.sm),
+              bottomLeft: Radius.circular(outgoing ? AppRadii.sm : 4),
+              bottomRight: Radius.circular(outgoing ? 4 : AppRadii.sm),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child:
+                    message.deletedAt == null &&
+                        message.type == ChatMessageType.signal
+                    ? _SignalMessageContent(onOpen: onOpenSignal)
+                    : Text(
+                        message.deletedAt == null
+                            ? message.text ?? 'Неподдерживаемое сообщение'
+                            : 'Сообщение удалено',
+                        style: TextStyle(
+                          color: outgoing ? Colors.white : null,
+                          fontStyle: message.deletedAt == null
+                              ? FontStyle.normal
+                              : FontStyle.italic,
+                        ),
                       ),
+              ),
+              const SizedBox(height: 3),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${message.createdAt.hour.toString().padLeft(2, '0')}:${message.createdAt.minute.toString().padLeft(2, '0')}',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: outgoing
+                          ? Colors.white70
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              '${message.createdAt.hour.toString().padLeft(2, '0')}:${message.createdAt.minute.toString().padLeft(2, '0')}',
-              style: Theme.of(context).textTheme.labelSmall,
-            ),
-            if (outgoing) ...[
-              const SizedBox(width: 3),
-              _DeliveryIcon(message: message, onRetry: onRetry),
+                  ),
+                  if (outgoing) ...[
+                    const SizedBox(width: 3),
+                    _DeliveryIcon(message: message, onRetry: onRetry),
+                  ],
+                ],
+              ),
             ],
-          ],
+          ),
         ),
       ),
+    ),
+  );
+}
+
+class _ChatOfflineBanner extends StatelessWidget {
+  const _ChatOfflineBanner();
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: double.infinity,
+    margin: const EdgeInsets.fromLTRB(16, 4, 16, 2),
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    decoration: BoxDecoration(
+      color: AppColors.warning.withValues(alpha: .1),
+      borderRadius: BorderRadius.circular(AppRadii.sm),
+      border: Border.all(color: AppColors.warning.withValues(alpha: .75)),
+    ),
+    child: const Row(
+      children: [
+        Icon(Icons.cloud_off_outlined, size: 18, color: AppColors.warning),
+        SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            'Сообщение отправится, когда появится интернет',
+            style: TextStyle(fontSize: 12),
+          ),
+        ),
+      ],
     ),
   );
 }

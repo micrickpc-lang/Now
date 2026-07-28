@@ -13,6 +13,14 @@ const prisma = new PrismaClient({
 
 async function remove() {
   await prisma.locationShare.deleteMany({ where: { ownerId: userId } });
+  await prisma.exactLocationShare.deleteMany({
+    where: {
+      OR: [
+        { ownerId: userId },
+        { recipients: { some: { viewerId: userId } } },
+      ],
+    },
+  });
   await prisma.notificationToken.deleteMany({ where: { userId } });
   await prisma.authSession.deleteMany({ where: { userId } });
   await prisma.roomMessage.updateMany({

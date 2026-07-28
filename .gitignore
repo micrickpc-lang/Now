@@ -19,6 +19,7 @@ dist/
 apps/mobile/ios/Pods/
 apps/mobile/ios/.symlinks/
 infra/maps/data/*.osm.pbf
+infra/maps/data/*.metadata.json
 infra/maps/data/*.mbtiles
 infra/maps/data/*.pmtiles
 infra/maps/data/nominatim/

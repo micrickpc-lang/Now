@@ -1,6 +1,7 @@
 import { Global, Module } from "@nestjs/common";
 import { CryptoService } from "./crypto.service";
 import { PrismaService } from "./prisma.service";
+import { RedisService } from "./redis.service";
 import { AuditService } from "./audit.service";
 import {
   MESSAGE_ENCRYPTION_PROVIDER,
@@ -11,6 +12,7 @@ import {
 @Module({
   providers: [
     PrismaService,
+    RedisService,
     CryptoService,
     AuditService,
     ServerManagedEncryptionProvider,
@@ -21,6 +23,7 @@ import {
   ],
   exports: [
     PrismaService,
+    RedisService,
     CryptoService,
     AuditService,
     MESSAGE_ENCRYPTION_PROVIDER,

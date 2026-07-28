@@ -129,7 +129,23 @@ export class SocialService {
 
   async removeFriend(userId: string, otherId: string) {
     const [userAId, userBId] = canonicalPair(userId, otherId);
-    await this.prisma.friendship.deleteMany({ where: { userAId, userBId } });
+    await this.prisma.$transaction(async (tx) => {
+      await tx.friendship.deleteMany({ where: { userAId, userBId } });
+      await tx.exactLocationRecipient.deleteMany({
+        where: {
+          OR: [
+            { viewerId: otherId, share: { ownerId: userId } },
+            { viewerId: userId, share: { ownerId: otherId } },
+          ],
+        },
+      });
+      await tx.exactLocationShare.deleteMany({
+        where: {
+          audience: "SELECTED_FRIENDS",
+          recipients: { none: {} },
+        },
+      });
+    });
     return { success: true };
   }
 
@@ -154,6 +170,45 @@ export class SocialService {
             {
               ownerId: blockedId,
               room: { members: { some: { userId, leftAt: null } } },
+            },
+          ],
+        },
+      });
+      await tx.exactLocationRecipient.deleteMany({
+        where: {
+          OR: [
+            { viewerId: blockedId, share: { ownerId: userId } },
+            { viewerId: userId, share: { ownerId: blockedId } },
+          ],
+        },
+      });
+      await tx.exactLocationShare.deleteMany({
+        where: {
+          OR: [
+            {
+              ownerId: userId,
+              audience: "CIRCLE",
+              circle: { members: { some: { userId: blockedId } } },
+            },
+            {
+              ownerId: blockedId,
+              audience: "CIRCLE",
+              circle: { members: { some: { userId } } },
+            },
+            {
+              ownerId: userId,
+              audience: "ROOM",
+              room: { members: { some: { userId: blockedId, leftAt: null } } },
+            },
+            {
+              ownerId: blockedId,
+              audience: "ROOM",
+              room: { members: { some: { userId, leftAt: null } } },
+            },
+            {
+              ownerId: { in: [userId, blockedId] },
+              audience: "SELECTED_FRIENDS",
+              recipients: { none: {} },
             },
           ],
         },

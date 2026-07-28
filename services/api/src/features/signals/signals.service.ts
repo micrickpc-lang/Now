@@ -7,9 +7,38 @@ import {
 import { AuditService } from "../../common/audit.service";
 import { ContentPolicyService } from "../../common/content-policy.service";
 import { PrismaService } from "../../common/prisma.service";
+import { Prisma } from "../../generated/prisma/client";
 import { RealtimeGateway } from "../../realtime/realtime.gateway";
 import { SocialService } from "../social/social.service";
 import type { CreateSignalDto, UpdateSignalDto } from "./signals.dto";
+
+type SafeLocationMode = "CITY" | "DISTRICT" | "APPROXIMATE";
+
+interface SafeLocationRow {
+  id: string;
+  ownerId: string;
+  signalId: string | null;
+  mode: SafeLocationMode;
+  description: string;
+  cityLabel: string | null;
+  districtLabel: string | null;
+  radiusMeters: number | null;
+  expiresAt: Date;
+  deletedAt: Date | null;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+export interface SafeLocationPreview {
+  safeLocationId: string;
+  mode: SafeLocationMode;
+  description: string;
+  expiresAt: Date;
+  cityLabel?: string;
+  districtLabel?: string;
+  center?: { latitude: number; longitude: number };
+  radiusMeters?: number;
+}
 
 @Injectable()
 export class SignalsService {
@@ -37,19 +66,26 @@ export class SignalsService {
     if (dto.text) await this.content.assertAllowed(dto.text, user.limitedMode);
     if (!dto.circleIds.length && !dto.userIds.length)
       throw new BadRequestException("Выберите круг или друзей");
-    if (
-      dto.locationMode === "APPROXIMATE" &&
-      (dto.latitude === undefined || dto.longitude === undefined)
-    ) {
-      throw new BadRequestException("Для приблизительной зоны нужна точка");
-    }
-    if (
-      dto.locationMode !== "APPROXIMATE" &&
-      (dto.latitude !== undefined || dto.longitude !== undefined)
-    ) {
-      throw new BadRequestException(
-        "Координаты допустимы только для приблизительной зоны",
-      );
+    const exactLocation =
+      dto.locationMode === "EXACT_PIN" || dto.locationMode === "EXACT_LIVE";
+    if (exactLocation) {
+      if (!dto.exactLocationShareId || dto.safeLocationId) {
+        throw new BadRequestException(
+          "Exact signals require one exact location share and no safe location",
+        );
+      }
+    } else {
+      if (dto.exactLocationShareId) {
+        throw new BadRequestException(
+          "Exact location shares are not allowed for safe signals",
+        );
+      }
+      if (dto.locationMode === "NONE" && dto.safeLocationId)
+        throw new BadRequestException(
+          "Safe location is not allowed when location is hidden",
+        );
+      if (dto.locationMode !== "NONE" && !dto.safeLocationId)
+        throw new BadRequestException("Safe location is required");
     }
     await this.assertVisibility(userId, dto.circleIds, dto.userIds);
     const startsAt = new Date(dto.startsAt);
@@ -62,44 +98,116 @@ export class SignalsService {
     ) {
       throw new BadRequestException("Некорректный срок сигнала");
     }
-    const signal = await this.prisma.signal.create({
-      data: {
-        authorId: userId,
-        category: dto.category,
-        text: dto.text?.trim(),
-        emoji: dto.emoji,
-        startsAt,
-        expiresAt,
-        format: dto.format,
-        locationMode: dto.locationMode,
-        cityLabel: dto.locationMode === "CITY" ? dto.cityLabel : null,
-        districtLabel:
-          dto.locationMode === "DISTRICT" ? dto.districtLabel : null,
-        maxParticipants: dto.maxParticipants,
-        visibility: {
-          create: [
-            ...[...new Set(dto.circleIds)].map((circleId) => ({ circleId })),
-            ...[...new Set(dto.userIds)].map((targetId) => ({
-              userId: targetId,
-            })),
-          ],
+    let safeLocation: SafeLocationRow | undefined;
+    const signal = await this.prisma.$transaction(async (tx) => {
+      let exactShare: {
+        id: string;
+        audience: string;
+        circleId: string | null;
+        recipients: Array<{ viewerId: string }>;
+      } | null = null;
+      if (exactLocation && dto.exactLocationShareId) {
+        exactShare = await tx.exactLocationShare.findFirst({
+          where: {
+            id: dto.exactLocationShareId,
+            ownerId: userId,
+            signal: { is: null },
+            OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+          },
+          select: {
+            id: true,
+            audience: true,
+            circleId: true,
+            recipients: { select: { viewerId: true } },
+          },
+        });
+        const selectedCircleIds = [...new Set(dto.circleIds)];
+        const selectedUserIds = [...new Set(dto.userIds)].sort();
+        const exactRecipientIds = (exactShare?.recipients ?? [])
+          .map(({ viewerId }) => viewerId)
+          .sort();
+        const matchesCircle =
+          selectedCircleIds.length === 1 &&
+          selectedUserIds.length === 0 &&
+          exactShare?.audience === "CIRCLE" &&
+          exactShare.circleId === selectedCircleIds[0];
+        const matchesFriends =
+          selectedCircleIds.length === 0 &&
+          selectedUserIds.length > 0 &&
+          exactShare?.audience === "SELECTED_FRIENDS" &&
+          selectedUserIds.length === exactRecipientIds.length &&
+          selectedUserIds.every(
+            (recipientId, index) => recipientId === exactRecipientIds[index],
+          );
+        if (!exactShare || (!matchesCircle && !matchesFriends)) {
+          throw new BadRequestException(
+            "Exact location audience must match the signal audience",
+          );
+        }
+      }
+      if (dto.safeLocationId) {
+        safeLocation = await this.lockSafeLocation(tx, dto.safeLocationId);
+        if (
+          !safeLocation ||
+          safeLocation.ownerId !== userId ||
+          safeLocation.mode !== dto.locationMode ||
+          safeLocation.signalId !== null ||
+          safeLocation.deletedAt !== null ||
+          new Date(safeLocation.expiresAt) <= new Date()
+        ) {
+          throw new BadRequestException("Safe location is unavailable");
+        }
+      }
+
+      const created = await tx.signal.create({
+        data: {
+          authorId: userId,
+          category: dto.category,
+          text: dto.text?.trim(),
+          emoji: dto.emoji,
+          startsAt,
+          expiresAt,
+          format: dto.format,
+          locationMode: exactLocation
+            ? dto.locationMode
+            : (safeLocation?.mode ?? "NONE"),
+          exactLocationShareId: exactShare?.id,
+          cityLabel: safeLocation?.cityLabel,
+          districtLabel: safeLocation?.districtLabel,
+          maxParticipants: dto.maxParticipants,
+          visibility: {
+            create: [
+              ...[...new Set(dto.circleIds)].map((circleId) => ({ circleId })),
+              ...[...new Set(dto.userIds)].map((targetId) => ({
+                userId: targetId,
+              })),
+            ],
+          },
+          participants: { create: { userId } },
         },
-        participants: { create: { userId } },
-      },
-      select: this.publicSelect(),
+        select: this.publicSelect(),
+      });
+
+      if (safeLocation) {
+        const attached = await tx.$executeRaw`
+          UPDATE "safe_location_zones"
+          SET "signal_id" = ${created.id}::uuid,
+              "expires_at" = ${expiresAt},
+              "updated_at" = now()
+          WHERE "id" = ${safeLocation.id}::uuid
+            AND "owner_id" = ${userId}::uuid
+            AND "mode" = CAST(${dto.locationMode} AS "LocationMode")
+            AND "signal_id" IS NULL
+            AND "deleted_at" IS NULL
+            AND "expires_at" > now()
+        `;
+        if (attached !== 1)
+          throw new BadRequestException("Safe location is unavailable");
+        safeLocation.expiresAt = expiresAt;
+        safeLocation.signalId = created.id;
+      }
+      return created;
     });
-    if (dto.locationMode === "APPROXIMATE") {
-      const [safeLon, safeLat] = this.reducePrecision(
-        dto.longitude!,
-        dto.latitude!,
-      );
-      await this.prisma.$executeRawUnsafe(
-        "UPDATE signals SET approximate_point = ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography WHERE id = $3::uuid",
-        safeLon,
-        safeLat,
-        signal.id,
-      );
-    }
     const recipients = await this.visibilityRecipients(signal.id);
     this.realtime.emitUsers(recipients, "signal.created", {
       signalId: signal.id,
@@ -110,12 +218,17 @@ export class SignalsService {
       resourceType: "signal",
       resourceId: signal.id,
     });
-    return signal;
+    return {
+      ...signal,
+      safeLocation: safeLocation
+        ? this.serializeSafeLocation(safeLocation)
+        : null,
+    };
   }
 
   async feed(userId: string) {
     const blocked = await this.blockedIds(userId);
-    return this.prisma.signal.findMany({
+    const signals = await this.prisma.signal.findMany({
       where: {
         state: { in: ["ACTIVE", "FULL"] },
         expiresAt: { gt: new Date() },
@@ -132,12 +245,13 @@ export class SignalsService {
       orderBy: [{ startsAt: "asc" }, { createdAt: "desc" }],
       take: 100,
     });
+    return this.hydrateSafeLocations(signals);
   }
 
   async get(userId: string, id: string) {
     const signal = await this.findVisible(userId, id);
     if (!signal) throw new NotFoundException("Сигнал не найден");
-    return signal;
+    return (await this.hydrateSafeLocations([signal]))[0];
   }
 
   async update(userId: string, id: string, dto: UpdateSignalDto) {
@@ -163,7 +277,7 @@ export class SignalsService {
       "signal.updated",
       { signalId: id },
     );
-    return updated;
+    return (await this.hydrateSafeLocations([updated]))[0];
   }
 
   async join(userId: string, id: string) {
@@ -261,6 +375,9 @@ export class SignalsService {
     await this.prisma.locationShare.deleteMany({
       where: { room: { signalId: id } },
     });
+    await this.prisma.exactLocationShare.deleteMany({
+      where: { signal: { id } },
+    });
     this.realtime.emitUsers(
       await this.visibilityRecipients(id),
       "signal.cancelled",
@@ -286,6 +403,9 @@ export class SignalsService {
           data: { state: "COMPLETED", completedAt: new Date() },
         });
       }
+      await tx.exactLocationShare.deleteMany({
+        where: { signal: { id } },
+      });
     });
     if (signal.room)
       this.realtime.emitRoom(signal.room.id, "room.completed", {
@@ -356,15 +476,107 @@ export class SignalsService {
     );
   }
 
-  private reducePrecision(
-    longitude: number,
-    latitude: number,
-  ): [number, number] {
-    const grid = 0.02;
-    return [
-      Math.round(longitude / grid) * grid,
-      Math.round(latitude / grid) * grid,
-    ];
+  private async lockSafeLocation(
+    tx: Prisma.TransactionClient,
+    safeLocationId: string,
+  ): Promise<SafeLocationRow | undefined> {
+    const rows = await tx.$queryRaw<SafeLocationRow[]>`
+      SELECT
+        "id",
+        "owner_id" AS "ownerId",
+        "signal_id" AS "signalId",
+        "mode"::text AS "mode",
+        "description",
+        "city_label" AS "cityLabel",
+        "district_label" AS "districtLabel",
+        "radius_meters" AS "radiusMeters",
+        "expires_at" AS "expiresAt",
+        "deleted_at" AS "deletedAt",
+        CASE
+          WHEN "safe_center" IS NULL THEN NULL
+          ELSE ST_Y("safe_center"::geometry)
+        END AS "latitude",
+        CASE
+          WHEN "safe_center" IS NULL THEN NULL
+          ELSE ST_X("safe_center"::geometry)
+        END AS "longitude"
+      FROM "safe_location_zones"
+      WHERE "id" = ${safeLocationId}::uuid
+      FOR UPDATE
+    `;
+    return rows[0];
+  }
+
+  private serializeSafeLocation(
+    safeLocation: SafeLocationRow,
+  ): SafeLocationPreview {
+    const preview: SafeLocationPreview = {
+      safeLocationId: safeLocation.id,
+      mode: safeLocation.mode,
+      description: safeLocation.description,
+      expiresAt: safeLocation.expiresAt,
+      ...(safeLocation.cityLabel && { cityLabel: safeLocation.cityLabel }),
+      ...(safeLocation.districtLabel && {
+        districtLabel: safeLocation.districtLabel,
+      }),
+    };
+    if (
+      safeLocation.mode === "APPROXIMATE" &&
+      safeLocation.latitude !== null &&
+      safeLocation.longitude !== null &&
+      safeLocation.radiusMeters !== null
+    ) {
+      preview.center = {
+        latitude: safeLocation.latitude,
+        longitude: safeLocation.longitude,
+      };
+      preview.radiusMeters = safeLocation.radiusMeters;
+    }
+    return preview;
+  }
+
+  private async hydrateSafeLocations<T extends { id: string }>(signals: T[]) {
+    if (!signals.length) return [] as Array<T & { safeLocation: null }>;
+    const signalIds = signals.map((signal) => signal.id);
+    const locations = await this.prisma.$queryRaw<SafeLocationRow[]>`
+      SELECT
+        "id",
+        "owner_id" AS "ownerId",
+        "signal_id" AS "signalId",
+        "mode"::text AS "mode",
+        "description",
+        "city_label" AS "cityLabel",
+        "district_label" AS "districtLabel",
+        "radius_meters" AS "radiusMeters",
+        "expires_at" AS "expiresAt",
+        "deleted_at" AS "deletedAt",
+        CASE
+          WHEN "safe_center" IS NULL THEN NULL
+          ELSE ST_Y("safe_center"::geometry)
+        END AS "latitude",
+        CASE
+          WHEN "safe_center" IS NULL THEN NULL
+          ELSE ST_X("safe_center"::geometry)
+        END AS "longitude"
+      FROM "safe_location_zones"
+      WHERE "signal_id" IN (${Prisma.join(
+        signalIds.map((signalId) => Prisma.sql`${signalId}::uuid`),
+      )})
+        AND "deleted_at" IS NULL
+        AND "expires_at" > now()
+    `;
+    const previews = new Map(
+      locations
+        .filter((location) => location.signalId !== null)
+        .map((location) => [
+          location.signalId as string,
+          this.serializeSafeLocation(location),
+        ]),
+    );
+    return signals.map((signal) => ({
+      ...signal,
+      safeLocation: previews.get(signal.id) ?? null,
+    }));
   }
 
   private publicSelect() {

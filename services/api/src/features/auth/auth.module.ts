@@ -3,9 +3,12 @@ import { ConfigService } from "@nestjs/config";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import {
-  DevelopmentOtpProvider,
+  HttpSmsProvider,
+  LocalTestSmsProvider,
   OTP_PROVIDER,
   OtpDispatcher,
+  SmsRuOtpProvider,
+  StagingOtpProvider,
   UnconfiguredProductionOtpProvider,
 } from "./otp.provider";
 import { TokenService } from "./token.service";
@@ -16,20 +19,37 @@ import { TokenService } from "./token.service";
     AuthService,
     TokenService,
     OtpDispatcher,
-    DevelopmentOtpProvider,
+    LocalTestSmsProvider,
+    HttpSmsProvider,
+    StagingOtpProvider,
+    SmsRuOtpProvider,
     UnconfiguredProductionOtpProvider,
     {
       provide: OTP_PROVIDER,
       inject: [
         ConfigService,
-        DevelopmentOtpProvider,
+        LocalTestSmsProvider,
+        HttpSmsProvider,
+        StagingOtpProvider,
+        SmsRuOtpProvider,
         UnconfiguredProductionOtpProvider,
       ],
       useFactory: (
         config: ConfigService,
-        development: DevelopmentOtpProvider,
+        localTest: LocalTestSmsProvider,
+        http: HttpSmsProvider,
+        staging: StagingOtpProvider,
+        smsRu: SmsRuOtpProvider,
         production: UnconfiguredProductionOtpProvider,
-      ) => (config.get("NODE_ENV") === "production" ? production : development),
+      ) => {
+        const authMode = config.get<string>("AUTH_MODE");
+        if (authMode === "local_test") return localTest;
+        if (authMode === "real_sms") return http;
+        if (config.get<string>("SMS_PROVIDER") === "smsru") return smsRu;
+        const appEnvironment = config.get<string>("APP_ENV");
+        if (appEnvironment === "staging") return staging;
+        return production;
+      },
     },
   ],
   exports: [TokenService],

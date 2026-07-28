@@ -1,3 +1,5 @@
+import '../../map/domain/map_models.dart';
+
 class SignalModel {
   const SignalModel({
     required this.id,
@@ -11,6 +13,8 @@ class SignalModel {
     this.emoji,
     this.authorName = 'Друг',
     this.locationLabel,
+    this.locationMode = LocationPrivacyMode.none,
+    this.safeLocation,
   });
   final String id;
   final String authorId;
@@ -23,11 +27,23 @@ class SignalModel {
   final int participantCount;
   final String authorName;
   final String? locationLabel;
+  final LocationPrivacyMode locationMode;
+  final SafeLocationPreview? safeLocation;
 
   factory SignalModel.fromJson(Map<String, dynamic> json) {
     final author = json['author'] as Map<String, dynamic>?;
     final profile = author?['profile'] as Map<String, dynamic>?;
     final count = json['_count'] as Map<String, dynamic>?;
+    final safeLocationJson = json['safeLocation'] is Map
+        ? Map<String, dynamic>.from(json['safeLocation'] as Map)
+        : null;
+    final safeLocation = safeLocationJson == null
+        ? null
+        : SafeLocationPreview.fromJson(safeLocationJson);
+    final locationMode = LocationPrivacyMode.values.firstWhere(
+      (mode) => mode.apiValue == json['locationMode']?.toString(),
+      orElse: () => LocationPrivacyMode.none,
+    );
     return SignalModel(
       id: json['id'] as String,
       authorId: json['authorId'] as String,
@@ -40,7 +56,11 @@ class SignalModel {
       participantCount: count?['participants'] as int? ?? 1,
       authorName: profile?['displayName'] as String? ?? 'Друг',
       locationLabel:
-          json['districtLabel'] as String? ?? json['cityLabel'] as String?,
+          safeLocation?.description ??
+          json['districtLabel'] as String? ??
+          json['cityLabel'] as String?,
+      locationMode: locationMode,
+      safeLocation: safeLocation,
     );
   }
 }

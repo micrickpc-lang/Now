@@ -94,6 +94,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
           IconButton(
+            onPressed: () => context.push('/location-shares'),
+            tooltip: 'ÐšÐ°Ñ€Ñ‚Ð°',
+            icon: const Icon(Icons.map_outlined),
+          ),
+          IconButton(
             onPressed: () => context.push('/circles'),
             tooltip: 'Круги',
             icon: const Icon(Icons.groups_2_outlined),
@@ -140,9 +145,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         label: 'Создать новый сигнал',
         child: FilledButton.icon(
           onPressed: () async {
-            final created = await context.push<bool>('/signal/new');
-            if (created == true)
+            final created = await context.push<Map<String, dynamic>>(
+              '/signal/new',
+            );
+            if (created != null) {
               ref.read(signalFeedProvider.notifier).refresh();
+            }
           },
           icon: const Icon(Icons.bolt_rounded),
           label: const Text('Что ты хочешь сейчас?'),
