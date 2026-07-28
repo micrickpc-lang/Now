@@ -4,6 +4,7 @@ import {
   IsLatitude,
   IsLongitude,
   IsNumber,
+  IsOptional,
   IsString,
   Length,
   Max,
@@ -22,8 +23,16 @@ export class ReverseLocationDto {
   lat!: number;
 
   @Type(() => Number)
+  @IsOptional()
   @IsLongitude()
-  lon!: number;
+  lon?: number;
+
+  // `lng` is the documented public spelling. Keep `lon` for existing mobile
+  // clients and reject ambiguous values in the controller.
+  @Type(() => Number)
+  @IsOptional()
+  @IsLongitude()
+  lng?: number;
 }
 
 export class ApproximateLocationDto {

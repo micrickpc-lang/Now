@@ -9,6 +9,70 @@ import 'package:seychas/features/map/presentation/place_picker_screen.dart';
 import 'package:seychas/features/signals/domain/signal_location_payload.dart';
 
 void main() {
+  test(
+    'global provider uses world camera settings without regional bounds',
+    () {
+      const config = AppConfig(
+        environment: AppEnvironment.production,
+        apiBaseUrl: 'https://api.example.invalid/api/v1',
+        wsBaseUrl: 'https://api.example.invalid',
+        mapStyleUrl: 'https://api.example.invalid/api/v1/maps/style.json',
+        firstPartyDomains: {'api.example.invalid'},
+        demoMode: false,
+        mapProviderMode: MapProviderMode.globalProvider,
+        pilotCenterLatitude: double.nan,
+        pilotCenterLongitude: double.nan,
+        pilotBounds: PilotBounds(
+          south: 43.82,
+          west: 7.55,
+          north: 43.65,
+          east: 7.30,
+        ),
+      );
+
+      expect(config.validate, returnsNormally);
+      expect(config.usesGlobalMapProvider, isTrue);
+      expect(config.initialMapZoom, 1.5);
+      expect(config.minimumMapZoom, 1);
+      expect(config.maximumMapZoom, greaterThanOrEqualTo(18));
+    },
+  );
+
+  test(
+    'global style substitutes a dart-define token without a source secret',
+    () {
+      const config = AppConfig(
+        environment: AppEnvironment.development,
+        apiBaseUrl: 'https://api.example.invalid/api/v1',
+        wsBaseUrl: 'https://api.example.invalid',
+        mapStyleUrl:
+            'https://tiles.example.invalid/style.json?key={MAP_API_KEY}',
+        mapApiKey: 'a+b/c',
+        firstPartyDomains: {'api.example.invalid'},
+        demoMode: false,
+        mapProviderMode: MapProviderMode.globalProvider,
+      );
+
+      expect(
+        config.mapStyleUrl,
+        'https://tiles.example.invalid/style.json?key=a%2Bb%2Fc',
+      );
+    },
+  );
+
+  test('global provider rejects the regional first-party style fallback', () {
+    const config = AppConfig(
+      environment: AppEnvironment.development,
+      apiBaseUrl: 'https://api.example.invalid/api/v1',
+      wsBaseUrl: 'https://api.example.invalid',
+      firstPartyDomains: {'api.example.invalid'},
+      demoMode: false,
+      mapProviderMode: MapProviderMode.globalProvider,
+    );
+
+    expect(config.validate, throwsStateError);
+  });
+
   test('HTTP staging never enables exact location', () {
     const config = AppConfig(
       environment: AppEnvironment.staging,
@@ -81,18 +145,21 @@ void main() {
     },
   );
 
-  test('exact signal payload carries no coordinates before share attachment', () {
-    const selection = MapSelectionResult(
-      mode: LocationPrivacyMode.exactLive,
-      sourcePoint: GeoPoint(43.7384, 7.4246),
-    );
+  test(
+    'exact signal payload carries no coordinates before share attachment',
+    () {
+      const selection = MapSelectionResult(
+        mode: LocationPrivacyMode.exactLive,
+        sourcePoint: GeoPoint(43.7384, 7.4246),
+      );
 
-    final payload = buildSignalLocationPayload(selection);
+      final payload = buildSignalLocationPayload(selection);
 
-    expect(payload, {'locationMode': 'EXACT_LIVE'});
-    expect(payload, isNot(contains('latitude')));
-    expect(payload, isNot(contains('longitude')));
-  });
+      expect(payload, {'locationMode': 'EXACT_LIVE'});
+      expect(payload, isNot(contains('latitude')));
+      expect(payload, isNot(contains('longitude')));
+    },
+  );
 
   testWidgets('cancelling GPS explanation does not request permission', (
     tester,

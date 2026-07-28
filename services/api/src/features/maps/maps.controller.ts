@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -10,6 +11,7 @@ import {
   Res,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Throttle } from "@nestjs/throttler";
 import type { Request, Response } from "express";
 import { CurrentAuth, Public } from "../../common/http";
 import {
@@ -55,13 +57,25 @@ export class MapsController {
   }
 
   @Get("search")
+  @Throttle({ default: { limit: 30, ttl: 60_000 } })
   search(@Query() query: MapSearchDto) {
     return this.maps.search(query.q);
   }
 
   @Get("reverse")
+  @Throttle({ default: { limit: 30, ttl: 60_000 } })
   reverse(@Query() query: ReverseLocationDto) {
-    return this.maps.reverse(query.lat, query.lon);
+    if (query.lon === undefined && query.lng === undefined) {
+      throw new BadRequestException("Either lon or lng is required");
+    }
+    if (
+      query.lon !== undefined &&
+      query.lng !== undefined &&
+      query.lon !== query.lng
+    ) {
+      throw new BadRequestException("lon and lng must match when both are set");
+    }
+    return this.maps.reverse(query.lat, query.lon ?? query.lng!);
   }
 
   @Post("approximate-location")

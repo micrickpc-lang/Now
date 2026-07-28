@@ -322,8 +322,8 @@ class _ExactLocationMapScreenState
   Widget build(BuildContext context) {
     final config = ref.watch(appConfigProvider);
     final initial = LatLng(
-      config.pilotCenterLatitude,
-      config.pilotCenterLongitude,
+      config.initialMapLatitude,
+      config.initialMapLongitude,
     );
     return Scaffold(
       appBar: AppBar(
@@ -341,20 +341,28 @@ class _ExactLocationMapScreenState
           MapLibreMap(
             key: ValueKey('exact-map-$_mapRevision'),
             styleString: config.mapStyleUrl,
-            initialCameraPosition: CameraPosition(target: initial, zoom: 12),
-            cameraTargetBounds: CameraTargetBounds(
-              LatLngBounds(
-                southwest: LatLng(
-                  config.pilotBounds.south,
-                  config.pilotBounds.west,
-                ),
-                northeast: LatLng(
-                  config.pilotBounds.north,
-                  config.pilotBounds.east,
-                ),
-              ),
+            initialCameraPosition: CameraPosition(
+              target: initial,
+              zoom: config.initialMapZoom,
             ),
-            minMaxZoomPreference: const MinMaxZoomPreference(8, 18),
+            cameraTargetBounds: config.usesGlobalMapProvider
+                ? CameraTargetBounds.unbounded
+                : CameraTargetBounds(
+                    LatLngBounds(
+                      southwest: LatLng(
+                        config.pilotBounds.south,
+                        config.pilotBounds.west,
+                      ),
+                      northeast: LatLng(
+                        config.pilotBounds.north,
+                        config.pilotBounds.east,
+                      ),
+                    ),
+                  ),
+            minMaxZoomPreference: MinMaxZoomPreference(
+              config.minimumMapZoom,
+              config.maximumMapZoom,
+            ),
             onMapCreated: (controller) {
               _mapController = controller;
               _startMapLoadDeadline();

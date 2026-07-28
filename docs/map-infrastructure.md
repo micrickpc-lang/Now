@@ -1,6 +1,28 @@
-# Self-hosted maps: Monaco pilot
+# Maps: global provider and self-hosted pilot
 
-Mobile получает карты только с first-party endpoints. Nginx отдаёт canonical MapLibre style/sprites/glyphs и проксирует vector tiles через API; API обращается к Martin и Nominatim по private Docker DNS. У mobile/API нет runtime-запросов к внешним map providers.
+`MAP_MODE=self_hosted` keeps the regional Monaco stack below as an optional
+first-party fallback. Select `MAP_MODE=global_provider` once global provider
+URLs are configured: mobile then receives its global MapLibre style from
+`MAP_STYLE_URL`, while
+`/api/v1/maps/search` and `/api/v1/maps/reverse` remain authenticated API
+endpoints. They proxy only the fixed `GEOCODING_BASE_URL` and
+`REVERSE_GEOCODING_BASE_URL` configured in the server environment; clients
+cannot supply an upstream URL and never receive `GEOCODING_API_KEY`.
+
+Global geocoder URLs use the Nominatim-compatible `search` (`q`, `limit`) and
+`reverse` (`lat`, `lon`) JSON contract. Both URLs must be HTTPS. The API adds a
+provider key either as `GEOCODING_API_KEY_QUERY_PARAM` (default `key`) or as
+the configured `GEOCODING_API_KEY_HEADER`. Query validation, the 30 requests
+per minute API limit, upstream timeout, sanitized cache keys, and no-query
+logging apply in both modes. `MAP_GLOBAL_FALLBACK_TO_SELF_HOSTED` is disabled
+by default: enable it only when the regional Nominatim dataset is a useful
+degraded result.
+
+В `self_hosted` mobile получает карты только с first-party endpoints. Nginx
+отдаёт canonical MapLibre style/sprites/glyphs и проксирует vector tiles через
+API; API обращается к Martin и Nominatim по private Docker DNS. В
+`global_provider` MapLibre загружает заданный через dart-define внешний style,
+а поиск и reverse остаются first-party API proxy с server-side provider key.
 
 ```text
 MapLibre ── /api/v1/maps/style.json ──> Nginx alias ──> assets/v1/style.json

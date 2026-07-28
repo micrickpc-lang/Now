@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/config/app_config.dart';
@@ -13,7 +14,10 @@ class MapsRepository {
   final AppConfig _config;
 
   Future<String> loadStyle() async {
-    final response = await _api.dio.get<Object>(_config.mapStyleUrl);
+    final response = await _api.dio.get<Object>(
+      _config.mapStyleUrl,
+      options: Options(extra: {'skipAuth': true}),
+    );
     final body = response.data;
     if (body is String) {
       jsonDecode(body);

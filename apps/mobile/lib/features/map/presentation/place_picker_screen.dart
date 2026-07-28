@@ -384,7 +384,7 @@ class _PlacePickerScreenState extends ConsumerState<PlacePickerScreen> {
     final config = ref.watch(appConfigProvider);
     final initial =
         widget.request.initialPoint ??
-        GeoPoint(config.pilotCenterLatitude, config.pilotCenterLongitude);
+        GeoPoint(config.initialMapLatitude, config.initialMapLongitude);
     final exactBlocked =
         widget.request.exactRoom && !config.canShareExactLocation;
     return Scaffold(
@@ -424,21 +424,28 @@ class _PlacePickerScreenState extends ConsumerState<PlacePickerScreen> {
               styleString: config.mapStyleUrl,
               initialCameraPosition: CameraPosition(
                 target: LatLng(initial.latitude, initial.longitude),
-                zoom: widget.request.initialPoint == null ? 12 : 15,
+                zoom: widget.request.initialPoint == null
+                    ? config.initialMapZoom
+                    : 15,
               ),
-              cameraTargetBounds: CameraTargetBounds(
-                LatLngBounds(
-                  southwest: LatLng(
-                    config.pilotBounds.south,
-                    config.pilotBounds.west,
-                  ),
-                  northeast: LatLng(
-                    config.pilotBounds.north,
-                    config.pilotBounds.east,
-                  ),
-                ),
+              cameraTargetBounds: config.usesGlobalMapProvider
+                  ? CameraTargetBounds.unbounded
+                  : CameraTargetBounds(
+                      LatLngBounds(
+                        southwest: LatLng(
+                          config.pilotBounds.south,
+                          config.pilotBounds.west,
+                        ),
+                        northeast: LatLng(
+                          config.pilotBounds.north,
+                          config.pilotBounds.east,
+                        ),
+                      ),
+                    ),
+              minMaxZoomPreference: MinMaxZoomPreference(
+                config.minimumMapZoom,
+                config.maximumMapZoom,
               ),
-              minMaxZoomPreference: const MinMaxZoomPreference(8, 18),
               onMapCreated: (controller) {
                 _mapController = controller;
                 _startMapLoadDeadline();

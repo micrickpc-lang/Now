@@ -12,6 +12,7 @@ import type { ApproximateLocationDto } from "./maps.dto";
 const SAFE_LOCATION_DRAFT_TTL_MS = 15 * 60_000;
 const MIN_APPROXIMATE_RADIUS_METERS = 2_000;
 const MAX_APPROXIMATE_RADIUS_METERS = 10_000;
+const GEOCODER_RETRYABLE_STATUSES = new Set([408, 429, 500, 502, 503, 504]);
 
 export interface ReverseResult {
   label: string;
@@ -29,6 +30,11 @@ export interface SearchResult {
 export interface SafeCenter {
   latitude: number;
   longitude: number;
+}
+
+interface GeocoderEndpoint {
+  url: string;
+  selfHosted: boolean;
 }
 
 @Injectable()
@@ -152,65 +158,20 @@ export class MapsService {
       .replace(/\s+/gu, " ")
       .trim()
       .slice(0, 120);
+    if (normalized.length < 2) {
+      throw new BadRequestException("Search query must contain at least two characters");
+    }
+    const coordinate = this.coordinateSearchResult(normalized);
+    if (coordinate) return [coordinate];
+
     const cacheKey = this.cacheKey(
       "search",
       normalized.toLocaleLowerCase("ru"),
     );
     const cached = await this.readCache<SearchResult[]>(cacheKey);
     if (cached) return cached;
-    const internal =
-      this.config.get<string>("INTERNAL_NOMINATIM_URL") ??
-      "http://nominatim:8080";
-    const url = new URL("/search", internal);
-    url.searchParams.set("q", normalized);
-    url.searchParams.set("format", "jsonv2");
-    url.searchParams.set("limit", "8");
-    url.searchParams.set("addressdetails", "1");
-    const countryCodes = this.config.get<string>("SEARCH_COUNTRY_CODES");
-    if (countryCodes) url.searchParams.set("countrycodes", countryCodes);
-    const response = await this.fetchUpstream(
-      url,
-      {
-        headers: {
-          "user-agent": "seychas-private-geocoder/1.0",
-          "accept-language": "ru",
-        },
-      },
-      "Search service unavailable",
-    );
-    if (!response.ok)
-      throw new BadGatewayException("Search service unavailable");
-    const rows = (await response.json()) as Array<Record<string, unknown>>;
-    const results = rows
-      .map((row): SearchResult | undefined => {
-        const latitude = Number(row.lat);
-        const longitude = Number(row.lon);
-        const label = this.safeString(row.display_name, 240);
-        if (
-          !label ||
-          !Number.isFinite(latitude) ||
-          !Number.isFinite(longitude) ||
-          latitude < -90 ||
-          latitude > 90 ||
-          longitude < -180 ||
-          longitude > 180
-        ) {
-          return undefined;
-        }
-        return {
-          id:
-            this.safeString(row.place_id, 80) ??
-            this.cacheKey("place", `${latitude}:${longitude}`),
-          label,
-          latitude,
-          longitude,
-          ...(this.safeString(row.type, 60)
-            ? { type: this.safeString(row.type, 60) }
-            : {}),
-        };
-      })
-      .filter((row): row is SearchResult => row !== undefined)
-      .slice(0, 8);
+    const payload = await this.requestGeocoder("search", normalized);
+    const results = this.searchResults(payload);
     await this.writeCache(cacheKey, results, 300);
     return results;
   }
@@ -222,26 +183,8 @@ export class MapsService {
     );
     const cached = await this.readCache<ReverseResult>(cacheKey);
     if (cached) return cached;
-    const internal =
-      this.config.get<string>("INTERNAL_NOMINATIM_URL") ??
-      "http://nominatim:8080";
-    const url = new URL("/reverse", internal);
-    url.searchParams.set("lat", String(latitude));
-    url.searchParams.set("lon", String(longitude));
-    url.searchParams.set("format", "jsonv2");
-    const response = await this.fetchUpstream(
-      url,
-      {
-        headers: {
-          "user-agent": "seychas-private-geocoder/1.0",
-          "accept-language": "ru",
-        },
-      },
-      "Reverse search unavailable",
-    );
-    if (!response.ok)
-      throw new BadGatewayException("Reverse search unavailable");
-    const row = (await response.json()) as Record<string, unknown>;
+    const payload = await this.requestGeocoder("reverse", latitude, longitude);
+    const row = this.reverseRow(payload);
     const rawAddress = this.addressObject(row.address);
     const address = this.administrativeAddress(rawAddress);
     const label =
@@ -263,6 +206,12 @@ export class MapsService {
   }
 
   async upstreamReadiness() {
+    if (this.mapMode() === "global_provider") {
+      // The global style and geocoder are independent external services. Their
+      // configured URLs are validated at startup; probing provider endpoints
+      // can consume quota or require a request-specific credential.
+      return { tileService: "external", geocoder: "configured" } as const;
+    }
     const martin =
       this.config.get<string>("INTERNAL_MARTIN_URL") ?? "http://martin:3000";
     const nominatim =
@@ -375,6 +324,274 @@ export class MapsService {
 
   private mapBaseUrl(requestBaseUrl?: string) {
     return requestBaseUrl?.replace(/\/+$/u, "") || this.publicBaseUrl();
+  }
+
+  private mapMode(): "self_hosted" | "global_provider" {
+    return this.config.get<string>("MAP_MODE") === "global_provider"
+      ? "global_provider"
+      : "self_hosted";
+  }
+
+  private geocoderEndpoint(
+    operation: "search" | "reverse",
+    mode: "self_hosted" | "global_provider" = this.mapMode(),
+  ): GeocoderEndpoint {
+    if (mode === "self_hosted") {
+      const internal =
+        this.config.get<string>("INTERNAL_NOMINATIM_URL") ??
+        "http://nominatim:8080";
+      return {
+        url: new URL(`/${operation}`, internal).toString(),
+        selfHosted: true,
+      };
+    }
+
+    const key =
+      operation === "search"
+        ? "GEOCODING_BASE_URL"
+        : "REVERSE_GEOCODING_BASE_URL";
+    const url = this.config.get<string>(key);
+    if (!url) throw new BadGatewayException("Geocoding service unavailable");
+    return { url, selfHosted: false };
+  }
+
+  private async requestGeocoder(
+    operation: "search" | "reverse",
+    value: string | number,
+    longitude?: number,
+  ): Promise<unknown> {
+    const primary = this.geocoderEndpoint(operation);
+    try {
+      return await this.fetchGeocoder(primary, operation, value, longitude);
+    } catch (error) {
+      if (
+        primary.selfHosted ||
+        this.config.get<string>("MAP_GLOBAL_FALLBACK_TO_SELF_HOSTED") ===
+          "false" ||
+        !(error instanceof BadGatewayException)
+      ) {
+        throw error;
+      }
+      return this.fetchGeocoder(
+        this.geocoderEndpoint(operation, "self_hosted"),
+        operation,
+        value,
+        longitude,
+      );
+    }
+  }
+
+  private async fetchGeocoder(
+    endpoint: GeocoderEndpoint,
+    operation: "search" | "reverse",
+    value: string | number,
+    longitude?: number,
+  ): Promise<unknown> {
+    const url = new URL(endpoint.url);
+    const headers: Record<string, string> = {
+      "user-agent": "seychas-geocoder-proxy/1.0",
+      "accept-language": "ru",
+    };
+    if (operation === "search") {
+      url.searchParams.set("q", String(value));
+      url.searchParams.set("limit", "8");
+      url.searchParams.set("addressdetails", "1");
+      if (endpoint.selfHosted) {
+        const countryCodes = this.config.get<string>("SEARCH_COUNTRY_CODES");
+        if (countryCodes) url.searchParams.set("countrycodes", countryCodes);
+      }
+    } else {
+      url.searchParams.set("lat", String(value));
+      url.searchParams.set("lon", String(longitude));
+    }
+    url.searchParams.set("format", "jsonv2");
+    this.applyGlobalCredential(url, headers, endpoint.selfHosted);
+
+    const unavailableMessage =
+      operation === "search"
+        ? "Search service unavailable"
+        : "Reverse search unavailable";
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const response = await this.fetchUpstream(
+          url,
+          { headers },
+          unavailableMessage,
+        );
+        if (response.ok) {
+          return this.readGeocoderPayload(response, unavailableMessage);
+        }
+        if (
+          !GEOCODER_RETRYABLE_STATUSES.has(response.status) ||
+          attempt === 1
+        ) {
+          throw new BadGatewayException(unavailableMessage);
+        }
+      } catch (error) {
+        if (attempt === 1 || !(error instanceof BadGatewayException)) {
+          throw error;
+        }
+      }
+      await this.waitForGeocoderRetry();
+    }
+    throw new BadGatewayException(unavailableMessage);
+  }
+
+  private waitForGeocoderRetry(): Promise<void> {
+    const configured = Number(
+      this.config.get<string>("MAP_GEOCODER_RETRY_DELAY_MS") ?? "1200",
+    );
+    const delay = Number.isFinite(configured)
+      ? Math.max(250, Math.min(3_000, configured))
+      : 1_200;
+    return new Promise((resolve) => setTimeout(resolve, delay));
+  }
+
+  private applyGlobalCredential(
+    url: URL,
+    headers: Record<string, string>,
+    selfHosted: boolean,
+  ) {
+    if (selfHosted) return;
+    const apiKey = this.config.get<string>("GEOCODING_API_KEY")?.trim();
+    if (!apiKey) return;
+    const header = this.config
+      .get<string>("GEOCODING_API_KEY_HEADER")
+      ?.trim();
+    if (header) {
+      headers[header] = apiKey;
+      return;
+    }
+    const parameter =
+      this.config.get<string>("GEOCODING_API_KEY_QUERY_PARAM")?.trim() ||
+      "key";
+    url.searchParams.set(parameter, apiKey);
+  }
+
+  private async readGeocoderPayload(
+    response: Response,
+    unavailableMessage: string,
+  ): Promise<unknown> {
+    const declaredLength = Number(response.headers.get("content-length") ?? 0);
+    if (declaredLength > 2_000_000) {
+      throw new BadGatewayException(unavailableMessage);
+    }
+    try {
+      const body = await response.arrayBuffer();
+      if (body.byteLength > 2_000_000) {
+        throw new BadGatewayException(unavailableMessage);
+      }
+      return JSON.parse(new TextDecoder().decode(body)) as unknown;
+    } catch {
+      throw new BadGatewayException(unavailableMessage);
+    }
+  }
+
+  private searchResults(payload: unknown): SearchResult[] {
+    const rows = Array.isArray(payload)
+      ? payload
+      : this.geoJsonRows(this.addressObject(payload));
+    return rows
+      .map((row) => this.searchResult(this.addressObject(row)))
+      .filter((row): row is SearchResult => row !== undefined)
+      .slice(0, 8);
+  }
+
+  private geoJsonRows(payload: Record<string, unknown>): unknown[] {
+    if (!Array.isArray(payload.features)) return [];
+    return payload.features.map((feature) => {
+      const value = this.addressObject(feature);
+      const properties = this.addressObject(value.properties);
+      const geometry = this.addressObject(value.geometry);
+      const coordinates = Array.isArray(geometry.coordinates)
+        ? geometry.coordinates
+        : [];
+      return {
+        place_id: value.id,
+        display_name:
+          properties.place_name ??
+          properties.full_address ??
+          properties.name ??
+          value.text,
+        lat: coordinates[1],
+        lon: coordinates[0],
+        type: properties.type ?? properties.feature_type,
+      };
+    });
+  }
+
+  private searchResult(
+    row: Record<string, unknown>,
+  ): SearchResult | undefined {
+    const latitude = Number(row.lat);
+    const longitude = Number(row.lon);
+    const label = this.safeString(row.display_name, 240);
+    if (
+      !label ||
+      !Number.isFinite(latitude) ||
+      !Number.isFinite(longitude) ||
+      latitude < -90 ||
+      latitude > 90 ||
+      longitude < -180 ||
+      longitude > 180
+    ) {
+      return undefined;
+    }
+    const type = this.safeString(row.type, 60);
+    return {
+      id:
+        this.safeString(row.place_id, 80) ??
+        this.cacheKey("place", `${latitude}:${longitude}`),
+      label,
+      latitude,
+      longitude,
+      ...(type ? { type } : {}),
+    };
+  }
+
+  private reverseRow(payload: unknown): Record<string, unknown> {
+    const row = this.addressObject(payload);
+    if (Object.keys(row).length > 0 && !Array.isArray(row.features)) return row;
+
+    const feature = Array.isArray(row.features) ? row.features[0] : undefined;
+    const value = this.addressObject(feature);
+    const properties = this.addressObject(value.properties);
+    return {
+      address: {
+        city: properties.city ?? properties.place ?? properties.locality,
+        city_district: properties.district ?? properties.neighborhood,
+        county: properties.county,
+        state: properties.region ?? properties.state,
+        country: properties.country,
+        country_code: properties.country_code,
+      },
+    };
+  }
+
+  private coordinateSearchResult(query: string): SearchResult | undefined {
+    const match = /^([+-]?\d{1,2}(?:\.\d+)?),\s*([+-]?\d{1,3}(?:\.\d+)?)$/u.exec(
+      query,
+    );
+    if (!match) return undefined;
+    const latitude = Number(match[1]);
+    const longitude = Number(match[2]);
+    if (
+      !Number.isFinite(latitude) ||
+      !Number.isFinite(longitude) ||
+      latitude < -90 ||
+      latitude > 90 ||
+      longitude < -180 ||
+      longitude > 180
+    ) {
+      return undefined;
+    }
+    return {
+      id: this.cacheKey("coordinate", `${latitude}:${longitude}`),
+      label: `${latitude}, ${longitude}`,
+      latitude,
+      longitude,
+      type: "coordinate",
+    };
   }
 
   private async fetchUpstream(

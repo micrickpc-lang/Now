@@ -4,6 +4,49 @@ import '../storage/app_mode_store.dart';
 
 enum AppEnvironment { development, staging, production }
 
+enum MapProviderMode {
+  selfHostedRegional,
+  globalProvider;
+
+  static MapProviderMode parse(String value) => switch (value) {
+    'self_hosted_regional' => MapProviderMode.selfHostedRegional,
+    'self_hosted' => MapProviderMode.selfHostedRegional,
+    'global_provider' => MapProviderMode.globalProvider,
+    _ => throw StateError(
+      'MAP_MODE must be self_hosted, self_hosted_regional or global_provider',
+    ),
+  };
+}
+
+double _readEnvironmentDouble(String name, {required String defaultValue}) {
+  final value = switch (name) {
+    'MAP_DEFAULT_LAT' => const String.fromEnvironment(
+      'MAP_DEFAULT_LAT',
+      defaultValue: '20',
+    ),
+    'MAP_DEFAULT_LNG' => const String.fromEnvironment(
+      'MAP_DEFAULT_LNG',
+      defaultValue: '0',
+    ),
+    'MAP_DEFAULT_ZOOM' => const String.fromEnvironment(
+      'MAP_DEFAULT_ZOOM',
+      defaultValue: '1.5',
+    ),
+    'MAP_MIN_ZOOM' => const String.fromEnvironment(
+      'MAP_MIN_ZOOM',
+      defaultValue: '1',
+    ),
+    'MAP_MAX_ZOOM' => const String.fromEnvironment(
+      'MAP_MAX_ZOOM',
+      defaultValue: '20',
+    ),
+    _ => defaultValue,
+  };
+  final parsed = double.tryParse(value);
+  if (parsed == null) throw StateError('$name must be a valid number');
+  return parsed;
+}
+
 // ignore_for_file: prefer_initializing_formals
 
 class AppConfig {
@@ -16,6 +59,13 @@ class AppConfig {
     required this.firstPartyDomains,
     required this.demoMode,
     String mapStyleUrl = '',
+    this.mapApiKey = '',
+    this.mapProviderMode = MapProviderMode.selfHostedRegional,
+    this.globalDefaultLatitude = 20,
+    this.globalDefaultLongitude = 0,
+    this.globalDefaultZoom = 1.5,
+    this.globalMinimumZoom = 1,
+    this.globalMaximumZoom = 20,
     this.pilotRegion = 'Monaco demo',
     this.pilotCenterLatitude = 43.7384,
     this.pilotCenterLongitude = 7.4246,
@@ -47,6 +97,35 @@ class AppConfig {
     const configuredMapStyle = String.fromEnvironment(
       'MAP_STYLE_URL',
       defaultValue: '',
+    );
+    const mapMode = String.fromEnvironment('MAP_MODE', defaultValue: '');
+    const legacyMapProviderMode = String.fromEnvironment(
+      'MAP_PROVIDER_MODE',
+      defaultValue: 'self_hosted_regional',
+    );
+    final configuredMapProviderMode = mapMode.trim().isEmpty
+        ? legacyMapProviderMode
+        : mapMode;
+    const mapApiKey = String.fromEnvironment('MAP_API_KEY', defaultValue: '');
+    final globalDefaultLatitude = _readEnvironmentDouble(
+      'MAP_DEFAULT_LAT',
+      defaultValue: '20',
+    );
+    final globalDefaultLongitude = _readEnvironmentDouble(
+      'MAP_DEFAULT_LNG',
+      defaultValue: '0',
+    );
+    final globalDefaultZoom = _readEnvironmentDouble(
+      'MAP_DEFAULT_ZOOM',
+      defaultValue: '1.5',
+    );
+    final globalMinimumZoom = _readEnvironmentDouble(
+      'MAP_MIN_ZOOM',
+      defaultValue: '1',
+    );
+    final globalMaximumZoom = _readEnvironmentDouble(
+      'MAP_MAX_ZOOM',
+      defaultValue: '20',
     );
     const domains = String.fromEnvironment(
       'FIRST_PARTY_DOMAINS',
@@ -102,6 +181,13 @@ class AppConfig {
       apiBaseUrl: api,
       wsBaseUrl: ws,
       mapStyleUrl: configuredMapStyle,
+      mapApiKey: mapApiKey,
+      mapProviderMode: MapProviderMode.parse(configuredMapProviderMode),
+      globalDefaultLatitude: globalDefaultLatitude,
+      globalDefaultLongitude: globalDefaultLongitude,
+      globalDefaultZoom: globalDefaultZoom,
+      globalMinimumZoom: globalMinimumZoom,
+      globalMaximumZoom: globalMaximumZoom,
       firstPartyDomains: allowlist,
       demoMode: demoMode,
       pilotRegion: pilotRegion,
@@ -117,6 +203,13 @@ class AppConfig {
   final String apiBaseUrl;
   final String wsBaseUrl;
   final String _mapStyleUrl;
+  final String mapApiKey;
+  final MapProviderMode mapProviderMode;
+  final double globalDefaultLatitude;
+  final double globalDefaultLongitude;
+  final double globalDefaultZoom;
+  final double globalMinimumZoom;
+  final double globalMaximumZoom;
   final Set<String> firstPartyDomains;
   final bool demoMode;
   final String pilotRegion;
@@ -124,9 +217,34 @@ class AppConfig {
   final double pilotCenterLongitude;
   final PilotBounds pilotBounds;
 
-  String get mapStyleUrl => _mapStyleUrl.trim().isEmpty
-      ? '$apiBaseUrl/maps/style.json'
-      : _mapStyleUrl;
+  String get mapStyleUrl {
+    final styleUrl = _mapStyleUrl.trim().isEmpty
+        ? '$apiBaseUrl/maps/style.json'
+        : _mapStyleUrl;
+    if (!styleUrl.contains('{MAP_API_KEY}')) return styleUrl;
+    if (mapApiKey.trim().isEmpty) {
+      throw StateError('MAP_STYLE_URL requires MAP_API_KEY');
+    }
+    return styleUrl.replaceAll(
+      '{MAP_API_KEY}',
+      Uri.encodeQueryComponent(mapApiKey),
+    );
+  }
+
+  bool get usesGlobalMapProvider =>
+      mapProviderMode == MapProviderMode.globalProvider;
+
+  double get initialMapLatitude =>
+      usesGlobalMapProvider ? globalDefaultLatitude : pilotCenterLatitude;
+
+  double get initialMapLongitude =>
+      usesGlobalMapProvider ? globalDefaultLongitude : pilotCenterLongitude;
+
+  double get initialMapZoom => usesGlobalMapProvider ? globalDefaultZoom : 12;
+
+  double get minimumMapZoom => usesGlobalMapProvider ? globalMinimumZoom : 8;
+
+  double get maximumMapZoom => usesGlobalMapProvider ? globalMaximumZoom : 18;
 
   bool get usesSecureTransport =>
       Uri.tryParse(apiBaseUrl)?.scheme.toLowerCase() == 'https';
@@ -142,13 +260,34 @@ class AppConfig {
       (environment == AppEnvironment.production && usesSecureTransport);
 
   void validate() {
-    final centerValid =
+    final regionalCenterValid =
         pilotCenterLatitude.isFinite &&
         pilotCenterLongitude.isFinite &&
         pilotBounds.isValid &&
         pilotBounds.contains(pilotCenterLatitude, pilotCenterLongitude);
-    if (!centerValid) {
+    if (!usesGlobalMapProvider && !regionalCenterValid) {
       throw StateError('Pilot map center and bounds are invalid');
+    }
+    if (usesGlobalMapProvider &&
+        (!globalDefaultLatitude.isFinite ||
+            !globalDefaultLongitude.isFinite ||
+            globalDefaultLatitude < -90 ||
+            globalDefaultLatitude > 90 ||
+            globalDefaultLongitude < -180 ||
+            globalDefaultLongitude > 180 ||
+            !globalDefaultZoom.isFinite ||
+            !globalMinimumZoom.isFinite ||
+            !globalMaximumZoom.isFinite ||
+            globalMinimumZoom < 0 ||
+            globalMinimumZoom > 2 ||
+            globalMaximumZoom < 18 ||
+            globalMaximumZoom > 24 ||
+            globalDefaultZoom < globalMinimumZoom ||
+            globalDefaultZoom > globalMaximumZoom)) {
+      throw StateError('Global map camera configuration is invalid');
+    }
+    if (usesGlobalMapProvider && _mapStyleUrl.trim().isEmpty) {
+      throw StateError('MAP_STYLE_URL is required for global_provider');
     }
     for (final endpoint in [apiBaseUrl, wsBaseUrl, mapStyleUrl]) {
       final uri = Uri.tryParse(endpoint);
@@ -178,6 +317,13 @@ class AppConfig {
     apiBaseUrl: apiBaseUrl,
     wsBaseUrl: wsBaseUrl,
     mapStyleUrl: _mapStyleUrl,
+    mapApiKey: mapApiKey,
+    mapProviderMode: mapProviderMode,
+    globalDefaultLatitude: globalDefaultLatitude,
+    globalDefaultLongitude: globalDefaultLongitude,
+    globalDefaultZoom: globalDefaultZoom,
+    globalMinimumZoom: globalMinimumZoom,
+    globalMaximumZoom: globalMaximumZoom,
     firstPartyDomains: firstPartyDomains,
     demoMode: demoMode ?? this.demoMode,
     pilotRegion: pilotRegion,
