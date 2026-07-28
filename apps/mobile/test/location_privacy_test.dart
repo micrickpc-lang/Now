@@ -81,6 +81,19 @@ void main() {
     },
   );
 
+  test('exact signal payload carries no coordinates before share attachment', () {
+    const selection = MapSelectionResult(
+      mode: LocationPrivacyMode.exactLive,
+      sourcePoint: GeoPoint(43.7384, 7.4246),
+    );
+
+    final payload = buildSignalLocationPayload(selection);
+
+    expect(payload, {'locationMode': 'EXACT_LIVE'});
+    expect(payload, isNot(contains('latitude')));
+    expect(payload, isNot(contains('longitude')));
+  });
+
   testWidgets('cancelling GPS explanation does not request permission', (
     tester,
   ) async {

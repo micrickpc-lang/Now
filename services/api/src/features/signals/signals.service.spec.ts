@@ -31,6 +31,7 @@ describe("SignalsService safe locations", () => {
     $queryRaw: jest.fn(),
     $executeRaw: jest.fn(),
     signal: { create: jest.fn() },
+    exactLocationShare: { findFirst: jest.fn() },
   };
   const prisma = {
     signal: { count: jest.fn(), findMany: jest.fn() },
@@ -64,6 +65,12 @@ describe("SignalsService safe locations", () => {
     tx.$queryRaw.mockResolvedValue([{ ...safeLocation }]);
     tx.signal.create.mockResolvedValue({ ...createdSignal });
     tx.$executeRaw.mockResolvedValue(1);
+    tx.exactLocationShare.findFirst.mockResolvedValue({
+      id: "exact-share-id",
+      audience: "CIRCLE",
+      circleId: "circle-id",
+      recipients: [],
+    });
     audit.write.mockResolvedValue(undefined);
   });
 
@@ -145,6 +152,52 @@ describe("SignalsService safe locations", () => {
         format: "OFFLINE",
         locationMode: "APPROXIMATE",
         safeLocationId: "safe-location-id",
+        maxParticipants: 4,
+        circleIds: ["circle-id"],
+        userIds: [],
+      }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+    expect(tx.signal.create).not.toHaveBeenCalled();
+  });
+
+  it("links an exact share only when its audience matches the signal", async () => {
+    await service.create("author-id", {
+      category: "walk",
+      startsAt: new Date(Date.now() + 15 * 60_000).toISOString(),
+      durationMinutes: 30,
+      format: "OFFLINE",
+      locationMode: "EXACT_LIVE",
+      exactLocationShareId: "exact-share-id",
+      maxParticipants: 4,
+      circleIds: ["circle-id"],
+      userIds: [],
+    });
+
+    const [[createArgs]] = tx.signal.create.mock.calls as unknown as Array<
+      [{ data: { locationMode: string; exactLocationShareId: string } }]
+    >;
+    expect(createArgs.data).toMatchObject({
+      locationMode: "EXACT_LIVE",
+      exactLocationShareId: "exact-share-id",
+    });
+  });
+
+  it("rejects an exact share whose audience differs from the signal", async () => {
+    tx.exactLocationShare.findFirst.mockResolvedValue({
+      id: "exact-share-id",
+      audience: "SELECTED_FRIENDS",
+      circleId: null,
+      recipients: [{ viewerId: "friend-id" }],
+    });
+
+    await expect(
+      service.create("author-id", {
+        category: "walk",
+        startsAt: new Date(Date.now() + 15 * 60_000).toISOString(),
+        durationMinutes: 30,
+        format: "OFFLINE",
+        locationMode: "EXACT_PIN",
+        exactLocationShareId: "exact-share-id",
         maxParticipants: 4,
         circleIds: ["circle-id"],
         userIds: [],

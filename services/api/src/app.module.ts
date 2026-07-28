@@ -16,6 +16,7 @@ import { validateEnvironment } from "./config/environment";
 import { AuthModule } from "./features/auth/auth.module";
 import { ConversationsModule } from "./features/conversations/conversations.module";
 import { MapsModule } from "./features/maps/maps.module";
+import { LocationSharingModule } from "./features/location-sharing/location-sharing.module";
 import { MemoriesModule } from "./features/memories/memories.module";
 import { MediaModule } from "./features/media/media.module";
 import { ModerationModule } from "./features/moderation/moderation.module";
@@ -38,6 +39,7 @@ import { RealtimeModule } from "./realtime/realtime.module";
     SocialModule,
     SignalsModule,
     RoomsModule,
+    LocationSharingModule,
     MapsModule,
     MemoriesModule,
     MediaModule,

@@ -6,10 +6,11 @@ import {
   Param,
   Post,
   Query,
+  Req,
   Res,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import { CurrentAuth, Public } from "../../common/http";
 import {
   ApproximateLocationDto,
@@ -26,14 +27,14 @@ export class MapsController {
 
   @Get("style.json")
   @Public()
-  style() {
-    return this.maps.style();
+  style(@Req() request: Request) {
+    return this.maps.style(this.requestMapBaseUrl(request));
   }
 
   @Get("tilejson.json")
   @Public()
-  tileJson() {
-    return this.maps.tileJson();
+  tileJson(@Req() request: Request) {
+    return this.maps.tileJson(this.requestMapBaseUrl(request));
   }
 
   @Get("tiles/:z/:x/:y")
@@ -69,5 +70,26 @@ export class MapsController {
     @Body() dto: ApproximateLocationDto,
   ) {
     return this.maps.createSafeLocation(auth.userId, dto);
+  }
+
+  private requestMapBaseUrl(request: Request): string | undefined {
+    const host = request.get("host");
+    if (!host) return undefined;
+
+    try {
+      const origin = new URL(`${request.protocol}://${host}`);
+      if (
+        origin.username ||
+        origin.password ||
+        origin.pathname !== "/" ||
+        origin.search ||
+        origin.hash
+      ) {
+        return undefined;
+      }
+      return `${origin.origin}/api/v1/maps`;
+    } catch {
+      return undefined;
+    }
   }
 }

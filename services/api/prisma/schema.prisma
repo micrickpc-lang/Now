@@ -46,6 +46,21 @@ enum LocationMode {
   DISTRICT
   APPROXIMATE
   EXACT_ROOM
+  EXACT_PIN
+  EXACT_LIVE
+}
+
+enum ExactLocationAudience {
+  SELECTED_FRIENDS
+  CIRCLE
+  ROOM
+}
+
+enum ExactLocationExpiry {
+  THIRTY_MINUTES
+  ONE_HOUR
+  MEETING_END
+  MANUAL
 }
 
 enum JoinRequestState {
@@ -148,6 +163,8 @@ model User {
   reactions                   RoomReaction[]
   pollVotes                   RoomPollVote[]
   locationShares              LocationShare[]
+  exactLocationShares         ExactLocationShare[] @relation("ExactLocationOwner")
+  exactLocationRecipients     ExactLocationRecipient[] @relation("ExactLocationRecipient")
   memories                    Memory[]             @relation("MemoryOwner")
   memoryParticipants          MemoryParticipant[]
   media                       MediaFile[]
@@ -293,6 +310,7 @@ model Circle {
   owner      User               @relation("CircleOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   members    CircleMember[]
   visibility SignalVisibility[]
+  exactLocationShares ExactLocationShare[]
 
   @@index([ownerId])
   @@map("circles")
@@ -324,6 +342,7 @@ model Signal {
   cityLabel        String?                                @map("city_label") @db.VarChar(100)
   districtLabel    String?                                @map("district_label") @db.VarChar(100)
   approximatePoint Unsupported("geography(Point, 4326)")? @map("approximate_point")
+  exactLocationShareId String?                            @unique @map("exact_location_share_id") @db.Uuid
   maxParticipants  Int                                    @default(4) @map("max_participants")
   state            SignalState                            @default(ACTIVE)
   extendedAt       DateTime?                              @map("extended_at")
@@ -336,6 +355,7 @@ model Signal {
   room             TemporaryRoom?
   reports          Report[]
   safeLocationZone SafeLocationZone?
+  exactLocationShare ExactLocationShare?                 @relation("SignalExactLocation", fields: [exactLocationShareId], references: [id], onDelete: SetNull)
 
   @@index([authorId, state])
   @@index([state, expiresAt])
@@ -400,6 +420,7 @@ model TemporaryRoom {
   messages       RoomMessage[]
   polls          RoomPoll[]
   locationShares LocationShare[]
+  exactLocationShares ExactLocationShare[]
 
   @@index([state, expiresAt])
   @@map("temporary_rooms")
@@ -502,6 +523,46 @@ model LocationShare {
   @@unique([roomId, ownerId])
   @@index([expiresAt])
   @@map("location_shares")
+}
+
+model ExactLocationShare {
+  id                       String                @id @default(uuid()) @db.Uuid
+  ownerId                  String                @map("owner_id") @db.Uuid
+  audience                 ExactLocationAudience
+  expiryMode               ExactLocationExpiry   @map("expiry_mode")
+  circleId                 String?               @map("circle_id") @db.Uuid
+  roomId                   String?               @map("room_id") @db.Uuid
+  backgroundUpdatesEnabled Boolean               @default(false) @map("background_updates_enabled")
+  ciphertext               String
+  iv                       String
+  authTag                  String                @map("auth_tag")
+  encryptedDataKey         String                @map("encrypted_data_key")
+  keyIv                    String                @map("key_iv")
+  keyAuthTag               String                @map("key_auth_tag")
+  expiresAt                DateTime?             @map("expires_at")
+  createdAt                DateTime              @default(now()) @map("created_at")
+  updatedAt                DateTime              @updatedAt @map("updated_at")
+  owner                    User                  @relation("ExactLocationOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  circle                   Circle?               @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  room                     TemporaryRoom?        @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  signal                   Signal?               @relation("SignalExactLocation")
+  recipients               ExactLocationRecipient[]
+
+  @@index([ownerId, expiresAt])
+  @@index([circleId, expiresAt])
+  @@index([roomId, expiresAt])
+  @@map("exact_location_shares")
+}
+
+model ExactLocationRecipient {
+  shareId  String             @map("share_id") @db.Uuid
+  viewerId String             @map("viewer_id") @db.Uuid
+  share    ExactLocationShare @relation(fields: [shareId], references: [id], onDelete: Cascade)
+  viewer   User               @relation("ExactLocationRecipient", fields: [viewerId], references: [id], onDelete: Cascade)
+
+  @@id([shareId, viewerId])
+  @@index([viewerId])
+  @@map("exact_location_recipients")
 }
 
 model SafeLocationZone {

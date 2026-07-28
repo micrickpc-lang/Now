@@ -94,6 +94,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
           IconButton(
+            onPressed: () => context.push('/location-shares'),
+            tooltip: 'ÐšÐ°Ñ€Ñ‚Ð°',
+            icon: const Icon(Icons.map_outlined),
+          ),
+          IconButton(
             onPressed: () => context.push('/circles'),
             tooltip: 'Круги',
             icon: const Icon(Icons.groups_2_outlined),

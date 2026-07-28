@@ -25,6 +25,9 @@ async function sweep() {
     const locations = await client.query(
       "DELETE FROM location_shares WHERE expires_at <= now() RETURNING id",
     );
+    const expiredExactLocations = await client.query(
+      "DELETE FROM exact_location_shares WHERE expires_at <= now() RETURNING id",
+    );
     const expiredSafeLocations = await client.query(
       `DELETE FROM safe_location_zones
        WHERE expires_at <= now()
@@ -34,12 +37,26 @@ async function sweep() {
       UPDATE signals SET state = 'EXPIRED', updated_at = now()
       WHERE expires_at <= now() AND state IN ('ACTIVE', 'FULL') RETURNING id
     `);
+    const expiredSignalExactLocations = await client.query(`
+      DELETE FROM exact_location_shares
+      WHERE id IN (
+        SELECT exact_location_share_id
+        FROM signals
+        WHERE exact_location_share_id IS NOT NULL
+          AND (expires_at <= now() OR state NOT IN ('ACTIVE', 'FULL'))
+      )
+      RETURNING id
+    `);
     const rooms = await client.query(`
       UPDATE temporary_rooms SET state = 'ARCHIVED', completed_at = COALESCE(completed_at, now())
       WHERE expires_at <= now() AND state = 'ACTIVE' RETURNING id
     `);
     await client.query(`
       DELETE FROM location_shares
+      WHERE room_id IN (SELECT id FROM temporary_rooms WHERE state <> 'ACTIVE')
+    `);
+    await client.query(`
+      DELETE FROM exact_location_shares
       WHERE room_id IN (SELECT id FROM temporary_rooms WHERE state <> 'ACTIVE')
     `);
     await client.query(`
@@ -54,6 +71,8 @@ async function sweep() {
         level: "info",
         event: "ttl_sweep",
         expiredLocations: locations.rowCount,
+        expiredExactLocations: expiredExactLocations.rowCount,
+        expiredSignalExactLocations: expiredSignalExactLocations.rowCount,
         expiredSafeLocations: expiredSafeLocations.rowCount,
         expiredSignals: signals.rowCount,
         archivedRooms: rooms.rowCount,

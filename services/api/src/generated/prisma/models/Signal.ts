@@ -46,6 +46,7 @@ export type SignalMinAggregateOutputType = {
   locationMode: $Enums.LocationMode | null
   cityLabel: string | null
   districtLabel: string | null
+  exactLocationShareId: string | null
   maxParticipants: number | null
   state: $Enums.SignalState | null
   extendedAt: Date | null
@@ -65,6 +66,7 @@ export type SignalMaxAggregateOutputType = {
   locationMode: $Enums.LocationMode | null
   cityLabel: string | null
   districtLabel: string | null
+  exactLocationShareId: string | null
   maxParticipants: number | null
   state: $Enums.SignalState | null
   extendedAt: Date | null
@@ -84,6 +86,7 @@ export type SignalCountAggregateOutputType = {
   locationMode: number
   cityLabel: number
   districtLabel: number
+  exactLocationShareId: number
   maxParticipants: number
   state: number
   extendedAt: number
@@ -113,6 +116,7 @@ export type SignalMinAggregateInputType = {
   locationMode?: true
   cityLabel?: true
   districtLabel?: true
+  exactLocationShareId?: true
   maxParticipants?: true
   state?: true
   extendedAt?: true
@@ -132,6 +136,7 @@ export type SignalMaxAggregateInputType = {
   locationMode?: true
   cityLabel?: true
   districtLabel?: true
+  exactLocationShareId?: true
   maxParticipants?: true
   state?: true
   extendedAt?: true
@@ -151,6 +156,7 @@ export type SignalCountAggregateInputType = {
   locationMode?: true
   cityLabel?: true
   districtLabel?: true
+  exactLocationShareId?: true
   maxParticipants?: true
   state?: true
   extendedAt?: true
@@ -257,6 +263,7 @@ export type SignalGroupByOutputType = {
   locationMode: $Enums.LocationMode
   cityLabel: string | null
   districtLabel: string | null
+  exactLocationShareId: string | null
   maxParticipants: number
   state: $Enums.SignalState
   extendedAt: Date | null
@@ -299,6 +306,7 @@ export type SignalWhereInput = {
   locationMode?: Prisma.EnumLocationModeFilter<"Signal"> | $Enums.LocationMode
   cityLabel?: Prisma.StringNullableFilter<"Signal"> | string | null
   districtLabel?: Prisma.StringNullableFilter<"Signal"> | string | null
+  exactLocationShareId?: Prisma.UuidNullableFilter<"Signal"> | string | null
   maxParticipants?: Prisma.IntFilter<"Signal"> | number
   state?: Prisma.EnumSignalStateFilter<"Signal"> | $Enums.SignalState
   extendedAt?: Prisma.DateTimeNullableFilter<"Signal"> | Date | string | null
@@ -311,6 +319,7 @@ export type SignalWhereInput = {
   room?: Prisma.XOR<Prisma.TemporaryRoomNullableScalarRelationFilter, Prisma.TemporaryRoomWhereInput> | null
   reports?: Prisma.ReportListRelationFilter
   safeLocationZone?: Prisma.XOR<Prisma.SafeLocationZoneNullableScalarRelationFilter, Prisma.SafeLocationZoneWhereInput> | null
+  exactLocationShare?: Prisma.XOR<Prisma.ExactLocationShareNullableScalarRelationFilter, Prisma.ExactLocationShareWhereInput> | null
 }
 
 export type SignalOrderByWithRelationInput = {
@@ -325,6 +334,7 @@ export type SignalOrderByWithRelationInput = {
   locationMode?: Prisma.SortOrder
   cityLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   districtLabel?: Prisma.SortOrderInput | Prisma.SortOrder
+  exactLocationShareId?: Prisma.SortOrderInput | Prisma.SortOrder
   maxParticipants?: Prisma.SortOrder
   state?: Prisma.SortOrder
   extendedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -337,10 +347,12 @@ export type SignalOrderByWithRelationInput = {
   room?: Prisma.TemporaryRoomOrderByWithRelationInput
   reports?: Prisma.ReportOrderByRelationAggregateInput
   safeLocationZone?: Prisma.SafeLocationZoneOrderByWithRelationInput
+  exactLocationShare?: Prisma.ExactLocationShareOrderByWithRelationInput
 }
 
 export type SignalWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  exactLocationShareId?: string
   AND?: Prisma.SignalWhereInput | Prisma.SignalWhereInput[]
   OR?: Prisma.SignalWhereInput[]
   NOT?: Prisma.SignalWhereInput | Prisma.SignalWhereInput[]
@@ -366,7 +378,8 @@ export type SignalWhereUniqueInput = Prisma.AtLeast<{
   room?: Prisma.XOR<Prisma.TemporaryRoomNullableScalarRelationFilter, Prisma.TemporaryRoomWhereInput> | null
   reports?: Prisma.ReportListRelationFilter
   safeLocationZone?: Prisma.XOR<Prisma.SafeLocationZoneNullableScalarRelationFilter, Prisma.SafeLocationZoneWhereInput> | null
-}, "id">
+  exactLocationShare?: Prisma.XOR<Prisma.ExactLocationShareNullableScalarRelationFilter, Prisma.ExactLocationShareWhereInput> | null
+}, "id" | "exactLocationShareId">
 
 export type SignalOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -380,6 +393,7 @@ export type SignalOrderByWithAggregationInput = {
   locationMode?: Prisma.SortOrder
   cityLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   districtLabel?: Prisma.SortOrderInput | Prisma.SortOrder
+  exactLocationShareId?: Prisma.SortOrderInput | Prisma.SortOrder
   maxParticipants?: Prisma.SortOrder
   state?: Prisma.SortOrder
   extendedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -407,6 +421,7 @@ export type SignalScalarWhereWithAggregatesInput = {
   locationMode?: Prisma.EnumLocationModeWithAggregatesFilter<"Signal"> | $Enums.LocationMode
   cityLabel?: Prisma.StringNullableWithAggregatesFilter<"Signal"> | string | null
   districtLabel?: Prisma.StringNullableWithAggregatesFilter<"Signal"> | string | null
+  exactLocationShareId?: Prisma.UuidNullableWithAggregatesFilter<"Signal"> | string | null
   maxParticipants?: Prisma.IntWithAggregatesFilter<"Signal"> | number
   state?: Prisma.EnumSignalStateWithAggregatesFilter<"Signal"> | $Enums.SignalState
   extendedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Signal"> | Date | string | null
@@ -437,6 +452,7 @@ export type SignalCreateInput = {
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
   safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
+  exactLocationShare?: Prisma.ExactLocationShareCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateInput = {
@@ -451,6 +467,7 @@ export type SignalUncheckedCreateInput = {
   locationMode?: $Enums.LocationMode
   cityLabel?: string | null
   districtLabel?: string | null
+  exactLocationShareId?: string | null
   maxParticipants?: number
   state?: $Enums.SignalState
   extendedAt?: Date | string | null
@@ -487,6 +504,7 @@ export type SignalUpdateInput = {
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
   safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
+  exactLocationShare?: Prisma.ExactLocationShareUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateInput = {
@@ -501,6 +519,7 @@ export type SignalUncheckedUpdateInput = {
   locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
   cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exactLocationShareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
   extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -526,6 +545,7 @@ export type SignalCreateManyInput = {
   locationMode?: $Enums.LocationMode
   cityLabel?: string | null
   districtLabel?: string | null
+  exactLocationShareId?: string | null
   maxParticipants?: number
   state?: $Enums.SignalState
   extendedAt?: Date | string | null
@@ -563,6 +583,7 @@ export type SignalUncheckedUpdateManyInput = {
   locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
   cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exactLocationShareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
   extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -592,6 +613,7 @@ export type SignalCountOrderByAggregateInput = {
   locationMode?: Prisma.SortOrder
   cityLabel?: Prisma.SortOrder
   districtLabel?: Prisma.SortOrder
+  exactLocationShareId?: Prisma.SortOrder
   maxParticipants?: Prisma.SortOrder
   state?: Prisma.SortOrder
   extendedAt?: Prisma.SortOrder
@@ -615,6 +637,7 @@ export type SignalMaxOrderByAggregateInput = {
   locationMode?: Prisma.SortOrder
   cityLabel?: Prisma.SortOrder
   districtLabel?: Prisma.SortOrder
+  exactLocationShareId?: Prisma.SortOrder
   maxParticipants?: Prisma.SortOrder
   state?: Prisma.SortOrder
   extendedAt?: Prisma.SortOrder
@@ -634,6 +657,7 @@ export type SignalMinOrderByAggregateInput = {
   locationMode?: Prisma.SortOrder
   cityLabel?: Prisma.SortOrder
   districtLabel?: Prisma.SortOrder
+  exactLocationShareId?: Prisma.SortOrder
   maxParticipants?: Prisma.SortOrder
   state?: Prisma.SortOrder
   extendedAt?: Prisma.SortOrder
@@ -765,6 +789,38 @@ export type SignalUpdateOneRequiredWithoutRoomNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SignalUpdateToOneWithWhereWithoutRoomInput, Prisma.SignalUpdateWithoutRoomInput>, Prisma.SignalUncheckedUpdateWithoutRoomInput>
 }
 
+export type SignalCreateNestedOneWithoutExactLocationShareInput = {
+  create?: Prisma.XOR<Prisma.SignalCreateWithoutExactLocationShareInput, Prisma.SignalUncheckedCreateWithoutExactLocationShareInput>
+  connectOrCreate?: Prisma.SignalCreateOrConnectWithoutExactLocationShareInput
+  connect?: Prisma.SignalWhereUniqueInput
+}
+
+export type SignalUncheckedCreateNestedOneWithoutExactLocationShareInput = {
+  create?: Prisma.XOR<Prisma.SignalCreateWithoutExactLocationShareInput, Prisma.SignalUncheckedCreateWithoutExactLocationShareInput>
+  connectOrCreate?: Prisma.SignalCreateOrConnectWithoutExactLocationShareInput
+  connect?: Prisma.SignalWhereUniqueInput
+}
+
+export type SignalUpdateOneWithoutExactLocationShareNestedInput = {
+  create?: Prisma.XOR<Prisma.SignalCreateWithoutExactLocationShareInput, Prisma.SignalUncheckedCreateWithoutExactLocationShareInput>
+  connectOrCreate?: Prisma.SignalCreateOrConnectWithoutExactLocationShareInput
+  upsert?: Prisma.SignalUpsertWithoutExactLocationShareInput
+  disconnect?: Prisma.SignalWhereInput | boolean
+  delete?: Prisma.SignalWhereInput | boolean
+  connect?: Prisma.SignalWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SignalUpdateToOneWithWhereWithoutExactLocationShareInput, Prisma.SignalUpdateWithoutExactLocationShareInput>, Prisma.SignalUncheckedUpdateWithoutExactLocationShareInput>
+}
+
+export type SignalUncheckedUpdateOneWithoutExactLocationShareNestedInput = {
+  create?: Prisma.XOR<Prisma.SignalCreateWithoutExactLocationShareInput, Prisma.SignalUncheckedCreateWithoutExactLocationShareInput>
+  connectOrCreate?: Prisma.SignalCreateOrConnectWithoutExactLocationShareInput
+  upsert?: Prisma.SignalUpsertWithoutExactLocationShareInput
+  disconnect?: Prisma.SignalWhereInput | boolean
+  delete?: Prisma.SignalWhereInput | boolean
+  connect?: Prisma.SignalWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SignalUpdateToOneWithWhereWithoutExactLocationShareInput, Prisma.SignalUpdateWithoutExactLocationShareInput>, Prisma.SignalUncheckedUpdateWithoutExactLocationShareInput>
+}
+
 export type SignalCreateNestedOneWithoutSafeLocationZoneInput = {
   create?: Prisma.XOR<Prisma.SignalCreateWithoutSafeLocationZoneInput, Prisma.SignalUncheckedCreateWithoutSafeLocationZoneInput>
   connectOrCreate?: Prisma.SignalCreateOrConnectWithoutSafeLocationZoneInput
@@ -819,6 +875,7 @@ export type SignalCreateWithoutAuthorInput = {
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
   safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
+  exactLocationShare?: Prisma.ExactLocationShareCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutAuthorInput = {
@@ -832,6 +889,7 @@ export type SignalUncheckedCreateWithoutAuthorInput = {
   locationMode?: $Enums.LocationMode
   cityLabel?: string | null
   districtLabel?: string | null
+  exactLocationShareId?: string | null
   maxParticipants?: number
   state?: $Enums.SignalState
   extendedAt?: Date | string | null
@@ -886,6 +944,7 @@ export type SignalScalarWhereInput = {
   locationMode?: Prisma.EnumLocationModeFilter<"Signal"> | $Enums.LocationMode
   cityLabel?: Prisma.StringNullableFilter<"Signal"> | string | null
   districtLabel?: Prisma.StringNullableFilter<"Signal"> | string | null
+  exactLocationShareId?: Prisma.UuidNullableFilter<"Signal"> | string | null
   maxParticipants?: Prisma.IntFilter<"Signal"> | number
   state?: Prisma.EnumSignalStateFilter<"Signal"> | $Enums.SignalState
   extendedAt?: Prisma.DateTimeNullableFilter<"Signal"> | Date | string | null
@@ -915,6 +974,7 @@ export type SignalCreateWithoutVisibilityInput = {
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
   safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
+  exactLocationShare?: Prisma.ExactLocationShareCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutVisibilityInput = {
@@ -929,6 +989,7 @@ export type SignalUncheckedCreateWithoutVisibilityInput = {
   locationMode?: $Enums.LocationMode
   cityLabel?: string | null
   districtLabel?: string | null
+  exactLocationShareId?: string | null
   maxParticipants?: number
   state?: $Enums.SignalState
   extendedAt?: Date | string | null
@@ -979,6 +1040,7 @@ export type SignalUpdateWithoutVisibilityInput = {
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
   safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
+  exactLocationShare?: Prisma.ExactLocationShareUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutVisibilityInput = {
@@ -993,6 +1055,7 @@ export type SignalUncheckedUpdateWithoutVisibilityInput = {
   locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
   cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exactLocationShareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
   extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1027,6 +1090,7 @@ export type SignalCreateWithoutJoinRequestsInput = {
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
   safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
+  exactLocationShare?: Prisma.ExactLocationShareCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutJoinRequestsInput = {
@@ -1041,6 +1105,7 @@ export type SignalUncheckedCreateWithoutJoinRequestsInput = {
   locationMode?: $Enums.LocationMode
   cityLabel?: string | null
   districtLabel?: string | null
+  exactLocationShareId?: string | null
   maxParticipants?: number
   state?: $Enums.SignalState
   extendedAt?: Date | string | null
@@ -1091,6 +1156,7 @@ export type SignalUpdateWithoutJoinRequestsInput = {
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
   safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
+  exactLocationShare?: Prisma.ExactLocationShareUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutJoinRequestsInput = {
@@ -1105,6 +1171,7 @@ export type SignalUncheckedUpdateWithoutJoinRequestsInput = {
   locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
   cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exactLocationShareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
   extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1139,6 +1206,7 @@ export type SignalCreateWithoutParticipantsInput = {
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
   safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
+  exactLocationShare?: Prisma.ExactLocationShareCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutParticipantsInput = {
@@ -1153,6 +1221,7 @@ export type SignalUncheckedCreateWithoutParticipantsInput = {
   locationMode?: $Enums.LocationMode
   cityLabel?: string | null
   districtLabel?: string | null
+  exactLocationShareId?: string | null
   maxParticipants?: number
   state?: $Enums.SignalState
   extendedAt?: Date | string | null
@@ -1203,6 +1272,7 @@ export type SignalUpdateWithoutParticipantsInput = {
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
   safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
+  exactLocationShare?: Prisma.ExactLocationShareUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutParticipantsInput = {
@@ -1217,6 +1287,7 @@ export type SignalUncheckedUpdateWithoutParticipantsInput = {
   locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
   cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exactLocationShareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
   extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1251,6 +1322,7 @@ export type SignalCreateWithoutRoomInput = {
   participants?: Prisma.SignalParticipantCreateNestedManyWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
   safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
+  exactLocationShare?: Prisma.ExactLocationShareCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutRoomInput = {
@@ -1265,6 +1337,7 @@ export type SignalUncheckedCreateWithoutRoomInput = {
   locationMode?: $Enums.LocationMode
   cityLabel?: string | null
   districtLabel?: string | null
+  exactLocationShareId?: string | null
   maxParticipants?: number
   state?: $Enums.SignalState
   extendedAt?: Date | string | null
@@ -1315,9 +1388,126 @@ export type SignalUpdateWithoutRoomInput = {
   participants?: Prisma.SignalParticipantUpdateManyWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
   safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
+  exactLocationShare?: Prisma.ExactLocationShareUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutRoomInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  text?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emoji?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  format?: Prisma.EnumSignalFormatFieldUpdateOperationsInput | $Enums.SignalFormat
+  locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
+  cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exactLocationShareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
+  state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
+  extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  visibility?: Prisma.SignalVisibilityUncheckedUpdateManyWithoutSignalNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutSignalNestedInput
+  participants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutSignalNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedUpdateOneWithoutSignalNestedInput
+}
+
+export type SignalCreateWithoutExactLocationShareInput = {
+  id?: string
+  category: string
+  text?: string | null
+  emoji?: string | null
+  startsAt: Date | string
+  expiresAt: Date | string
+  format: $Enums.SignalFormat
+  locationMode?: $Enums.LocationMode
+  cityLabel?: string | null
+  districtLabel?: string | null
+  maxParticipants?: number
+  state?: $Enums.SignalState
+  extendedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  author: Prisma.UserCreateNestedOneWithoutSignalsInput
+  visibility?: Prisma.SignalVisibilityCreateNestedManyWithoutSignalInput
+  joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutSignalInput
+  participants?: Prisma.SignalParticipantCreateNestedManyWithoutSignalInput
+  room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
+  reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
+}
+
+export type SignalUncheckedCreateWithoutExactLocationShareInput = {
+  id?: string
+  authorId: string
+  category: string
+  text?: string | null
+  emoji?: string | null
+  startsAt: Date | string
+  expiresAt: Date | string
+  format: $Enums.SignalFormat
+  locationMode?: $Enums.LocationMode
+  cityLabel?: string | null
+  districtLabel?: string | null
+  maxParticipants?: number
+  state?: $Enums.SignalState
+  extendedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  visibility?: Prisma.SignalVisibilityUncheckedCreateNestedManyWithoutSignalInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutSignalInput
+  participants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutSignalInput
+  room?: Prisma.TemporaryRoomUncheckedCreateNestedOneWithoutSignalInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutSignalInput
+  safeLocationZone?: Prisma.SafeLocationZoneUncheckedCreateNestedOneWithoutSignalInput
+}
+
+export type SignalCreateOrConnectWithoutExactLocationShareInput = {
+  where: Prisma.SignalWhereUniqueInput
+  create: Prisma.XOR<Prisma.SignalCreateWithoutExactLocationShareInput, Prisma.SignalUncheckedCreateWithoutExactLocationShareInput>
+}
+
+export type SignalUpsertWithoutExactLocationShareInput = {
+  update: Prisma.XOR<Prisma.SignalUpdateWithoutExactLocationShareInput, Prisma.SignalUncheckedUpdateWithoutExactLocationShareInput>
+  create: Prisma.XOR<Prisma.SignalCreateWithoutExactLocationShareInput, Prisma.SignalUncheckedCreateWithoutExactLocationShareInput>
+  where?: Prisma.SignalWhereInput
+}
+
+export type SignalUpdateToOneWithWhereWithoutExactLocationShareInput = {
+  where?: Prisma.SignalWhereInput
+  data: Prisma.XOR<Prisma.SignalUpdateWithoutExactLocationShareInput, Prisma.SignalUncheckedUpdateWithoutExactLocationShareInput>
+}
+
+export type SignalUpdateWithoutExactLocationShareInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  text?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emoji?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  format?: Prisma.EnumSignalFormatFieldUpdateOperationsInput | $Enums.SignalFormat
+  locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
+  cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
+  state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
+  extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneRequiredWithoutSignalsNestedInput
+  visibility?: Prisma.SignalVisibilityUpdateManyWithoutSignalNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutSignalNestedInput
+  participants?: Prisma.SignalParticipantUpdateManyWithoutSignalNestedInput
+  room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
+  safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
+}
+
+export type SignalUncheckedUpdateWithoutExactLocationShareInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1337,6 +1527,7 @@ export type SignalUncheckedUpdateWithoutRoomInput = {
   visibility?: Prisma.SignalVisibilityUncheckedUpdateManyWithoutSignalNestedInput
   joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutSignalNestedInput
   participants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutSignalNestedInput
+  room?: Prisma.TemporaryRoomUncheckedUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutSignalNestedInput
   safeLocationZone?: Prisma.SafeLocationZoneUncheckedUpdateOneWithoutSignalNestedInput
 }
@@ -1363,6 +1554,7 @@ export type SignalCreateWithoutSafeLocationZoneInput = {
   participants?: Prisma.SignalParticipantCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
   reports?: Prisma.ReportCreateNestedManyWithoutSignalInput
+  exactLocationShare?: Prisma.ExactLocationShareCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutSafeLocationZoneInput = {
@@ -1377,6 +1569,7 @@ export type SignalUncheckedCreateWithoutSafeLocationZoneInput = {
   locationMode?: $Enums.LocationMode
   cityLabel?: string | null
   districtLabel?: string | null
+  exactLocationShareId?: string | null
   maxParticipants?: number
   state?: $Enums.SignalState
   extendedAt?: Date | string | null
@@ -1427,6 +1620,7 @@ export type SignalUpdateWithoutSafeLocationZoneInput = {
   participants?: Prisma.SignalParticipantUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
+  exactLocationShare?: Prisma.ExactLocationShareUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutSafeLocationZoneInput = {
@@ -1441,6 +1635,7 @@ export type SignalUncheckedUpdateWithoutSafeLocationZoneInput = {
   locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
   cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exactLocationShareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
   extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1475,6 +1670,7 @@ export type SignalCreateWithoutReportsInput = {
   participants?: Prisma.SignalParticipantCreateNestedManyWithoutSignalInput
   room?: Prisma.TemporaryRoomCreateNestedOneWithoutSignalInput
   safeLocationZone?: Prisma.SafeLocationZoneCreateNestedOneWithoutSignalInput
+  exactLocationShare?: Prisma.ExactLocationShareCreateNestedOneWithoutSignalInput
 }
 
 export type SignalUncheckedCreateWithoutReportsInput = {
@@ -1489,6 +1685,7 @@ export type SignalUncheckedCreateWithoutReportsInput = {
   locationMode?: $Enums.LocationMode
   cityLabel?: string | null
   districtLabel?: string | null
+  exactLocationShareId?: string | null
   maxParticipants?: number
   state?: $Enums.SignalState
   extendedAt?: Date | string | null
@@ -1539,6 +1736,7 @@ export type SignalUpdateWithoutReportsInput = {
   participants?: Prisma.SignalParticipantUpdateManyWithoutSignalNestedInput
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
   safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
+  exactLocationShare?: Prisma.ExactLocationShareUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutReportsInput = {
@@ -1553,6 +1751,7 @@ export type SignalUncheckedUpdateWithoutReportsInput = {
   locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
   cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exactLocationShareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
   extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1576,6 +1775,7 @@ export type SignalCreateManyAuthorInput = {
   locationMode?: $Enums.LocationMode
   cityLabel?: string | null
   districtLabel?: string | null
+  exactLocationShareId?: string | null
   maxParticipants?: number
   state?: $Enums.SignalState
   extendedAt?: Date | string | null
@@ -1605,6 +1805,7 @@ export type SignalUpdateWithoutAuthorInput = {
   room?: Prisma.TemporaryRoomUpdateOneWithoutSignalNestedInput
   reports?: Prisma.ReportUpdateManyWithoutSignalNestedInput
   safeLocationZone?: Prisma.SafeLocationZoneUpdateOneWithoutSignalNestedInput
+  exactLocationShare?: Prisma.ExactLocationShareUpdateOneWithoutSignalNestedInput
 }
 
 export type SignalUncheckedUpdateWithoutAuthorInput = {
@@ -1618,6 +1819,7 @@ export type SignalUncheckedUpdateWithoutAuthorInput = {
   locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
   cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exactLocationShareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
   extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1642,6 +1844,7 @@ export type SignalUncheckedUpdateManyWithoutAuthorInput = {
   locationMode?: Prisma.EnumLocationModeFieldUpdateOperationsInput | $Enums.LocationMode
   cityLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   districtLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exactLocationShareId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maxParticipants?: Prisma.IntFieldUpdateOperationsInput | number
   state?: Prisma.EnumSignalStateFieldUpdateOperationsInput | $Enums.SignalState
   extendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1719,6 +1922,7 @@ export type SignalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   locationMode?: boolean
   cityLabel?: boolean
   districtLabel?: boolean
+  exactLocationShareId?: boolean
   maxParticipants?: boolean
   state?: boolean
   extendedAt?: boolean
@@ -1731,6 +1935,7 @@ export type SignalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   room?: boolean | Prisma.Signal$roomArgs<ExtArgs>
   reports?: boolean | Prisma.Signal$reportsArgs<ExtArgs>
   safeLocationZone?: boolean | Prisma.Signal$safeLocationZoneArgs<ExtArgs>
+  exactLocationShare?: boolean | Prisma.Signal$exactLocationShareArgs<ExtArgs>
   _count?: boolean | Prisma.SignalCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["signal"]>
 
@@ -1746,12 +1951,14 @@ export type SignalSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   locationMode?: boolean
   cityLabel?: boolean
   districtLabel?: boolean
+  exactLocationShareId?: boolean
   maxParticipants?: boolean
   state?: boolean
   extendedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  exactLocationShare?: boolean | Prisma.Signal$exactLocationShareArgs<ExtArgs>
 }, ExtArgs["result"]["signal"]>
 
 export type SignalSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1766,12 +1973,14 @@ export type SignalSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   locationMode?: boolean
   cityLabel?: boolean
   districtLabel?: boolean
+  exactLocationShareId?: boolean
   maxParticipants?: boolean
   state?: boolean
   extendedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  exactLocationShare?: boolean | Prisma.Signal$exactLocationShareArgs<ExtArgs>
 }, ExtArgs["result"]["signal"]>
 
 export type SignalSelectScalar = {
@@ -1786,6 +1995,7 @@ export type SignalSelectScalar = {
   locationMode?: boolean
   cityLabel?: boolean
   districtLabel?: boolean
+  exactLocationShareId?: boolean
   maxParticipants?: boolean
   state?: boolean
   extendedAt?: boolean
@@ -1793,7 +2003,7 @@ export type SignalSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SignalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "authorId" | "category" | "text" | "emoji" | "startsAt" | "expiresAt" | "format" | "locationMode" | "cityLabel" | "districtLabel" | "maxParticipants" | "state" | "extendedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["signal"]>
+export type SignalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "authorId" | "category" | "text" | "emoji" | "startsAt" | "expiresAt" | "format" | "locationMode" | "cityLabel" | "districtLabel" | "exactLocationShareId" | "maxParticipants" | "state" | "extendedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["signal"]>
 export type SignalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   visibility?: boolean | Prisma.Signal$visibilityArgs<ExtArgs>
@@ -1802,13 +2012,16 @@ export type SignalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   room?: boolean | Prisma.Signal$roomArgs<ExtArgs>
   reports?: boolean | Prisma.Signal$reportsArgs<ExtArgs>
   safeLocationZone?: boolean | Prisma.Signal$safeLocationZoneArgs<ExtArgs>
+  exactLocationShare?: boolean | Prisma.Signal$exactLocationShareArgs<ExtArgs>
   _count?: boolean | Prisma.SignalCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SignalIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  exactLocationShare?: boolean | Prisma.Signal$exactLocationShareArgs<ExtArgs>
 }
 export type SignalIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  exactLocationShare?: boolean | Prisma.Signal$exactLocationShareArgs<ExtArgs>
 }
 
 export type $SignalPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1821,6 +2034,7 @@ export type $SignalPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     room: Prisma.$TemporaryRoomPayload<ExtArgs> | null
     reports: Prisma.$ReportPayload<ExtArgs>[]
     safeLocationZone: Prisma.$SafeLocationZonePayload<ExtArgs> | null
+    exactLocationShare: Prisma.$ExactLocationSharePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1834,6 +2048,7 @@ export type $SignalPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     locationMode: $Enums.LocationMode
     cityLabel: string | null
     districtLabel: string | null
+    exactLocationShareId: string | null
     maxParticipants: number
     state: $Enums.SignalState
     extendedAt: Date | null
@@ -2240,6 +2455,7 @@ export interface Prisma__SignalClient<T, Null = never, ExtArgs extends runtime.T
   room<T extends Prisma.Signal$roomArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Signal$roomArgs<ExtArgs>>): Prisma.Prisma__TemporaryRoomClient<runtime.Types.Result.GetResult<Prisma.$TemporaryRoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   reports<T extends Prisma.Signal$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Signal$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   safeLocationZone<T extends Prisma.Signal$safeLocationZoneArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Signal$safeLocationZoneArgs<ExtArgs>>): Prisma.Prisma__SafeLocationZoneClient<runtime.Types.Result.GetResult<Prisma.$SafeLocationZonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  exactLocationShare<T extends Prisma.Signal$exactLocationShareArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Signal$exactLocationShareArgs<ExtArgs>>): Prisma.Prisma__ExactLocationShareClient<runtime.Types.Result.GetResult<Prisma.$ExactLocationSharePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2280,6 +2496,7 @@ export interface SignalFieldRefs {
   readonly locationMode: Prisma.FieldRef<"Signal", 'LocationMode'>
   readonly cityLabel: Prisma.FieldRef<"Signal", 'String'>
   readonly districtLabel: Prisma.FieldRef<"Signal", 'String'>
+  readonly exactLocationShareId: Prisma.FieldRef<"Signal", 'String'>
   readonly maxParticipants: Prisma.FieldRef<"Signal", 'Int'>
   readonly state: Prisma.FieldRef<"Signal", 'SignalState'>
   readonly extendedAt: Prisma.FieldRef<"Signal", 'DateTime'>
@@ -2817,6 +3034,25 @@ export type Signal$safeLocationZoneArgs<ExtArgs extends runtime.Types.Extensions
    */
   include?: Prisma.SafeLocationZoneInclude<ExtArgs> | null
   where?: Prisma.SafeLocationZoneWhereInput
+}
+
+/**
+ * Signal.exactLocationShare
+ */
+export type Signal$exactLocationShareArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExactLocationShare
+   */
+  select?: Prisma.ExactLocationShareSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExactLocationShare
+   */
+  omit?: Prisma.ExactLocationShareOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExactLocationShareInclude<ExtArgs> | null
+  where?: Prisma.ExactLocationShareWhereInput
 }
 
 /**

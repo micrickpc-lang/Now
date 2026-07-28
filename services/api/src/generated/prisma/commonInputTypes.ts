@@ -416,6 +416,40 @@ export type EnumRoomStateWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumRoomStateFilter<$PrismaModel>
 }
 
+export type EnumExactLocationAudienceFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExactLocationAudience | Prisma.EnumExactLocationAudienceFieldRefInput<$PrismaModel>
+  in?: $Enums.ExactLocationAudience[] | Prisma.ListEnumExactLocationAudienceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExactLocationAudience[] | Prisma.ListEnumExactLocationAudienceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExactLocationAudienceFilter<$PrismaModel> | $Enums.ExactLocationAudience
+}
+
+export type EnumExactLocationExpiryFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExactLocationExpiry | Prisma.EnumExactLocationExpiryFieldRefInput<$PrismaModel>
+  in?: $Enums.ExactLocationExpiry[] | Prisma.ListEnumExactLocationExpiryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExactLocationExpiry[] | Prisma.ListEnumExactLocationExpiryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExactLocationExpiryFilter<$PrismaModel> | $Enums.ExactLocationExpiry
+}
+
+export type EnumExactLocationAudienceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExactLocationAudience | Prisma.EnumExactLocationAudienceFieldRefInput<$PrismaModel>
+  in?: $Enums.ExactLocationAudience[] | Prisma.ListEnumExactLocationAudienceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExactLocationAudience[] | Prisma.ListEnumExactLocationAudienceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExactLocationAudienceWithAggregatesFilter<$PrismaModel> | $Enums.ExactLocationAudience
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumExactLocationAudienceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumExactLocationAudienceFilter<$PrismaModel>
+}
+
+export type EnumExactLocationExpiryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExactLocationExpiry | Prisma.EnumExactLocationExpiryFieldRefInput<$PrismaModel>
+  in?: $Enums.ExactLocationExpiry[] | Prisma.ListEnumExactLocationExpiryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExactLocationExpiry[] | Prisma.ListEnumExactLocationExpiryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExactLocationExpiryWithAggregatesFilter<$PrismaModel> | $Enums.ExactLocationExpiry
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumExactLocationExpiryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumExactLocationExpiryFilter<$PrismaModel>
+}
+
 export type IntNullableFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel> | null
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
@@ -961,6 +995,40 @@ export type NestedEnumRoomStateWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumRoomStateFilter<$PrismaModel>
   _max?: Prisma.NestedEnumRoomStateFilter<$PrismaModel>
+}
+
+export type NestedEnumExactLocationAudienceFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExactLocationAudience | Prisma.EnumExactLocationAudienceFieldRefInput<$PrismaModel>
+  in?: $Enums.ExactLocationAudience[] | Prisma.ListEnumExactLocationAudienceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExactLocationAudience[] | Prisma.ListEnumExactLocationAudienceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExactLocationAudienceFilter<$PrismaModel> | $Enums.ExactLocationAudience
+}
+
+export type NestedEnumExactLocationExpiryFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExactLocationExpiry | Prisma.EnumExactLocationExpiryFieldRefInput<$PrismaModel>
+  in?: $Enums.ExactLocationExpiry[] | Prisma.ListEnumExactLocationExpiryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExactLocationExpiry[] | Prisma.ListEnumExactLocationExpiryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExactLocationExpiryFilter<$PrismaModel> | $Enums.ExactLocationExpiry
+}
+
+export type NestedEnumExactLocationAudienceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExactLocationAudience | Prisma.EnumExactLocationAudienceFieldRefInput<$PrismaModel>
+  in?: $Enums.ExactLocationAudience[] | Prisma.ListEnumExactLocationAudienceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExactLocationAudience[] | Prisma.ListEnumExactLocationAudienceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExactLocationAudienceWithAggregatesFilter<$PrismaModel> | $Enums.ExactLocationAudience
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumExactLocationAudienceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumExactLocationAudienceFilter<$PrismaModel>
+}
+
+export type NestedEnumExactLocationExpiryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExactLocationExpiry | Prisma.EnumExactLocationExpiryFieldRefInput<$PrismaModel>
+  in?: $Enums.ExactLocationExpiry[] | Prisma.ListEnumExactLocationExpiryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExactLocationExpiry[] | Prisma.ListEnumExactLocationExpiryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExactLocationExpiryWithAggregatesFilter<$PrismaModel> | $Enums.ExactLocationExpiry
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumExactLocationExpiryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumExactLocationExpiryFilter<$PrismaModel>
 }
 
 export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {

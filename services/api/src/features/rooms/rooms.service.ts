@@ -27,6 +27,19 @@ export class RoomsService {
     return this.assertMember(userId, roomId);
   }
 
+  activeRooms(userId: string) {
+    return this.prisma.temporaryRoom.findMany({
+      where: {
+        state: "ACTIVE",
+        expiresAt: { gt: new Date() },
+        members: { some: { userId, leftAt: null } },
+      },
+      select: { id: true, title: true, expiresAt: true },
+      orderBy: { expiresAt: "asc" },
+      take: 20,
+    });
+  }
+
   async locationShares(userId: string, roomId: string) {
     if (this.config.get<string>("ALLOW_EXACT_LOCATION") !== "true") {
       throw new ForbiddenException("Exact location sharing is disabled");
@@ -118,6 +131,9 @@ export class RoomsService {
         data: { leftAt: new Date() },
       }),
       this.prisma.locationShare.deleteMany({
+        where: { roomId, ownerId: userId },
+      }),
+      this.prisma.exactLocationShare.deleteMany({
         where: { roomId, ownerId: userId },
       }),
     ]);

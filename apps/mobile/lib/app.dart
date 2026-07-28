@@ -12,6 +12,7 @@ import 'features/chats/presentation/chat_screen.dart';
 import 'features/chats/presentation/chats_screen.dart';
 import 'features/home/presentation/home_screen.dart';
 import 'features/map/presentation/place_picker_screen.dart';
+import 'features/location_sharing/presentation/exact_location_map_screen.dart';
 import 'features/map/domain/map_models.dart';
 import 'features/memories/presentation/memories_screen.dart';
 import 'features/navigation/presentation/app_shell.dart';
@@ -113,6 +114,10 @@ final routerProvider = Provider<GoRouter>((ref) {
               ? state.extra! as PlacePickerRequest
               : const PlacePickerRequest.signal(),
         ),
+      ),
+      GoRoute(
+        path: '/location-shares',
+        builder: (_, __) => const ExactLocationMapScreen(),
       ),
       GoRoute(path: '/circles', builder: (_, __) => const CirclesScreen()),
       GoRoute(path: '/memories', builder: (_, __) => const MemoriesScreen()),

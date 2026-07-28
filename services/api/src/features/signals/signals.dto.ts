@@ -51,12 +51,29 @@ export class CreateSignalDto {
   @IsIn(["ONLINE", "OFFLINE"])
   format!: "ONLINE" | "OFFLINE";
 
-  @IsIn(["NONE", "CITY", "DISTRICT", "APPROXIMATE"])
-  locationMode!: "NONE" | "CITY" | "DISTRICT" | "APPROXIMATE";
+  @IsIn([
+    "NONE",
+    "CITY",
+    "DISTRICT",
+    "APPROXIMATE",
+    "EXACT_PIN",
+    "EXACT_LIVE",
+  ])
+  locationMode!:
+    | "NONE"
+    | "CITY"
+    | "DISTRICT"
+    | "APPROXIMATE"
+    | "EXACT_PIN"
+    | "EXACT_LIVE";
 
   @IsOptional()
   @IsUUID("4")
   safeLocationId?: string;
+
+  @IsOptional()
+  @IsUUID("4")
+  exactLocationShareId?: string;
 
   @Type(() => Number)
   @IsInt()

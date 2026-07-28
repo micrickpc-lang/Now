@@ -12,6 +12,17 @@ Map<String, dynamic> buildSignalLocationPayload(MapSelectionResult selection) {
   if (mode == LocationPrivacyMode.none) {
     return const {'locationMode': 'NONE'};
   }
+  if (mode == LocationPrivacyMode.exactPin ||
+      mode == LocationPrivacyMode.exactLive) {
+    if (selection.sourcePoint == null) {
+      throw ArgumentError.value(
+        selection,
+        'selection',
+        'An exact point is required for an exact signal location',
+      );
+    }
+    return {'locationMode': mode.apiValue};
+  }
 
   final safeLocation = selection.safeLocation;
   if (safeLocation == null || safeLocation.mode != mode) {

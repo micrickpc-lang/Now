@@ -72,6 +72,8 @@ export const ModelName = {
   RoomPollOption: 'RoomPollOption',
   RoomPollVote: 'RoomPollVote',
   LocationShare: 'LocationShare',
+  ExactLocationShare: 'ExactLocationShare',
+  ExactLocationRecipient: 'ExactLocationRecipient',
   SafeLocationZone: 'SafeLocationZone',
   Conversation: 'Conversation',
   ConversationMember: 'ConversationMember',
@@ -254,6 +256,7 @@ export const SignalScalarFieldEnum = {
   locationMode: 'locationMode',
   cityLabel: 'cityLabel',
   districtLabel: 'districtLabel',
+  exactLocationShareId: 'exactLocationShareId',
   maxParticipants: 'maxParticipants',
   state: 'state',
   extendedAt: 'extendedAt',
@@ -389,6 +392,36 @@ export const LocationShareScalarFieldEnum = {
 } as const
 
 export type LocationShareScalarFieldEnum = (typeof LocationShareScalarFieldEnum)[keyof typeof LocationShareScalarFieldEnum]
+
+
+export const ExactLocationShareScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  audience: 'audience',
+  expiryMode: 'expiryMode',
+  circleId: 'circleId',
+  roomId: 'roomId',
+  backgroundUpdatesEnabled: 'backgroundUpdatesEnabled',
+  ciphertext: 'ciphertext',
+  iv: 'iv',
+  authTag: 'authTag',
+  encryptedDataKey: 'encryptedDataKey',
+  keyIv: 'keyIv',
+  keyAuthTag: 'keyAuthTag',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExactLocationShareScalarFieldEnum = (typeof ExactLocationShareScalarFieldEnum)[keyof typeof ExactLocationShareScalarFieldEnum]
+
+
+export const ExactLocationRecipientScalarFieldEnum = {
+  shareId: 'shareId',
+  viewerId: 'viewerId'
+} as const
+
+export type ExactLocationRecipientScalarFieldEnum = (typeof ExactLocationRecipientScalarFieldEnum)[keyof typeof ExactLocationRecipientScalarFieldEnum]
 
 
 export const SafeLocationZoneScalarFieldEnum = {

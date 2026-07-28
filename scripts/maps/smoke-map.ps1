@@ -43,14 +43,40 @@ $handler = [System.Net.Http.HttpClientHandler]::new()
 $client = [System.Net.Http.HttpClient]::new($handler)
 $client.Timeout = [TimeSpan]::FromSeconds($timeoutSeconds)
 $failures = 0
+
+function Test-AbsoluteMapTileUrl {
+  param(
+    [Parameter(Mandatory = $true)]
+    [byte[]]$Body
+  )
+
+  try {
+    $style = [System.Text.Encoding]::UTF8.GetString($Body) | ConvertFrom-Json
+    $tiles = @($style.sources.seychas.tiles)
+    if ($tiles.Count -ne 1 -or -not $tiles[0]) { return $false }
+    $tileUri = [Uri]$tiles[0]
+    $tilePath = '/' + $tileUri.GetComponents(
+      [UriComponents]::Path,
+      [UriFormat]::Unescaped
+    )
+    return (
+      $tileUri.IsAbsoluteUri -and
+      $tileUri.Scheme -in @('http', 'https') -and
+      $tilePath -eq '/api/v1/maps/tiles/{z}/{x}/{y}.pbf'
+    )
+  } catch {
+    return $false
+  }
+}
+
 $probes = @(
   @{ Path = '/health'; Kind = 'json'; Minimum = 2; Expected = 200 },
-  @{ Path = '/api/v1/maps/style.json'; Kind = 'json'; Minimum = 100; Expected = 200; Needle = '/maps/v1/tiles/{z}/{x}/{y}.pbf' },
+  @{ Path = '/api/v1/maps/style.json'; Kind = 'json'; Minimum = 100; Expected = 200; Needle = '/api/v1/maps/tiles/{z}/{x}/{y}.pbf'; RequiresAbsoluteTile = $true },
   @{ Path = '/api/v1/maps/tilejson.json'; Kind = 'json'; Minimum = 100; Expected = 200; Needle = '/api/v1/maps/tiles/{z}/{x}/{y}.pbf' },
   @{ Path = '/api/v1/maps/tiles/14/8529/5974.pbf'; Kind = 'pbf'; Minimum = 1; Expected = 200 },
   @{ Path = '/api/v1/maps/search'; Kind = 'json'; Minimum = 2; Expected = 401 },
   @{ Path = '/api/v1/maps/reverse'; Kind = 'json'; Minimum = 2; Expected = 401 },
-  @{ Path = '/maps/v1/style.json'; Kind = 'json'; Minimum = 100; Expected = 200; Needle = '/maps/v1/sprites/sprite' },
+  @{ Path = '/maps/v1/style.json'; Kind = 'json'; Minimum = 100; Expected = 200; Needle = '/api/v1/maps/tiles/{z}/{x}/{y}.pbf'; RequiresAbsoluteTile = $true },
   @{ Path = '/maps/v1/sprites/sprite.json'; Kind = 'json'; Minimum = 2; Expected = 200 },
   @{ Path = '/maps/v1/sprites/sprite.png'; Kind = 'png'; Minimum = 16; Expected = 200 },
   @{ Path = '/maps/v1/sprites/sprite@2x.json'; Kind = 'json'; Minimum = 2; Expected = 200 },
@@ -84,7 +110,12 @@ try {
     }
     $needle = if ($probe.ContainsKey('Needle')) { [string]$probe.Needle } else { '' }
     $bodyMatches = -not $needle -or [System.Text.Encoding]::UTF8.GetString($body).Contains($needle)
-    if ($status -ne $probe.Expected -or -not $validType -or $body.Length -lt $probe.Minimum -or -not $bodyMatches) {
+    $hasAbsoluteTile = (
+      -not $probe.ContainsKey('RequiresAbsoluteTile') -or
+      -not $probe.RequiresAbsoluteTile -or
+      (Test-AbsoluteMapTileUrl $body)
+    )
+    if ($status -ne $probe.Expected -or -not $validType -or $body.Length -lt $probe.Minimum -or -not $bodyMatches -or -not $hasAbsoluteTile) {
       $failures += 1
     }
     if ($response) { $response.Dispose() }

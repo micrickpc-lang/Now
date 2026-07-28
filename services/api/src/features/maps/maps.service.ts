@@ -39,8 +39,8 @@ export class MapsService {
     private readonly redis: RedisService,
   ) {}
 
-  style() {
-    const base = this.publicBaseUrl();
+  style(requestBaseUrl?: string) {
+    const base = this.mapBaseUrl(requestBaseUrl);
     return {
       version: 8,
       name: "Сейчас Aurora v1",
@@ -51,7 +51,9 @@ export class MapsService {
       sources: {
         seychas: {
           type: "vector",
-          url: `${base}/tilejson.json`,
+          tiles: [`${base}/tiles/{z}/{x}/{y}.pbf`],
+          minzoom: 0,
+          maxzoom: 14,
         },
       },
       layers: [
@@ -88,8 +90,8 @@ export class MapsService {
     };
   }
 
-  tileJson() {
-    const base = this.publicBaseUrl();
+  tileJson(requestBaseUrl?: string) {
+    const base = this.mapBaseUrl(requestBaseUrl);
     return {
       tilejson: "3.0.0",
       name: "Seychas Aurora v1",
@@ -369,6 +371,10 @@ export class MapsService {
       this.config.get<string>("MAP_PUBLIC_BASE_URL") ??
       "http://localhost:8080/maps"
     ).replace(/\/+$/u, "");
+  }
+
+  private mapBaseUrl(requestBaseUrl?: string) {
+    return requestBaseUrl?.replace(/\/+$/u, "") || this.publicBaseUrl();
   }
 
   private async fetchUpstream(

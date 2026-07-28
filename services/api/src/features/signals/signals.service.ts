@@ -66,12 +66,27 @@ export class SignalsService {
     if (dto.text) await this.content.assertAllowed(dto.text, user.limitedMode);
     if (!dto.circleIds.length && !dto.userIds.length)
       throw new BadRequestException("Выберите круг или друзей");
-    if (dto.locationMode === "NONE" && dto.safeLocationId)
-      throw new BadRequestException(
-        "Safe location is not allowed when location is hidden",
-      );
-    if (dto.locationMode !== "NONE" && !dto.safeLocationId)
-      throw new BadRequestException("Safe location is required");
+    const exactLocation =
+      dto.locationMode === "EXACT_PIN" || dto.locationMode === "EXACT_LIVE";
+    if (exactLocation) {
+      if (!dto.exactLocationShareId || dto.safeLocationId) {
+        throw new BadRequestException(
+          "Exact signals require one exact location share and no safe location",
+        );
+      }
+    } else {
+      if (dto.exactLocationShareId) {
+        throw new BadRequestException(
+          "Exact location shares are not allowed for safe signals",
+        );
+      }
+      if (dto.locationMode === "NONE" && dto.safeLocationId)
+        throw new BadRequestException(
+          "Safe location is not allowed when location is hidden",
+        );
+      if (dto.locationMode !== "NONE" && !dto.safeLocationId)
+        throw new BadRequestException("Safe location is required");
+    }
     await this.assertVisibility(userId, dto.circleIds, dto.userIds);
     const startsAt = new Date(dto.startsAt);
     const expiresAt = new Date(
@@ -85,6 +100,51 @@ export class SignalsService {
     }
     let safeLocation: SafeLocationRow | undefined;
     const signal = await this.prisma.$transaction(async (tx) => {
+      let exactShare: {
+        id: string;
+        audience: string;
+        circleId: string | null;
+        recipients: Array<{ viewerId: string }>;
+      } | null = null;
+      if (exactLocation && dto.exactLocationShareId) {
+        exactShare = await tx.exactLocationShare.findFirst({
+          where: {
+            id: dto.exactLocationShareId,
+            ownerId: userId,
+            signal: { is: null },
+            OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+          },
+          select: {
+            id: true,
+            audience: true,
+            circleId: true,
+            recipients: { select: { viewerId: true } },
+          },
+        });
+        const selectedCircleIds = [...new Set(dto.circleIds)];
+        const selectedUserIds = [...new Set(dto.userIds)].sort();
+        const exactRecipientIds = (exactShare?.recipients ?? [])
+          .map(({ viewerId }) => viewerId)
+          .sort();
+        const matchesCircle =
+          selectedCircleIds.length === 1 &&
+          selectedUserIds.length === 0 &&
+          exactShare?.audience === "CIRCLE" &&
+          exactShare.circleId === selectedCircleIds[0];
+        const matchesFriends =
+          selectedCircleIds.length === 0 &&
+          selectedUserIds.length > 0 &&
+          exactShare?.audience === "SELECTED_FRIENDS" &&
+          selectedUserIds.length === exactRecipientIds.length &&
+          selectedUserIds.every(
+            (recipientId, index) => recipientId === exactRecipientIds[index],
+          );
+        if (!exactShare || (!matchesCircle && !matchesFriends)) {
+          throw new BadRequestException(
+            "Exact location audience must match the signal audience",
+          );
+        }
+      }
       if (dto.safeLocationId) {
         safeLocation = await this.lockSafeLocation(tx, dto.safeLocationId);
         if (
@@ -108,7 +168,10 @@ export class SignalsService {
           startsAt,
           expiresAt,
           format: dto.format,
-          locationMode: safeLocation?.mode ?? "NONE",
+          locationMode: exactLocation
+            ? dto.locationMode
+            : (safeLocation?.mode ?? "NONE"),
+          exactLocationShareId: exactShare?.id,
           cityLabel: safeLocation?.cityLabel,
           districtLabel: safeLocation?.districtLabel,
           maxParticipants: dto.maxParticipants,
@@ -312,6 +375,9 @@ export class SignalsService {
     await this.prisma.locationShare.deleteMany({
       where: { room: { signalId: id } },
     });
+    await this.prisma.exactLocationShare.deleteMany({
+      where: { signal: { id } },
+    });
     this.realtime.emitUsers(
       await this.visibilityRecipients(id),
       "signal.cancelled",
@@ -337,6 +403,9 @@ export class SignalsService {
           data: { state: "COMPLETED", completedAt: new Date() },
         });
       }
+      await tx.exactLocationShare.deleteMany({
+        where: { signal: { id } },
+      });
     });
     if (signal.room)
       this.realtime.emitRoom(signal.room.id, "room.completed", {

@@ -220,6 +220,7 @@ export type TemporaryRoomWhereInput = {
   messages?: Prisma.RoomMessageListRelationFilter
   polls?: Prisma.RoomPollListRelationFilter
   locationShares?: Prisma.LocationShareListRelationFilter
+  exactLocationShares?: Prisma.ExactLocationShareListRelationFilter
 }
 
 export type TemporaryRoomOrderByWithRelationInput = {
@@ -238,6 +239,7 @@ export type TemporaryRoomOrderByWithRelationInput = {
   messages?: Prisma.RoomMessageOrderByRelationAggregateInput
   polls?: Prisma.RoomPollOrderByRelationAggregateInput
   locationShares?: Prisma.LocationShareOrderByRelationAggregateInput
+  exactLocationShares?: Prisma.ExactLocationShareOrderByRelationAggregateInput
 }
 
 export type TemporaryRoomWhereUniqueInput = Prisma.AtLeast<{
@@ -259,6 +261,7 @@ export type TemporaryRoomWhereUniqueInput = Prisma.AtLeast<{
   messages?: Prisma.RoomMessageListRelationFilter
   polls?: Prisma.RoomPollListRelationFilter
   locationShares?: Prisma.LocationShareListRelationFilter
+  exactLocationShares?: Prisma.ExactLocationShareListRelationFilter
 }, "id" | "signalId">
 
 export type TemporaryRoomOrderByWithAggregationInput = {
@@ -305,6 +308,7 @@ export type TemporaryRoomCreateInput = {
   messages?: Prisma.RoomMessageCreateNestedManyWithoutRoomInput
   polls?: Prisma.RoomPollCreateNestedManyWithoutRoomInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomUncheckedCreateInput = {
@@ -321,6 +325,7 @@ export type TemporaryRoomUncheckedCreateInput = {
   messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutRoomInput
   polls?: Prisma.RoomPollUncheckedCreateNestedManyWithoutRoomInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomUpdateInput = {
@@ -337,6 +342,7 @@ export type TemporaryRoomUpdateInput = {
   messages?: Prisma.RoomMessageUpdateManyWithoutRoomNestedInput
   polls?: Prisma.RoomPollUpdateManyWithoutRoomNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomUncheckedUpdateInput = {
@@ -353,6 +359,7 @@ export type TemporaryRoomUncheckedUpdateInput = {
   messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutRoomNestedInput
   polls?: Prisma.RoomPollUncheckedUpdateManyWithoutRoomNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomCreateManyInput = {
@@ -579,6 +586,22 @@ export type TemporaryRoomUpdateOneRequiredWithoutLocationSharesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TemporaryRoomUpdateToOneWithWhereWithoutLocationSharesInput, Prisma.TemporaryRoomUpdateWithoutLocationSharesInput>, Prisma.TemporaryRoomUncheckedUpdateWithoutLocationSharesInput>
 }
 
+export type TemporaryRoomCreateNestedOneWithoutExactLocationSharesInput = {
+  create?: Prisma.XOR<Prisma.TemporaryRoomCreateWithoutExactLocationSharesInput, Prisma.TemporaryRoomUncheckedCreateWithoutExactLocationSharesInput>
+  connectOrCreate?: Prisma.TemporaryRoomCreateOrConnectWithoutExactLocationSharesInput
+  connect?: Prisma.TemporaryRoomWhereUniqueInput
+}
+
+export type TemporaryRoomUpdateOneWithoutExactLocationSharesNestedInput = {
+  create?: Prisma.XOR<Prisma.TemporaryRoomCreateWithoutExactLocationSharesInput, Prisma.TemporaryRoomUncheckedCreateWithoutExactLocationSharesInput>
+  connectOrCreate?: Prisma.TemporaryRoomCreateOrConnectWithoutExactLocationSharesInput
+  upsert?: Prisma.TemporaryRoomUpsertWithoutExactLocationSharesInput
+  disconnect?: Prisma.TemporaryRoomWhereInput | boolean
+  delete?: Prisma.TemporaryRoomWhereInput | boolean
+  connect?: Prisma.TemporaryRoomWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TemporaryRoomUpdateToOneWithWhereWithoutExactLocationSharesInput, Prisma.TemporaryRoomUpdateWithoutExactLocationSharesInput>, Prisma.TemporaryRoomUncheckedUpdateWithoutExactLocationSharesInput>
+}
+
 export type TemporaryRoomCreateWithoutOwnerInput = {
   id?: string
   title: string
@@ -592,6 +615,7 @@ export type TemporaryRoomCreateWithoutOwnerInput = {
   messages?: Prisma.RoomMessageCreateNestedManyWithoutRoomInput
   polls?: Prisma.RoomPollCreateNestedManyWithoutRoomInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomUncheckedCreateWithoutOwnerInput = {
@@ -607,6 +631,7 @@ export type TemporaryRoomUncheckedCreateWithoutOwnerInput = {
   messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutRoomInput
   polls?: Prisma.RoomPollUncheckedCreateNestedManyWithoutRoomInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomCreateOrConnectWithoutOwnerInput = {
@@ -663,6 +688,7 @@ export type TemporaryRoomCreateWithoutSignalInput = {
   messages?: Prisma.RoomMessageCreateNestedManyWithoutRoomInput
   polls?: Prisma.RoomPollCreateNestedManyWithoutRoomInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomUncheckedCreateWithoutSignalInput = {
@@ -678,6 +704,7 @@ export type TemporaryRoomUncheckedCreateWithoutSignalInput = {
   messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutRoomInput
   polls?: Prisma.RoomPollUncheckedCreateNestedManyWithoutRoomInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomCreateOrConnectWithoutSignalInput = {
@@ -709,6 +736,7 @@ export type TemporaryRoomUpdateWithoutSignalInput = {
   messages?: Prisma.RoomMessageUpdateManyWithoutRoomNestedInput
   polls?: Prisma.RoomPollUpdateManyWithoutRoomNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomUncheckedUpdateWithoutSignalInput = {
@@ -724,6 +752,7 @@ export type TemporaryRoomUncheckedUpdateWithoutSignalInput = {
   messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutRoomNestedInput
   polls?: Prisma.RoomPollUncheckedUpdateManyWithoutRoomNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomCreateWithoutMembersInput = {
@@ -739,6 +768,7 @@ export type TemporaryRoomCreateWithoutMembersInput = {
   messages?: Prisma.RoomMessageCreateNestedManyWithoutRoomInput
   polls?: Prisma.RoomPollCreateNestedManyWithoutRoomInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomUncheckedCreateWithoutMembersInput = {
@@ -754,6 +784,7 @@ export type TemporaryRoomUncheckedCreateWithoutMembersInput = {
   messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutRoomInput
   polls?: Prisma.RoomPollUncheckedCreateNestedManyWithoutRoomInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomCreateOrConnectWithoutMembersInput = {
@@ -785,6 +816,7 @@ export type TemporaryRoomUpdateWithoutMembersInput = {
   messages?: Prisma.RoomMessageUpdateManyWithoutRoomNestedInput
   polls?: Prisma.RoomPollUpdateManyWithoutRoomNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomUncheckedUpdateWithoutMembersInput = {
@@ -800,6 +832,7 @@ export type TemporaryRoomUncheckedUpdateWithoutMembersInput = {
   messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutRoomNestedInput
   polls?: Prisma.RoomPollUncheckedUpdateManyWithoutRoomNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomCreateWithoutMessagesInput = {
@@ -815,6 +848,7 @@ export type TemporaryRoomCreateWithoutMessagesInput = {
   members?: Prisma.RoomMemberCreateNestedManyWithoutRoomInput
   polls?: Prisma.RoomPollCreateNestedManyWithoutRoomInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomUncheckedCreateWithoutMessagesInput = {
@@ -830,6 +864,7 @@ export type TemporaryRoomUncheckedCreateWithoutMessagesInput = {
   members?: Prisma.RoomMemberUncheckedCreateNestedManyWithoutRoomInput
   polls?: Prisma.RoomPollUncheckedCreateNestedManyWithoutRoomInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomCreateOrConnectWithoutMessagesInput = {
@@ -861,6 +896,7 @@ export type TemporaryRoomUpdateWithoutMessagesInput = {
   members?: Prisma.RoomMemberUpdateManyWithoutRoomNestedInput
   polls?: Prisma.RoomPollUpdateManyWithoutRoomNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomUncheckedUpdateWithoutMessagesInput = {
@@ -876,6 +912,7 @@ export type TemporaryRoomUncheckedUpdateWithoutMessagesInput = {
   members?: Prisma.RoomMemberUncheckedUpdateManyWithoutRoomNestedInput
   polls?: Prisma.RoomPollUncheckedUpdateManyWithoutRoomNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomCreateWithoutPollsInput = {
@@ -891,6 +928,7 @@ export type TemporaryRoomCreateWithoutPollsInput = {
   members?: Prisma.RoomMemberCreateNestedManyWithoutRoomInput
   messages?: Prisma.RoomMessageCreateNestedManyWithoutRoomInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomUncheckedCreateWithoutPollsInput = {
@@ -906,6 +944,7 @@ export type TemporaryRoomUncheckedCreateWithoutPollsInput = {
   members?: Prisma.RoomMemberUncheckedCreateNestedManyWithoutRoomInput
   messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutRoomInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomCreateOrConnectWithoutPollsInput = {
@@ -937,6 +976,7 @@ export type TemporaryRoomUpdateWithoutPollsInput = {
   members?: Prisma.RoomMemberUpdateManyWithoutRoomNestedInput
   messages?: Prisma.RoomMessageUpdateManyWithoutRoomNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomUncheckedUpdateWithoutPollsInput = {
@@ -952,6 +992,7 @@ export type TemporaryRoomUncheckedUpdateWithoutPollsInput = {
   members?: Prisma.RoomMemberUncheckedUpdateManyWithoutRoomNestedInput
   messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutRoomNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomCreateWithoutLocationSharesInput = {
@@ -967,6 +1008,7 @@ export type TemporaryRoomCreateWithoutLocationSharesInput = {
   members?: Prisma.RoomMemberCreateNestedManyWithoutRoomInput
   messages?: Prisma.RoomMessageCreateNestedManyWithoutRoomInput
   polls?: Prisma.RoomPollCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomUncheckedCreateWithoutLocationSharesInput = {
@@ -982,6 +1024,7 @@ export type TemporaryRoomUncheckedCreateWithoutLocationSharesInput = {
   members?: Prisma.RoomMemberUncheckedCreateNestedManyWithoutRoomInput
   messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutRoomInput
   polls?: Prisma.RoomPollUncheckedCreateNestedManyWithoutRoomInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedCreateNestedManyWithoutRoomInput
 }
 
 export type TemporaryRoomCreateOrConnectWithoutLocationSharesInput = {
@@ -1013,6 +1056,7 @@ export type TemporaryRoomUpdateWithoutLocationSharesInput = {
   members?: Prisma.RoomMemberUpdateManyWithoutRoomNestedInput
   messages?: Prisma.RoomMessageUpdateManyWithoutRoomNestedInput
   polls?: Prisma.RoomPollUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomUncheckedUpdateWithoutLocationSharesInput = {
@@ -1028,6 +1072,87 @@ export type TemporaryRoomUncheckedUpdateWithoutLocationSharesInput = {
   members?: Prisma.RoomMemberUncheckedUpdateManyWithoutRoomNestedInput
   messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutRoomNestedInput
   polls?: Prisma.RoomPollUncheckedUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutRoomNestedInput
+}
+
+export type TemporaryRoomCreateWithoutExactLocationSharesInput = {
+  id?: string
+  title: string
+  state?: $Enums.RoomState
+  scheduledAt?: Date | string | null
+  expiresAt: Date | string
+  completedAt?: Date | string | null
+  createdAt?: Date | string
+  signal: Prisma.SignalCreateNestedOneWithoutRoomInput
+  owner: Prisma.UserCreateNestedOneWithoutRoomsOwnedInput
+  members?: Prisma.RoomMemberCreateNestedManyWithoutRoomInput
+  messages?: Prisma.RoomMessageCreateNestedManyWithoutRoomInput
+  polls?: Prisma.RoomPollCreateNestedManyWithoutRoomInput
+  locationShares?: Prisma.LocationShareCreateNestedManyWithoutRoomInput
+}
+
+export type TemporaryRoomUncheckedCreateWithoutExactLocationSharesInput = {
+  id?: string
+  signalId: string
+  ownerId: string
+  title: string
+  state?: $Enums.RoomState
+  scheduledAt?: Date | string | null
+  expiresAt: Date | string
+  completedAt?: Date | string | null
+  createdAt?: Date | string
+  members?: Prisma.RoomMemberUncheckedCreateNestedManyWithoutRoomInput
+  messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutRoomInput
+  polls?: Prisma.RoomPollUncheckedCreateNestedManyWithoutRoomInput
+  locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutRoomInput
+}
+
+export type TemporaryRoomCreateOrConnectWithoutExactLocationSharesInput = {
+  where: Prisma.TemporaryRoomWhereUniqueInput
+  create: Prisma.XOR<Prisma.TemporaryRoomCreateWithoutExactLocationSharesInput, Prisma.TemporaryRoomUncheckedCreateWithoutExactLocationSharesInput>
+}
+
+export type TemporaryRoomUpsertWithoutExactLocationSharesInput = {
+  update: Prisma.XOR<Prisma.TemporaryRoomUpdateWithoutExactLocationSharesInput, Prisma.TemporaryRoomUncheckedUpdateWithoutExactLocationSharesInput>
+  create: Prisma.XOR<Prisma.TemporaryRoomCreateWithoutExactLocationSharesInput, Prisma.TemporaryRoomUncheckedCreateWithoutExactLocationSharesInput>
+  where?: Prisma.TemporaryRoomWhereInput
+}
+
+export type TemporaryRoomUpdateToOneWithWhereWithoutExactLocationSharesInput = {
+  where?: Prisma.TemporaryRoomWhereInput
+  data: Prisma.XOR<Prisma.TemporaryRoomUpdateWithoutExactLocationSharesInput, Prisma.TemporaryRoomUncheckedUpdateWithoutExactLocationSharesInput>
+}
+
+export type TemporaryRoomUpdateWithoutExactLocationSharesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.EnumRoomStateFieldUpdateOperationsInput | $Enums.RoomState
+  scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  signal?: Prisma.SignalUpdateOneRequiredWithoutRoomNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutRoomsOwnedNestedInput
+  members?: Prisma.RoomMemberUpdateManyWithoutRoomNestedInput
+  messages?: Prisma.RoomMessageUpdateManyWithoutRoomNestedInput
+  polls?: Prisma.RoomPollUpdateManyWithoutRoomNestedInput
+  locationShares?: Prisma.LocationShareUpdateManyWithoutRoomNestedInput
+}
+
+export type TemporaryRoomUncheckedUpdateWithoutExactLocationSharesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  signalId?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.EnumRoomStateFieldUpdateOperationsInput | $Enums.RoomState
+  scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.RoomMemberUncheckedUpdateManyWithoutRoomNestedInput
+  messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutRoomNestedInput
+  polls?: Prisma.RoomPollUncheckedUpdateManyWithoutRoomNestedInput
+  locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomCreateManyOwnerInput = {
@@ -1054,6 +1179,7 @@ export type TemporaryRoomUpdateWithoutOwnerInput = {
   messages?: Prisma.RoomMessageUpdateManyWithoutRoomNestedInput
   polls?: Prisma.RoomPollUpdateManyWithoutRoomNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomUncheckedUpdateWithoutOwnerInput = {
@@ -1069,6 +1195,7 @@ export type TemporaryRoomUncheckedUpdateWithoutOwnerInput = {
   messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutRoomNestedInput
   polls?: Prisma.RoomPollUncheckedUpdateManyWithoutRoomNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutRoomNestedInput
+  exactLocationShares?: Prisma.ExactLocationShareUncheckedUpdateManyWithoutRoomNestedInput
 }
 
 export type TemporaryRoomUncheckedUpdateManyWithoutOwnerInput = {
@@ -1092,6 +1219,7 @@ export type TemporaryRoomCountOutputType = {
   messages: number
   polls: number
   locationShares: number
+  exactLocationShares: number
 }
 
 export type TemporaryRoomCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1099,6 +1227,7 @@ export type TemporaryRoomCountOutputTypeSelect<ExtArgs extends runtime.Types.Ext
   messages?: boolean | TemporaryRoomCountOutputTypeCountMessagesArgs
   polls?: boolean | TemporaryRoomCountOutputTypeCountPollsArgs
   locationShares?: boolean | TemporaryRoomCountOutputTypeCountLocationSharesArgs
+  exactLocationShares?: boolean | TemporaryRoomCountOutputTypeCountExactLocationSharesArgs
 }
 
 /**
@@ -1139,6 +1268,13 @@ export type TemporaryRoomCountOutputTypeCountLocationSharesArgs<ExtArgs extends 
   where?: Prisma.LocationShareWhereInput
 }
 
+/**
+ * TemporaryRoomCountOutputType without action
+ */
+export type TemporaryRoomCountOutputTypeCountExactLocationSharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExactLocationShareWhereInput
+}
+
 
 export type TemporaryRoomSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1156,6 +1292,7 @@ export type TemporaryRoomSelect<ExtArgs extends runtime.Types.Extensions.Interna
   messages?: boolean | Prisma.TemporaryRoom$messagesArgs<ExtArgs>
   polls?: boolean | Prisma.TemporaryRoom$pollsArgs<ExtArgs>
   locationShares?: boolean | Prisma.TemporaryRoom$locationSharesArgs<ExtArgs>
+  exactLocationShares?: boolean | Prisma.TemporaryRoom$exactLocationSharesArgs<ExtArgs>
   _count?: boolean | Prisma.TemporaryRoomCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["temporaryRoom"]>
 
@@ -1207,6 +1344,7 @@ export type TemporaryRoomInclude<ExtArgs extends runtime.Types.Extensions.Intern
   messages?: boolean | Prisma.TemporaryRoom$messagesArgs<ExtArgs>
   polls?: boolean | Prisma.TemporaryRoom$pollsArgs<ExtArgs>
   locationShares?: boolean | Prisma.TemporaryRoom$locationSharesArgs<ExtArgs>
+  exactLocationShares?: boolean | Prisma.TemporaryRoom$exactLocationSharesArgs<ExtArgs>
   _count?: boolean | Prisma.TemporaryRoomCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TemporaryRoomIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1227,6 +1365,7 @@ export type $TemporaryRoomPayload<ExtArgs extends runtime.Types.Extensions.Inter
     messages: Prisma.$RoomMessagePayload<ExtArgs>[]
     polls: Prisma.$RoomPollPayload<ExtArgs>[]
     locationShares: Prisma.$LocationSharePayload<ExtArgs>[]
+    exactLocationShares: Prisma.$ExactLocationSharePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1638,6 +1777,7 @@ export interface Prisma__TemporaryRoomClient<T, Null = never, ExtArgs extends ru
   messages<T extends Prisma.TemporaryRoom$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TemporaryRoom$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoomMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   polls<T extends Prisma.TemporaryRoom$pollsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TemporaryRoom$pollsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoomPollPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   locationShares<T extends Prisma.TemporaryRoom$locationSharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TemporaryRoom$locationSharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LocationSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  exactLocationShares<T extends Prisma.TemporaryRoom$exactLocationSharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TemporaryRoom$exactLocationSharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExactLocationSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2170,6 +2310,30 @@ export type TemporaryRoom$locationSharesArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.LocationShareScalarFieldEnum | Prisma.LocationShareScalarFieldEnum[]
+}
+
+/**
+ * TemporaryRoom.exactLocationShares
+ */
+export type TemporaryRoom$exactLocationSharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExactLocationShare
+   */
+  select?: Prisma.ExactLocationShareSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExactLocationShare
+   */
+  omit?: Prisma.ExactLocationShareOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExactLocationShareInclude<ExtArgs> | null
+  where?: Prisma.ExactLocationShareWhereInput
+  orderBy?: Prisma.ExactLocationShareOrderByWithRelationInput | Prisma.ExactLocationShareOrderByWithRelationInput[]
+  cursor?: Prisma.ExactLocationShareWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExactLocationShareScalarFieldEnum | Prisma.ExactLocationShareScalarFieldEnum[]
 }
 
 /**

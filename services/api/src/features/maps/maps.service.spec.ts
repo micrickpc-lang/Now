@@ -42,6 +42,18 @@ describe("MapsService", () => {
     global.fetch = originalFetch;
   });
 
+  it("uses the requesting map origin for absolute Android tile URLs", () => {
+    const base = "http://192.168.1.68/api/v1/maps";
+
+    expect(service.style(base).sources.seychas).toMatchObject({
+      type: "vector",
+      tiles: [`${base}/tiles/{z}/{x}/{y}.pbf`],
+    });
+    expect(service.tileJson(base).tiles).toEqual([
+      `${base}/tiles/{z}/{x}/{y}.pbf`,
+    ]);
+  });
+
   it("rejects XYZ coordinates outside the zoom grid before an upstream call", async () => {
     global.fetch = jest.fn();
 

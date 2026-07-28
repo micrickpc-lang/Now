@@ -293,6 +293,8 @@ const _eventNames = [
   'room.poll.updated',
   'location.share.updated',
   'location.share.revoked',
+  'location.exact.updated',
+  'location.exact.revoked',
   'conversation.created',
   'conversation.updated',
   'conversation.deleted',

@@ -3,6 +3,8 @@ enum LocationPrivacyMode {
   city('CITY'),
   district('DISTRICT'),
   approximate('APPROXIMATE'),
+  exactPin('EXACT_PIN'),
+  exactLive('EXACT_LIVE'),
   exactRoomOnly('EXACT_ROOM_ONLY');
 
   const LocationPrivacyMode(this.apiValue);

@@ -169,6 +169,15 @@ try {
     $compose + @('up', '-d', '--wait', '--wait-timeout', '600')
   ) 'The PC stack did not become healthy'
 
+  # Docker Compose does not restart a running service when only a bind-mounted
+  # Nginx configuration file changed. Reload it before the HTTP/map checks.
+  Invoke-PcNativeCommand $docker (
+    $compose + @(
+      'up', '-d', '--wait', '--wait-timeout', '30', '--force-recreate',
+      '--no-deps', 'nginx'
+    )
+  ) 'Nginx reconfiguration failed'
+
   Invoke-PcNativeCommand $docker ($compose + @('ps')) `
     'Unable to inspect the running PC stack'
 

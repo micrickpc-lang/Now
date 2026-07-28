@@ -16,6 +16,11 @@ import { RoomsService } from "./rooms.service";
 export class RoomsController {
   constructor(private readonly rooms: RoomsService) {}
 
+  @Get("active")
+  activeRooms(@CurrentAuth() auth: { userId: string }) {
+    return this.rooms.activeRooms(auth.userId);
+  }
+
   @Get(":id/location-share")
   locationShares(
     @CurrentAuth() auth: { userId: string },

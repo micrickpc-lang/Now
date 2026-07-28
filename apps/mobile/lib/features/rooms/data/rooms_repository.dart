@@ -1,6 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/network/api_client.dart';
 
+class ActiveRoom {
+  const ActiveRoom({
+    required this.id,
+    required this.title,
+    required this.expiresAt,
+  });
+
+  factory ActiveRoom.fromJson(Map<String, dynamic> json) => ActiveRoom(
+    id: json['id']?.toString() ?? '',
+    title: json['title']?.toString() ?? 'Temporary room',
+    expiresAt: DateTime.parse(json['expiresAt'] as String).toLocal(),
+  );
+
+  final String id;
+  final String title;
+  final DateTime expiresAt;
+}
+
 class RoomLocationShare {
   const RoomLocationShare({
     required this.id,
@@ -49,6 +67,15 @@ class RoomsRepository implements RoomLocationShareRepository {
   final ApiClient _api;
   Future<Map<String, dynamic>> room(String id) async =>
       (await _api.dio.get<Map<String, dynamic>>('/rooms/$id')).data!;
+  Future<List<ActiveRoom>> activeRooms() async {
+    final response = await _api.dio.get<List<dynamic>>('/rooms/active');
+    return response.data!
+        .map(
+          (row) => ActiveRoom.fromJson(Map<String, dynamic>.from(row as Map)),
+        )
+        .toList(growable: false);
+  }
+
   Future<List<Map<String, dynamic>>> messages(String id) async =>
       (await _api.dio.get<List<dynamic>>(
         '/rooms/$id/messages',
@@ -99,4 +126,8 @@ class RoomsRepository implements RoomLocationShareRepository {
 
 final roomsRepositoryProvider = Provider<RoomsRepository>(
   (ref) => RoomsRepository(ref.watch(apiClientProvider)),
+);
+
+final activeRoomsProvider = FutureProvider<List<ActiveRoom>>(
+  (ref) => ref.watch(roomsRepositoryProvider).activeRooms(),
 );
