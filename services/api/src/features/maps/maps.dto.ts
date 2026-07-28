@@ -7,6 +7,16 @@ export class MapSearchDto {
   q!: string;
 }
 
+export class MapReverseDto {
+  @Type(() => Number)
+  @IsLatitude()
+  lat!: number;
+
+  @Type(() => Number)
+  @IsLongitude()
+  lon!: number;
+}
+
 export class ApproximateLocationDto {
   @Type(() => Number)
   @IsLatitude()

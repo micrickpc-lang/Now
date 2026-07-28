@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
@@ -18,6 +20,7 @@ export class RoomsService {
     private readonly crypto: CryptoService,
     private readonly audit: AuditService,
     private readonly content: ContentPolicyService,
+    @Inject(forwardRef(() => RealtimeGateway))
     private readonly realtime: RealtimeGateway,
   ) {}
 

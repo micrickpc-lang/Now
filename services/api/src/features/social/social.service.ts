@@ -7,6 +7,7 @@ import {
 import { AuditService } from "../../common/audit.service";
 import { CryptoService } from "../../common/crypto.service";
 import { PrismaService } from "../../common/prisma.service";
+import { RealtimeGateway } from "../../realtime/realtime.gateway";
 import type { CreateCircleDto, UpdateCircleDto } from "./social.dto";
 
 function canonicalPair(left: string, right: string): [string, string] {
@@ -19,6 +20,7 @@ export class SocialService {
     private readonly prisma: PrismaService,
     private readonly crypto: CryptoService,
     private readonly audit: AuditService,
+    private readonly realtime: RealtimeGateway,
   ) {}
 
   async createInvite(userId: string) {
@@ -128,14 +130,38 @@ export class SocialService {
   }
 
   async removeFriend(userId: string, otherId: string) {
+    if (userId === otherId)
+      throw new BadRequestException("Cannot remove yourself as a friend");
     const [userAId, userBId] = canonicalPair(userId, otherId);
-    await this.prisma.friendship.deleteMany({ where: { userAId, userBId } });
+    const roomIds = await this.activeSharedRoomIds(userId, otherId);
+    await this.prisma.$transaction(async (tx) => {
+      await tx.friendship.deleteMany({ where: { userAId, userBId } });
+      await this.revokeGlobalLocationRecipients(tx, userId, otherId);
+      if (!roomIds.length) return;
+      await tx.locationShare.deleteMany({
+        where: { roomId: { in: roomIds }, ownerId: { in: [userId, otherId] } },
+      });
+      await tx.roomMember.updateMany({
+        where: { roomId: { in: roomIds }, userId: otherId, leftAt: null },
+        data: { leftAt: new Date() },
+      });
+    });
+    await this.revokePairRealtimeAccess(userId, otherId, roomIds);
+    this.realtime.emitUsers([userId, otherId], "friendship.removed", {
+      userId,
+      otherId,
+    });
+    this.realtime.emitUsers([userId, otherId], "location.access.revoked", {
+      userId,
+      otherId,
+    });
     return { success: true };
   }
 
   async block(userId: string, blockedId: string) {
     if (userId === blockedId)
       throw new BadRequestException("Нельзя заблокировать себя");
+    const roomIds = await this.activeSharedRoomIds(userId, blockedId);
     await this.prisma.$transaction(async (tx) => {
       await tx.block.upsert({
         where: { blockerId_blockedId: { blockerId: userId, blockedId } },
@@ -144,28 +170,28 @@ export class SocialService {
       });
       const [userAId, userBId] = canonicalPair(userId, blockedId);
       await tx.friendship.deleteMany({ where: { userAId, userBId } });
-      await tx.locationShare.deleteMany({
-        where: {
-          OR: [
-            {
-              ownerId: userId,
-              room: { members: { some: { userId: blockedId, leftAt: null } } },
-            },
-            {
-              ownerId: blockedId,
-              room: { members: { some: { userId, leftAt: null } } },
-            },
-          ],
-        },
-      });
-      await tx.roomMember.updateMany({
-        where: {
-          userId: blockedId,
-          leftAt: null,
-          room: { members: { some: { userId, leftAt: null } } },
-        },
-        data: { leftAt: new Date() },
-      });
+      await this.revokeGlobalLocationRecipients(tx, userId, blockedId);
+      if (roomIds.length) {
+        await tx.locationShare.deleteMany({
+          where: {
+            roomId: { in: roomIds },
+            ownerId: { in: [userId, blockedId] },
+          },
+        });
+        await tx.roomMember.updateMany({
+          where: { roomId: { in: roomIds }, userId: blockedId, leftAt: null },
+          data: { leftAt: new Date() },
+        });
+      }
+    });
+    await this.revokePairRealtimeAccess(userId, blockedId, roomIds);
+    this.realtime.emitUsers([userId, blockedId], "user.blocked", {
+      blockerId: userId,
+      blockedId,
+    });
+    this.realtime.emitUsers([userId, blockedId], "location.access.revoked", {
+      userId,
+      otherId: blockedId,
     });
     await this.audit.write({
       actorUserId: userId,
@@ -314,5 +340,55 @@ export class SocialService {
     });
     if (!circle)
       throw new ForbiddenException("Только владелец может изменить круг");
+  }
+
+  private async activeSharedRoomIds(userId: string, otherId: string) {
+    const memberships = await this.prisma.roomMember.findMany({
+      where: {
+        userId: otherId,
+        leftAt: null,
+        room: {
+          state: "ACTIVE",
+          expiresAt: { gt: new Date() },
+          members: { some: { userId, leftAt: null } },
+        },
+      },
+      select: { roomId: true },
+    });
+    return memberships.map(({ roomId }) => roomId);
+  }
+
+  private async revokePairRealtimeAccess(
+    userId: string,
+    otherId: string,
+    roomIds: string[],
+  ) {
+    const [userAId, userBId] = canonicalPair(userId, otherId);
+    const directPairKey = `${userAId}:${userBId}`;
+    const conversation = await this.prisma.conversation.findUnique({
+      where: { directPairKey },
+      select: { id: true },
+    });
+    if (conversation) {
+      this.realtime.evictUserFromConversation(userId, conversation.id);
+      this.realtime.evictUserFromConversation(otherId, conversation.id);
+    }
+    for (const roomId of roomIds)
+      this.realtime.evictUserFromRoom(otherId, roomId);
+  }
+
+  private revokeGlobalLocationRecipients(
+    tx: Pick<PrismaService, "globalLocationShareRecipient">,
+    userId: string,
+    otherId: string,
+  ) {
+    return tx.globalLocationShareRecipient.deleteMany({
+      where: {
+        OR: [
+          { recipientId: otherId, share: { ownerId: userId } },
+          { recipientId: userId, share: { ownerId: otherId } },
+        ],
+      },
+    });
   }
 }

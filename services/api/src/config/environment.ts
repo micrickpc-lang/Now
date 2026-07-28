@@ -2,6 +2,7 @@ const requiredProductionSecrets = [
   "JWT_SECRET",
   "TOKEN_HASH_SECRET",
   "PHONE_HASH_SECRET",
+  "EMAIL_HASH_SECRET",
   "LOCATION_MASTER_KEY_BASE64",
 ] as const;
 
@@ -23,6 +24,12 @@ export function validateEnvironment(env: Record<string, unknown>) {
   if (production) {
     if (value.ALLOW_DEV_OTP === "true" || value.DEV_OTP_CODE) {
       throw new Error("Development OTP is forbidden in production");
+    }
+    if (value.ALLOW_LEGACY_SMS_TEST_MODE === "true") {
+      throw new Error("Legacy SMS test mode is forbidden in production");
+    }
+    if (value.EMAIL_DELIVERY_MODE === "disabled") {
+      throw new Error("Disabled email delivery is forbidden in production");
     }
     if (value.ALLOW_UNSCANNED_UPLOADS === "true") {
       throw new Error("Unscanned uploads are forbidden in production");
@@ -46,6 +53,12 @@ export function validateEnvironment(env: Record<string, unknown>) {
       throw new Error(
         "Production APP_ORIGINS must be a non-empty HTTPS allowlist",
       );
+    }
+    if (!value.SMTP_URL || !value.EMAIL_FROM) {
+      throw new Error("Production SMTP_URL and EMAIL_FROM are required");
+    }
+    if (!(value.GOOGLE_CLIENT_IDS ?? "").split(",").some(Boolean)) {
+      throw new Error("Production GOOGLE_CLIENT_IDS is required");
     }
   }
 

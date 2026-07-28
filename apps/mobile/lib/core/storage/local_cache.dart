@@ -6,30 +6,39 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../platform/cache_file_protection.dart';
+import 'cache_cipher.dart';
+
 class LocalCache {
-  LocalCache()
+  LocalCache({CacheCipher? cipher})
     : database = DatabaseConnection.delayed(
         Future(() async {
           final directory = await getApplicationSupportDirectory();
           final file = File(p.join(directory.path, 'seychas_cache.sqlite'));
+          if (!await file.exists()) await file.create(recursive: true);
+          await CacheFileProtection.excludeFromBackups(file.path);
           return DatabaseConnection(NativeDatabase.createInBackground(file));
         }),
-      ) {
+      ),
+      _cipher = cipher ?? SecureCacheCipher() {
     _ready = _initialize();
   }
 
-  LocalCache.forTest(QueryExecutor executor)
+  LocalCache.forTest(QueryExecutor executor, {CacheCipher? cipher})
     : database = DatabaseConnection.delayed(
         Future.value(DatabaseConnection(executor)),
-      ) {
+      ),
+      _cipher = cipher ?? InMemoryCacheCipher() {
     _ready = _initialize();
   }
 
   final DatabaseConnection database;
+  final CacheCipher _cipher;
   late final Future<void> _ready;
 
   Future<void> _initialize() async {
     await database.executor.ensureOpen(const _CacheExecutorUser());
+    await database.executor.runCustom('PRAGMA secure_delete = ON');
     await database.executor.runCustom(
       'CREATE TABLE IF NOT EXISTS cached_signals (id TEXT PRIMARY KEY, payload TEXT NOT NULL, expires_at INTEGER NOT NULL)',
     );
@@ -51,6 +60,13 @@ class LocalCache {
     await database.executor.runCustom(
       'CREATE TABLE IF NOT EXISTS app_settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
     );
+    try {
+      await _migrateLegacyPayloads();
+    } catch (_) {
+      // A replaced or corrupted Keychain/Keystore entry cannot decrypt cache.
+      // Delete only local replicas and continue with a new, empty cache.
+      await _clearSensitiveRows();
+    }
   }
 
   Future<void> cacheSignal(
@@ -61,7 +77,7 @@ class LocalCache {
     await _ready;
     await database.executor.runInsert(
       'INSERT OR REPLACE INTO cached_signals(id,payload,expires_at) VALUES(?,?,?)',
-      [id, payload, expiresAt.millisecondsSinceEpoch],
+      [id, await _cipher.encrypt(payload), expiresAt.millisecondsSinceEpoch],
     );
   }
 
@@ -71,7 +87,7 @@ class LocalCache {
       'SELECT payload FROM cached_signals WHERE expires_at > ? ORDER BY expires_at',
       [DateTime.now().millisecondsSinceEpoch],
     );
-    return rows.map((row) => row['payload']! as String).toList();
+    return _decryptRows(rows, 'payload');
   }
 
   Future<void> cacheConversation(
@@ -82,7 +98,11 @@ class LocalCache {
     await _ready;
     await database.executor.runInsert(
       'INSERT OR REPLACE INTO cached_conversations(id,payload,updated_at) VALUES(?,?,?)',
-      [id, payload, (updatedAt ?? DateTime.now()).millisecondsSinceEpoch],
+      [
+        id,
+        await _cipher.encrypt(payload),
+        (updatedAt ?? DateTime.now()).millisecondsSinceEpoch,
+      ],
     );
   }
 
@@ -92,7 +112,7 @@ class LocalCache {
       'SELECT payload FROM cached_conversations ORDER BY updated_at DESC, id DESC',
       const [],
     );
-    return rows.map((row) => row['payload']! as String).toList();
+    return _decryptRows(rows, 'payload');
   }
 
   Future<String?> cachedConversation(String id) async {
@@ -101,7 +121,7 @@ class LocalCache {
       'SELECT payload FROM cached_conversations WHERE id = ? LIMIT 1',
       [id],
     );
-    return rows.isEmpty ? null : rows.single['payload']! as String;
+    return rows.isEmpty ? null : _decrypt(rows.single['payload']! as String);
   }
 
   Future<void> retainConversations(Set<String> ids) async {
@@ -140,7 +160,12 @@ class LocalCache {
     await _ready;
     await database.executor.runInsert(
       'INSERT OR REPLACE INTO cached_messages(id,conversation_id,payload,created_at) VALUES(?,?,?,?)',
-      [id, conversationId, payload, createdAt.millisecondsSinceEpoch],
+      [
+        id,
+        conversationId,
+        await _cipher.encrypt(payload),
+        createdAt.millisecondsSinceEpoch,
+      ],
     );
   }
 
@@ -159,7 +184,7 @@ class LocalCache {
             'SELECT payload FROM cached_messages WHERE conversation_id = ? AND created_at < ? ORDER BY created_at DESC, id DESC LIMIT ?',
             [conversationId, beforeEpochMs, limit],
           );
-    return rows.map((row) => row['payload']! as String).toList();
+    return _decryptRows(rows, 'payload');
   }
 
   Future<void> removeCachedMessage(String id) async {
@@ -181,7 +206,11 @@ class LocalCache {
     }
     await database.executor.runInsert(
       'INSERT OR REPLACE INTO conversation_drafts(conversation_id,body,updated_at) VALUES(?,?,?)',
-      [conversationId, body, DateTime.now().millisecondsSinceEpoch],
+      [
+        conversationId,
+        await _cipher.encrypt(body),
+        DateTime.now().millisecondsSinceEpoch,
+      ],
     );
   }
 
@@ -191,7 +220,7 @@ class LocalCache {
       'SELECT body FROM conversation_drafts WHERE conversation_id = ? LIMIT 1',
       [conversationId],
     );
-    return rows.isEmpty ? null : rows.single['body']! as String;
+    return rows.isEmpty ? null : _decrypt(rows.single['body']! as String);
   }
 
   Future<void> enqueue({
@@ -203,7 +232,13 @@ class LocalCache {
     await _ready;
     await database.executor.runInsert(
       'INSERT OR REPLACE INTO outbox(id,method,path,payload,created_at) VALUES(?,?,?,?,?)',
-      [id, method, path, payload, DateTime.now().millisecondsSinceEpoch],
+      [
+        id,
+        method,
+        path,
+        await _cipher.encrypt(payload),
+        DateTime.now().millisecondsSinceEpoch,
+      ],
     );
   }
 
@@ -218,19 +253,19 @@ class LocalCache {
             'SELECT id,method,path,payload,created_at FROM outbox WHERE path = ? ORDER BY created_at',
             [path],
           );
-    return rows
-        .map(
-          (row) => OutboxEntry(
-            id: row['id']! as String,
-            method: row['method']! as String,
-            path: row['path']! as String,
-            payload: row['payload']! as String,
-            createdAt: DateTime.fromMillisecondsSinceEpoch(
-              row['created_at']! as int,
-            ),
+    return Future.wait(
+      rows.map(
+        (row) async => OutboxEntry(
+          id: row['id']! as String,
+          method: row['method']! as String,
+          path: row['path']! as String,
+          payload: await _decrypt(row['payload']! as String),
+          createdAt: DateTime.fromMillisecondsSinceEpoch(
+            row['created_at']! as int,
           ),
-        )
-        .toList();
+        ),
+      ),
+    );
   }
 
   Future<void> removeOutbox(String id) async {
@@ -244,30 +279,72 @@ class LocalCache {
       'SELECT value FROM app_settings WHERE key = ? LIMIT 1',
       [key],
     );
-    return rows.isEmpty ? null : rows.single['value']! as String;
+    return rows.isEmpty ? null : _decrypt(rows.single['value']! as String);
   }
 
   Future<void> writeSetting(String key, String value) async {
     await _ready;
     await database.executor.runInsert(
       'INSERT OR REPLACE INTO app_settings(key,value) VALUES(?,?)',
-      [key, value],
+      [key, await _cipher.encrypt(value)],
     );
   }
 
   Future<void> clearSensitive() async {
     await _ready;
+    await _clearSensitiveRows();
+    await _cipher.deleteKey();
+  }
+
+  Future<void> _clearSensitiveRows() async {
     await database.executor.runCustom('DELETE FROM outbox');
     await database.executor.runCustom('DELETE FROM cached_signals');
     await database.executor.runCustom('DELETE FROM cached_messages');
     await database.executor.runCustom('DELETE FROM cached_conversations');
     await database.executor.runCustom('DELETE FROM conversation_drafts');
-    await database.executor.runCustom(
-      "DELETE FROM app_settings WHERE key LIKE 'demo.%'",
+    await database.executor.runCustom('DELETE FROM app_settings');
+  }
+
+  Future<List<String>> _decryptRows(
+    List<Map<String, Object?>> rows,
+    String column,
+  ) async => Future.wait(rows.map((row) => _decrypt(row[column]! as String)));
+
+  Future<String> _decrypt(String value) => _cipher.decrypt(value);
+
+  Future<void> _migrateLegacyPayloads() async {
+    await _migrateLegacyColumn('cached_signals', 'id', 'payload');
+    await _migrateLegacyColumn('outbox', 'id', 'payload');
+    await _migrateLegacyColumn('cached_conversations', 'id', 'payload');
+    await _migrateLegacyColumn('cached_messages', 'id', 'payload');
+    await _migrateLegacyColumn(
+      'conversation_drafts',
+      'conversation_id',
+      'body',
     );
-    await database.executor.runCustom(
-      "DELETE FROM app_settings WHERE key LIKE 'account.%'",
+    await _migrateLegacyColumn('app_settings', 'key', 'value');
+  }
+
+  Future<void> _migrateLegacyColumn(
+    String table,
+    String idColumn,
+    String valueColumn,
+  ) async {
+    final rows = await database.executor.runSelect(
+      'SELECT $idColumn, $valueColumn FROM $table',
+      const [],
     );
+    for (final row in rows) {
+      final value = row[valueColumn]! as String;
+      if (value.startsWith('aesgcm:v1:')) {
+        await _cipher.decrypt(value);
+        continue;
+      }
+      await database.executor.runUpdate(
+        'UPDATE $table SET $valueColumn = ? WHERE $idColumn = ?',
+        [await _cipher.encrypt(value), row[idColumn]],
+      );
+    }
   }
 
   Future<void> close() => database.executor.close();

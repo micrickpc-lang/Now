@@ -30,6 +30,10 @@ class ApiClient {
       await _tokens.write(
         accessToken: response.data!['accessToken'] as String,
         refreshToken: response.data!['refreshToken'] as String,
+        profileComplete:
+            (response.data!['user']
+                    as Map<String, dynamic>?)?['profileComplete']
+                as bool?,
       );
       _sessionRefreshes.add(null);
       completer.complete();

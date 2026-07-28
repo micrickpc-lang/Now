@@ -29,6 +29,10 @@ export class CryptoService {
     return this.hmac(value, this.require("PHONE_HASH_SECRET"));
   }
 
+  hashEmail(value: string): string {
+    return this.hmac(value, this.require("EMAIL_HASH_SECRET"));
+  }
+
   hashIp(value: string): string {
     return this.hmac(value, this.require("TOKEN_HASH_SECRET"));
   }

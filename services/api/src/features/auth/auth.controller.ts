@@ -11,7 +11,17 @@ import {
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import type { Request } from "express";
 import { CurrentAuth, Public, requestIp } from "../../common/http";
-import { LogoutDto, RefreshDto, RequestOtpDto, VerifyOtpDto } from "./auth.dto";
+import {
+  CompleteProfileDto,
+  GoogleAuthDto,
+  LinkGoogleDto,
+  LogoutDto,
+  RefreshDto,
+  RequestEmailCodeDto,
+  RequestOtpDto,
+  VerifyEmailCodeDto,
+  VerifyOtpDto,
+} from "./auth.dto";
 import { AuthService } from "./auth.service";
 
 @ApiTags("auth")
@@ -36,6 +46,38 @@ export class AuthController {
   }
 
   @Public()
+  @Post("email/request-code")
+  requestEmailCode(@Body() dto: RequestEmailCodeDto, @Req() request: Request) {
+    return this.auth.requestEmailCode(dto, requestIp(request));
+  }
+
+  @Public()
+  @Post("email/resend-code")
+  resendEmailCode(@Body() dto: RequestEmailCodeDto, @Req() request: Request) {
+    return this.auth.resendEmailCode(dto, requestIp(request));
+  }
+
+  @Public()
+  @Post("email/verify-code")
+  verifyEmailCode(
+    @Body() dto: VerifyEmailCodeDto,
+    @Req() request: Request,
+    @Headers("user-agent") userAgent?: string,
+  ) {
+    return this.auth.verifyEmailCode(dto, requestIp(request), userAgent);
+  }
+
+  @Public()
+  @Post("google")
+  google(
+    @Body() dto: GoogleAuthDto,
+    @Req() request: Request,
+    @Headers("user-agent") userAgent?: string,
+  ) {
+    return this.auth.signInWithGoogle(dto, requestIp(request), userAgent);
+  }
+
+  @Public()
   @Post("refresh")
   refresh(@Body() dto: RefreshDto, @Req() request: Request) {
     return this.auth.refresh(dto.refreshToken, requestIp(request));
@@ -51,6 +93,62 @@ export class AuthController {
   @Post("logout-all")
   logoutAll(@CurrentAuth() current: { userId: string }) {
     return this.auth.logoutAll(current.userId);
+  }
+
+  @ApiBearerAuth()
+  @Post("profile")
+  completeProfile(
+    @CurrentAuth() current: { userId: string },
+    @Body() dto: CompleteProfileDto,
+  ) {
+    return this.auth.completeProfile(current.userId, dto);
+  }
+
+  @ApiBearerAuth()
+  @Get("identities")
+  identities(@CurrentAuth() current: { userId: string }) {
+    return this.auth.identities(current.userId);
+  }
+
+  @ApiBearerAuth()
+  @Post("identities/email/request-code")
+  requestEmailIdentityLink(
+    @CurrentAuth() current: { userId: string },
+    @Body() dto: RequestEmailCodeDto,
+    @Req() request: Request,
+  ) {
+    return this.auth.requestEmailIdentityLink(
+      current.userId,
+      dto,
+      requestIp(request),
+    );
+  }
+
+  @ApiBearerAuth()
+  @Post("identities/email/verify-code")
+  verifyEmailIdentityLink(
+    @CurrentAuth() current: { userId: string },
+    @Body() dto: VerifyEmailCodeDto,
+  ) {
+    return this.auth.verifyEmailIdentityLink(current.userId, dto);
+  }
+
+  @ApiBearerAuth()
+  @Post("identities/google")
+  linkGoogleIdentity(
+    @CurrentAuth() current: { userId: string },
+    @Body() dto: LinkGoogleDto,
+  ) {
+    return this.auth.linkGoogleIdentity(current.userId, dto.idToken);
+  }
+
+  @ApiBearerAuth()
+  @Delete("identities/:provider")
+  unlinkIdentity(
+    @CurrentAuth() current: { userId: string },
+    @Param("provider") provider: string,
+  ) {
+    return this.auth.unlinkIdentity(current.userId, provider);
   }
 
   @ApiBearerAuth()

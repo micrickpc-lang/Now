@@ -28,6 +28,11 @@ export type UserMinAggregateOutputType = {
   id: string | null
   phoneHash: string | null
   phoneCiphertext: string | null
+  emailHash: string | null
+  emailCiphertext: string | null
+  emailVerifiedAt: Date | null
+  username: string | null
+  profileCompletedAt: Date | null
   birthDate: Date | null
   limitedMode: boolean | null
   status: $Enums.UserStatus | null
@@ -40,6 +45,11 @@ export type UserMaxAggregateOutputType = {
   id: string | null
   phoneHash: string | null
   phoneCiphertext: string | null
+  emailHash: string | null
+  emailCiphertext: string | null
+  emailVerifiedAt: Date | null
+  username: string | null
+  profileCompletedAt: Date | null
   birthDate: Date | null
   limitedMode: boolean | null
   status: $Enums.UserStatus | null
@@ -52,6 +62,11 @@ export type UserCountAggregateOutputType = {
   id: number
   phoneHash: number
   phoneCiphertext: number
+  emailHash: number
+  emailCiphertext: number
+  emailVerifiedAt: number
+  username: number
+  profileCompletedAt: number
   birthDate: number
   limitedMode: number
   status: number
@@ -66,6 +81,11 @@ export type UserMinAggregateInputType = {
   id?: true
   phoneHash?: true
   phoneCiphertext?: true
+  emailHash?: true
+  emailCiphertext?: true
+  emailVerifiedAt?: true
+  username?: true
+  profileCompletedAt?: true
   birthDate?: true
   limitedMode?: true
   status?: true
@@ -78,6 +98,11 @@ export type UserMaxAggregateInputType = {
   id?: true
   phoneHash?: true
   phoneCiphertext?: true
+  emailHash?: true
+  emailCiphertext?: true
+  emailVerifiedAt?: true
+  username?: true
+  profileCompletedAt?: true
   birthDate?: true
   limitedMode?: true
   status?: true
@@ -90,6 +115,11 @@ export type UserCountAggregateInputType = {
   id?: true
   phoneHash?: true
   phoneCiphertext?: true
+  emailHash?: true
+  emailCiphertext?: true
+  emailVerifiedAt?: true
+  username?: true
+  profileCompletedAt?: true
   birthDate?: true
   limitedMode?: true
   status?: true
@@ -173,9 +203,14 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type UserGroupByOutputType = {
   id: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date
+  phoneHash: string | null
+  phoneCiphertext: string | null
+  emailHash: string | null
+  emailCiphertext: string | null
+  emailVerifiedAt: Date | null
+  username: string | null
+  profileCompletedAt: Date | null
+  birthDate: Date | null
   limitedMode: boolean
   status: $Enums.UserStatus
   createdAt: Date
@@ -206,9 +241,14 @@ export type UserWhereInput = {
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.UuidFilter<"User"> | string
-  phoneHash?: Prisma.StringFilter<"User"> | string
-  phoneCiphertext?: Prisma.StringFilter<"User"> | string
-  birthDate?: Prisma.DateTimeFilter<"User"> | Date | string
+  phoneHash?: Prisma.StringNullableFilter<"User"> | string | null
+  phoneCiphertext?: Prisma.StringNullableFilter<"User"> | string | null
+  emailHash?: Prisma.StringNullableFilter<"User"> | string | null
+  emailCiphertext?: Prisma.StringNullableFilter<"User"> | string | null
+  emailVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  username?: Prisma.StringNullableFilter<"User"> | string | null
+  profileCompletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  birthDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   limitedMode?: Prisma.BoolFilter<"User"> | boolean
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -217,6 +257,8 @@ export type UserWhereInput = {
   profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
   devices?: Prisma.DeviceListRelationFilter
   sessions?: Prisma.AuthSessionListRelationFilter
+  identities?: Prisma.AuthIdentityListRelationFilter
+  emailLoginCodes?: Prisma.EmailLoginCodeListRelationFilter
   circlesOwned?: Prisma.CircleListRelationFilter
   circleMemberships?: Prisma.CircleMemberListRelationFilter
   invitesCreated?: Prisma.FriendshipInviteListRelationFilter
@@ -233,6 +275,9 @@ export type UserWhereInput = {
   reactions?: Prisma.RoomReactionListRelationFilter
   pollVotes?: Prisma.RoomPollVoteListRelationFilter
   locationShares?: Prisma.LocationShareListRelationFilter
+  currentLocation?: Prisma.XOR<Prisma.UserLocationNullableScalarRelationFilter, Prisma.UserLocationWhereInput> | null
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareListRelationFilter
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientListRelationFilter
   memories?: Prisma.MemoryListRelationFilter
   memoryParticipants?: Prisma.MemoryParticipantListRelationFilter
   media?: Prisma.MediaFileListRelationFilter
@@ -263,9 +308,14 @@ export type UserWhereInput = {
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  phoneHash?: Prisma.SortOrder
-  phoneCiphertext?: Prisma.SortOrder
-  birthDate?: Prisma.SortOrder
+  phoneHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneCiphertext?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailCiphertext?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  username?: Prisma.SortOrderInput | Prisma.SortOrder
+  profileCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthDate?: Prisma.SortOrderInput | Prisma.SortOrder
   limitedMode?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -274,6 +324,8 @@ export type UserOrderByWithRelationInput = {
   profile?: Prisma.UserProfileOrderByWithRelationInput
   devices?: Prisma.DeviceOrderByRelationAggregateInput
   sessions?: Prisma.AuthSessionOrderByRelationAggregateInput
+  identities?: Prisma.AuthIdentityOrderByRelationAggregateInput
+  emailLoginCodes?: Prisma.EmailLoginCodeOrderByRelationAggregateInput
   circlesOwned?: Prisma.CircleOrderByRelationAggregateInput
   circleMemberships?: Prisma.CircleMemberOrderByRelationAggregateInput
   invitesCreated?: Prisma.FriendshipInviteOrderByRelationAggregateInput
@@ -290,6 +342,9 @@ export type UserOrderByWithRelationInput = {
   reactions?: Prisma.RoomReactionOrderByRelationAggregateInput
   pollVotes?: Prisma.RoomPollVoteOrderByRelationAggregateInput
   locationShares?: Prisma.LocationShareOrderByRelationAggregateInput
+  currentLocation?: Prisma.UserLocationOrderByWithRelationInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareOrderByRelationAggregateInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientOrderByRelationAggregateInput
   memories?: Prisma.MemoryOrderByRelationAggregateInput
   memoryParticipants?: Prisma.MemoryParticipantOrderByRelationAggregateInput
   media?: Prisma.MediaFileOrderByRelationAggregateInput
@@ -321,11 +376,16 @@ export type UserOrderByWithRelationInput = {
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   phoneHash?: string
+  emailHash?: string
+  username?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
-  phoneCiphertext?: Prisma.StringFilter<"User"> | string
-  birthDate?: Prisma.DateTimeFilter<"User"> | Date | string
+  phoneCiphertext?: Prisma.StringNullableFilter<"User"> | string | null
+  emailCiphertext?: Prisma.StringNullableFilter<"User"> | string | null
+  emailVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  profileCompletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  birthDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   limitedMode?: Prisma.BoolFilter<"User"> | boolean
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -334,6 +394,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
   devices?: Prisma.DeviceListRelationFilter
   sessions?: Prisma.AuthSessionListRelationFilter
+  identities?: Prisma.AuthIdentityListRelationFilter
+  emailLoginCodes?: Prisma.EmailLoginCodeListRelationFilter
   circlesOwned?: Prisma.CircleListRelationFilter
   circleMemberships?: Prisma.CircleMemberListRelationFilter
   invitesCreated?: Prisma.FriendshipInviteListRelationFilter
@@ -350,6 +412,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   reactions?: Prisma.RoomReactionListRelationFilter
   pollVotes?: Prisma.RoomPollVoteListRelationFilter
   locationShares?: Prisma.LocationShareListRelationFilter
+  currentLocation?: Prisma.XOR<Prisma.UserLocationNullableScalarRelationFilter, Prisma.UserLocationWhereInput> | null
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareListRelationFilter
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientListRelationFilter
   memories?: Prisma.MemoryListRelationFilter
   memoryParticipants?: Prisma.MemoryParticipantListRelationFilter
   media?: Prisma.MediaFileListRelationFilter
@@ -376,13 +441,18 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   chatMutes?: Prisma.ChatMuteListRelationFilter
   chatAuditEvents?: Prisma.ChatAuditEventListRelationFilter
   chatAuditTargets?: Prisma.ChatAuditEventListRelationFilter
-}, "id" | "phoneHash">
+}, "id" | "phoneHash" | "emailHash" | "username">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  phoneHash?: Prisma.SortOrder
-  phoneCiphertext?: Prisma.SortOrder
-  birthDate?: Prisma.SortOrder
+  phoneHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneCiphertext?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailCiphertext?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  username?: Prisma.SortOrderInput | Prisma.SortOrder
+  profileCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthDate?: Prisma.SortOrderInput | Prisma.SortOrder
   limitedMode?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -398,9 +468,14 @@ export type UserScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"User"> | string
-  phoneHash?: Prisma.StringWithAggregatesFilter<"User"> | string
-  phoneCiphertext?: Prisma.StringWithAggregatesFilter<"User"> | string
-  birthDate?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  phoneHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  phoneCiphertext?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  emailHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  emailCiphertext?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  emailVerifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  username?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  profileCompletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  birthDate?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   limitedMode?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -410,9 +485,14 @@ export type UserScalarWhereWithAggregatesInput = {
 
 export type UserCreateInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -421,6 +501,8 @@ export type UserCreateInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -437,6 +519,9 @@ export type UserCreateInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -467,9 +552,14 @@ export type UserCreateInput = {
 
 export type UserUncheckedCreateInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -478,6 +568,8 @@ export type UserUncheckedCreateInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -494,6 +586,9 @@ export type UserUncheckedCreateInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -524,9 +619,14 @@ export type UserUncheckedCreateInput = {
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -535,6 +635,8 @@ export type UserUpdateInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -551,6 +653,9 @@ export type UserUpdateInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -581,9 +686,14 @@ export type UserUpdateInput = {
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -592,6 +702,8 @@ export type UserUncheckedUpdateInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -608,6 +720,9 @@ export type UserUncheckedUpdateInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -638,9 +753,14 @@ export type UserUncheckedUpdateInput = {
 
 export type UserCreateManyInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -650,9 +770,14 @@ export type UserCreateManyInput = {
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -662,9 +787,14 @@ export type UserUpdateManyMutationInput = {
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -676,6 +806,11 @@ export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   phoneHash?: Prisma.SortOrder
   phoneCiphertext?: Prisma.SortOrder
+  emailHash?: Prisma.SortOrder
+  emailCiphertext?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  username?: Prisma.SortOrder
+  profileCompletedAt?: Prisma.SortOrder
   birthDate?: Prisma.SortOrder
   limitedMode?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -688,6 +823,11 @@ export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   phoneHash?: Prisma.SortOrder
   phoneCiphertext?: Prisma.SortOrder
+  emailHash?: Prisma.SortOrder
+  emailCiphertext?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  username?: Prisma.SortOrder
+  profileCompletedAt?: Prisma.SortOrder
   birthDate?: Prisma.SortOrder
   limitedMode?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -700,6 +840,11 @@ export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   phoneHash?: Prisma.SortOrder
   phoneCiphertext?: Prisma.SortOrder
+  emailHash?: Prisma.SortOrder
+  emailCiphertext?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  username?: Prisma.SortOrder
+  profileCompletedAt?: Prisma.SortOrder
   birthDate?: Prisma.SortOrder
   limitedMode?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -722,8 +867,12 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -734,8 +883,8 @@ export type EnumUserStatusFieldUpdateOperationsInput = {
   set?: $Enums.UserStatus
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
 }
 
 export type UserCreateNestedOneWithoutProfileInput = {
@@ -778,6 +927,36 @@ export type UserUpdateOneRequiredWithoutSessionsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutSessionsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSessionsInput, Prisma.UserUpdateWithoutSessionsInput>, Prisma.UserUncheckedUpdateWithoutSessionsInput>
+}
+
+export type UserCreateNestedOneWithoutIdentitiesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutIdentitiesInput, Prisma.UserUncheckedCreateWithoutIdentitiesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutIdentitiesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutIdentitiesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutIdentitiesInput, Prisma.UserUncheckedCreateWithoutIdentitiesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutIdentitiesInput
+  upsert?: Prisma.UserUpsertWithoutIdentitiesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutIdentitiesInput, Prisma.UserUpdateWithoutIdentitiesInput>, Prisma.UserUncheckedUpdateWithoutIdentitiesInput>
+}
+
+export type UserCreateNestedOneWithoutEmailLoginCodesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEmailLoginCodesInput, Prisma.UserUncheckedCreateWithoutEmailLoginCodesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEmailLoginCodesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutEmailLoginCodesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEmailLoginCodesInput, Prisma.UserUncheckedCreateWithoutEmailLoginCodesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEmailLoginCodesInput
+  upsert?: Prisma.UserUpsertWithoutEmailLoginCodesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEmailLoginCodesInput, Prisma.UserUpdateWithoutEmailLoginCodesInput>, Prisma.UserUncheckedUpdateWithoutEmailLoginCodesInput>
 }
 
 export type UserCreateNestedOneWithoutFriendshipsAInput = {
@@ -1006,6 +1185,48 @@ export type UserUpdateOneRequiredWithoutLocationSharesNestedInput = {
   upsert?: Prisma.UserUpsertWithoutLocationSharesInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLocationSharesInput, Prisma.UserUpdateWithoutLocationSharesInput>, Prisma.UserUncheckedUpdateWithoutLocationSharesInput>
+}
+
+export type UserCreateNestedOneWithoutCurrentLocationInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCurrentLocationInput, Prisma.UserUncheckedCreateWithoutCurrentLocationInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCurrentLocationInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCurrentLocationNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCurrentLocationInput, Prisma.UserUncheckedCreateWithoutCurrentLocationInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCurrentLocationInput
+  upsert?: Prisma.UserUpsertWithoutCurrentLocationInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCurrentLocationInput, Prisma.UserUpdateWithoutCurrentLocationInput>, Prisma.UserUncheckedUpdateWithoutCurrentLocationInput>
+}
+
+export type UserCreateNestedOneWithoutGlobalLocationSharesOwnedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGlobalLocationSharesOwnedInput, Prisma.UserUncheckedCreateWithoutGlobalLocationSharesOwnedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGlobalLocationSharesOwnedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutGlobalLocationSharesOwnedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGlobalLocationSharesOwnedInput, Prisma.UserUncheckedCreateWithoutGlobalLocationSharesOwnedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGlobalLocationSharesOwnedInput
+  upsert?: Prisma.UserUpsertWithoutGlobalLocationSharesOwnedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGlobalLocationSharesOwnedInput, Prisma.UserUpdateWithoutGlobalLocationSharesOwnedInput>, Prisma.UserUncheckedUpdateWithoutGlobalLocationSharesOwnedInput>
+}
+
+export type UserCreateNestedOneWithoutGlobalLocationShareRecipientsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGlobalLocationShareRecipientsInput, Prisma.UserUncheckedCreateWithoutGlobalLocationShareRecipientsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGlobalLocationShareRecipientsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutGlobalLocationShareRecipientsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGlobalLocationShareRecipientsInput, Prisma.UserUncheckedCreateWithoutGlobalLocationShareRecipientsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGlobalLocationShareRecipientsInput
+  upsert?: Prisma.UserUpsertWithoutGlobalLocationShareRecipientsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGlobalLocationShareRecipientsInput, Prisma.UserUpdateWithoutGlobalLocationShareRecipientsInput>, Prisma.UserUncheckedUpdateWithoutGlobalLocationShareRecipientsInput>
 }
 
 export type UserCreateNestedOneWithoutConversationsOwnedInput = {
@@ -1392,9 +1613,14 @@ export type UserUpdateOneWithoutDeletionReportsNestedInput = {
 
 export type UserCreateWithoutProfileInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -1402,6 +1628,8 @@ export type UserCreateWithoutProfileInput = {
   deletedAt?: Date | string | null
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -1418,6 +1646,9 @@ export type UserCreateWithoutProfileInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -1448,9 +1679,14 @@ export type UserCreateWithoutProfileInput = {
 
 export type UserUncheckedCreateWithoutProfileInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -1458,6 +1694,8 @@ export type UserUncheckedCreateWithoutProfileInput = {
   deletedAt?: Date | string | null
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -1474,6 +1712,9 @@ export type UserUncheckedCreateWithoutProfileInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -1520,9 +1761,14 @@ export type UserUpdateToOneWithWhereWithoutProfileInput = {
 
 export type UserUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1530,6 +1776,8 @@ export type UserUpdateWithoutProfileInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -1546,6 +1794,9 @@ export type UserUpdateWithoutProfileInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -1576,9 +1827,14 @@ export type UserUpdateWithoutProfileInput = {
 
 export type UserUncheckedUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1586,6 +1842,8 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1602,6 +1860,9 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -1632,9 +1893,14 @@ export type UserUncheckedUpdateWithoutProfileInput = {
 
 export type UserCreateWithoutDevicesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -1642,6 +1908,8 @@ export type UserCreateWithoutDevicesInput = {
   deletedAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -1658,6 +1926,9 @@ export type UserCreateWithoutDevicesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -1688,9 +1959,14 @@ export type UserCreateWithoutDevicesInput = {
 
 export type UserUncheckedCreateWithoutDevicesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -1698,6 +1974,8 @@ export type UserUncheckedCreateWithoutDevicesInput = {
   deletedAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -1714,6 +1992,9 @@ export type UserUncheckedCreateWithoutDevicesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -1760,9 +2041,14 @@ export type UserUpdateToOneWithWhereWithoutDevicesInput = {
 
 export type UserUpdateWithoutDevicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1770,6 +2056,8 @@ export type UserUpdateWithoutDevicesInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -1786,6 +2074,9 @@ export type UserUpdateWithoutDevicesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -1816,9 +2107,14 @@ export type UserUpdateWithoutDevicesInput = {
 
 export type UserUncheckedUpdateWithoutDevicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1826,6 +2122,8 @@ export type UserUncheckedUpdateWithoutDevicesInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1842,6 +2140,9 @@ export type UserUncheckedUpdateWithoutDevicesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -1872,9 +2173,14 @@ export type UserUncheckedUpdateWithoutDevicesInput = {
 
 export type UserCreateWithoutSessionsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -1882,6 +2188,8 @@ export type UserCreateWithoutSessionsInput = {
   deletedAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -1898,6 +2206,9 @@ export type UserCreateWithoutSessionsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -1928,9 +2239,14 @@ export type UserCreateWithoutSessionsInput = {
 
 export type UserUncheckedCreateWithoutSessionsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -1938,6 +2254,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   deletedAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -1954,6 +2272,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -2000,9 +2321,14 @@ export type UserUpdateToOneWithWhereWithoutSessionsInput = {
 
 export type UserUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2010,6 +2336,8 @@ export type UserUpdateWithoutSessionsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -2026,6 +2354,9 @@ export type UserUpdateWithoutSessionsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -2056,9 +2387,14 @@ export type UserUpdateWithoutSessionsInput = {
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2066,6 +2402,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2082,6 +2420,569 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
+  memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUncheckedUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUncheckedUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+}
+
+export type UserCreateWithoutIdentitiesInput = {
+  id?: string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
+  memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+}
+
+export type UserUncheckedCreateWithoutIdentitiesInput = {
+  id?: string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalUncheckedCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
+  memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportUncheckedCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationUncheckedCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditUncheckedCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+}
+
+export type UserCreateOrConnectWithoutIdentitiesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutIdentitiesInput, Prisma.UserUncheckedCreateWithoutIdentitiesInput>
+}
+
+export type UserUpsertWithoutIdentitiesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutIdentitiesInput, Prisma.UserUncheckedUpdateWithoutIdentitiesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutIdentitiesInput, Prisma.UserUncheckedCreateWithoutIdentitiesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutIdentitiesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutIdentitiesInput, Prisma.UserUncheckedUpdateWithoutIdentitiesInput>
+}
+
+export type UserUpdateWithoutIdentitiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
+  memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+}
+
+export type UserUncheckedUpdateWithoutIdentitiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUncheckedUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUncheckedUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUncheckedUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
+  memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUncheckedUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUncheckedUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+}
+
+export type UserCreateWithoutEmailLoginCodesInput = {
+  id?: string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
+  memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+}
+
+export type UserUncheckedCreateWithoutEmailLoginCodesInput = {
+  id?: string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalUncheckedCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
+  memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportUncheckedCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationUncheckedCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditUncheckedCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+}
+
+export type UserCreateOrConnectWithoutEmailLoginCodesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutEmailLoginCodesInput, Prisma.UserUncheckedCreateWithoutEmailLoginCodesInput>
+}
+
+export type UserUpsertWithoutEmailLoginCodesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutEmailLoginCodesInput, Prisma.UserUncheckedUpdateWithoutEmailLoginCodesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutEmailLoginCodesInput, Prisma.UserUncheckedCreateWithoutEmailLoginCodesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutEmailLoginCodesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutEmailLoginCodesInput, Prisma.UserUncheckedUpdateWithoutEmailLoginCodesInput>
+}
+
+export type UserUpdateWithoutEmailLoginCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
+  memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+}
+
+export type UserUncheckedUpdateWithoutEmailLoginCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUncheckedUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUncheckedUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUncheckedUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2112,9 +3013,14 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
 
 export type UserCreateWithoutFriendshipsAInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -2123,6 +3029,8 @@ export type UserCreateWithoutFriendshipsAInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -2138,6 +3046,9 @@ export type UserCreateWithoutFriendshipsAInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -2168,9 +3079,14 @@ export type UserCreateWithoutFriendshipsAInput = {
 
 export type UserUncheckedCreateWithoutFriendshipsAInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -2179,6 +3095,8 @@ export type UserUncheckedCreateWithoutFriendshipsAInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -2194,6 +3112,9 @@ export type UserUncheckedCreateWithoutFriendshipsAInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -2229,9 +3150,14 @@ export type UserCreateOrConnectWithoutFriendshipsAInput = {
 
 export type UserCreateWithoutFriendshipsBInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -2240,6 +3166,8 @@ export type UserCreateWithoutFriendshipsBInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -2255,6 +3183,9 @@ export type UserCreateWithoutFriendshipsBInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -2285,9 +3216,14 @@ export type UserCreateWithoutFriendshipsBInput = {
 
 export type UserUncheckedCreateWithoutFriendshipsBInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -2296,6 +3232,8 @@ export type UserUncheckedCreateWithoutFriendshipsBInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -2311,6 +3249,9 @@ export type UserUncheckedCreateWithoutFriendshipsBInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -2346,9 +3287,14 @@ export type UserCreateOrConnectWithoutFriendshipsBInput = {
 
 export type UserCreateWithoutFriendshipsAskedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -2357,6 +3303,8 @@ export type UserCreateWithoutFriendshipsAskedInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -2372,6 +3320,9 @@ export type UserCreateWithoutFriendshipsAskedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -2402,9 +3353,14 @@ export type UserCreateWithoutFriendshipsAskedInput = {
 
 export type UserUncheckedCreateWithoutFriendshipsAskedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -2413,6 +3369,8 @@ export type UserUncheckedCreateWithoutFriendshipsAskedInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -2428,6 +3386,9 @@ export type UserUncheckedCreateWithoutFriendshipsAskedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -2474,9 +3435,14 @@ export type UserUpdateToOneWithWhereWithoutFriendshipsAInput = {
 
 export type UserUpdateWithoutFriendshipsAInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2485,6 +3451,8 @@ export type UserUpdateWithoutFriendshipsAInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -2500,6 +3468,9 @@ export type UserUpdateWithoutFriendshipsAInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -2530,9 +3501,14 @@ export type UserUpdateWithoutFriendshipsAInput = {
 
 export type UserUncheckedUpdateWithoutFriendshipsAInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2541,6 +3517,8 @@ export type UserUncheckedUpdateWithoutFriendshipsAInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2556,6 +3534,9 @@ export type UserUncheckedUpdateWithoutFriendshipsAInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2597,9 +3578,14 @@ export type UserUpdateToOneWithWhereWithoutFriendshipsBInput = {
 
 export type UserUpdateWithoutFriendshipsBInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2608,6 +3594,8 @@ export type UserUpdateWithoutFriendshipsBInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -2623,6 +3611,9 @@ export type UserUpdateWithoutFriendshipsBInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -2653,9 +3644,14 @@ export type UserUpdateWithoutFriendshipsBInput = {
 
 export type UserUncheckedUpdateWithoutFriendshipsBInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2664,6 +3660,8 @@ export type UserUncheckedUpdateWithoutFriendshipsBInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2679,6 +3677,9 @@ export type UserUncheckedUpdateWithoutFriendshipsBInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2720,9 +3721,14 @@ export type UserUpdateToOneWithWhereWithoutFriendshipsAskedInput = {
 
 export type UserUpdateWithoutFriendshipsAskedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2731,6 +3737,8 @@ export type UserUpdateWithoutFriendshipsAskedInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -2746,6 +3754,9 @@ export type UserUpdateWithoutFriendshipsAskedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -2776,9 +3787,14 @@ export type UserUpdateWithoutFriendshipsAskedInput = {
 
 export type UserUncheckedUpdateWithoutFriendshipsAskedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2787,6 +3803,8 @@ export type UserUncheckedUpdateWithoutFriendshipsAskedInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2802,6 +3820,9 @@ export type UserUncheckedUpdateWithoutFriendshipsAskedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2832,9 +3853,14 @@ export type UserUncheckedUpdateWithoutFriendshipsAskedInput = {
 
 export type UserCreateWithoutInvitesCreatedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -2843,6 +3869,8 @@ export type UserCreateWithoutInvitesCreatedInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesConsumed?: Prisma.FriendshipInviteCreateNestedManyWithoutConsumedByInput
@@ -2858,6 +3886,9 @@ export type UserCreateWithoutInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -2888,9 +3919,14 @@ export type UserCreateWithoutInvitesCreatedInput = {
 
 export type UserUncheckedCreateWithoutInvitesCreatedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -2899,6 +3935,8 @@ export type UserUncheckedCreateWithoutInvitesCreatedInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesConsumed?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutConsumedByInput
@@ -2914,6 +3952,9 @@ export type UserUncheckedCreateWithoutInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -2949,9 +3990,14 @@ export type UserCreateOrConnectWithoutInvitesCreatedInput = {
 
 export type UserCreateWithoutInvitesConsumedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -2960,6 +4006,8 @@ export type UserCreateWithoutInvitesConsumedInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -2975,6 +4023,9 @@ export type UserCreateWithoutInvitesConsumedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -3005,9 +4056,14 @@ export type UserCreateWithoutInvitesConsumedInput = {
 
 export type UserUncheckedCreateWithoutInvitesConsumedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -3016,6 +4072,8 @@ export type UserUncheckedCreateWithoutInvitesConsumedInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -3031,6 +4089,9 @@ export type UserUncheckedCreateWithoutInvitesConsumedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -3077,9 +4138,14 @@ export type UserUpdateToOneWithWhereWithoutInvitesCreatedInput = {
 
 export type UserUpdateWithoutInvitesCreatedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3088,6 +4154,8 @@ export type UserUpdateWithoutInvitesCreatedInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesConsumed?: Prisma.FriendshipInviteUpdateManyWithoutConsumedByNestedInput
@@ -3103,6 +4171,9 @@ export type UserUpdateWithoutInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -3133,9 +4204,14 @@ export type UserUpdateWithoutInvitesCreatedInput = {
 
 export type UserUncheckedUpdateWithoutInvitesCreatedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3144,6 +4220,8 @@ export type UserUncheckedUpdateWithoutInvitesCreatedInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesConsumed?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutConsumedByNestedInput
@@ -3159,6 +4237,9 @@ export type UserUncheckedUpdateWithoutInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3200,9 +4281,14 @@ export type UserUpdateToOneWithWhereWithoutInvitesConsumedInput = {
 
 export type UserUpdateWithoutInvitesConsumedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3211,6 +4297,8 @@ export type UserUpdateWithoutInvitesConsumedInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -3226,6 +4314,9 @@ export type UserUpdateWithoutInvitesConsumedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -3256,9 +4347,14 @@ export type UserUpdateWithoutInvitesConsumedInput = {
 
 export type UserUncheckedUpdateWithoutInvitesConsumedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3267,6 +4363,8 @@ export type UserUncheckedUpdateWithoutInvitesConsumedInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -3282,6 +4380,9 @@ export type UserUncheckedUpdateWithoutInvitesConsumedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3312,9 +4413,14 @@ export type UserUncheckedUpdateWithoutInvitesConsumedInput = {
 
 export type UserCreateWithoutCirclesOwnedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -3323,6 +4429,8 @@ export type UserCreateWithoutCirclesOwnedInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
   invitesConsumed?: Prisma.FriendshipInviteCreateNestedManyWithoutConsumedByInput
@@ -3338,6 +4446,9 @@ export type UserCreateWithoutCirclesOwnedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -3368,9 +4479,14 @@ export type UserCreateWithoutCirclesOwnedInput = {
 
 export type UserUncheckedCreateWithoutCirclesOwnedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -3379,6 +4495,8 @@ export type UserUncheckedCreateWithoutCirclesOwnedInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
   invitesConsumed?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutConsumedByInput
@@ -3394,6 +4512,9 @@ export type UserUncheckedCreateWithoutCirclesOwnedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -3440,9 +4561,14 @@ export type UserUpdateToOneWithWhereWithoutCirclesOwnedInput = {
 
 export type UserUpdateWithoutCirclesOwnedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3451,6 +4577,8 @@ export type UserUpdateWithoutCirclesOwnedInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
   invitesConsumed?: Prisma.FriendshipInviteUpdateManyWithoutConsumedByNestedInput
@@ -3466,6 +4594,9 @@ export type UserUpdateWithoutCirclesOwnedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -3496,9 +4627,14 @@ export type UserUpdateWithoutCirclesOwnedInput = {
 
 export type UserUncheckedUpdateWithoutCirclesOwnedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3507,6 +4643,8 @@ export type UserUncheckedUpdateWithoutCirclesOwnedInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
   invitesConsumed?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutConsumedByNestedInput
@@ -3522,6 +4660,9 @@ export type UserUncheckedUpdateWithoutCirclesOwnedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3552,9 +4693,14 @@ export type UserUncheckedUpdateWithoutCirclesOwnedInput = {
 
 export type UserCreateWithoutCircleMembershipsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -3563,6 +4709,8 @@ export type UserCreateWithoutCircleMembershipsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
   invitesConsumed?: Prisma.FriendshipInviteCreateNestedManyWithoutConsumedByInput
@@ -3578,6 +4726,9 @@ export type UserCreateWithoutCircleMembershipsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -3608,9 +4759,14 @@ export type UserCreateWithoutCircleMembershipsInput = {
 
 export type UserUncheckedCreateWithoutCircleMembershipsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -3619,6 +4775,8 @@ export type UserUncheckedCreateWithoutCircleMembershipsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
   invitesConsumed?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutConsumedByInput
@@ -3634,6 +4792,9 @@ export type UserUncheckedCreateWithoutCircleMembershipsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -3680,9 +4841,14 @@ export type UserUpdateToOneWithWhereWithoutCircleMembershipsInput = {
 
 export type UserUpdateWithoutCircleMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3691,6 +4857,8 @@ export type UserUpdateWithoutCircleMembershipsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
   invitesConsumed?: Prisma.FriendshipInviteUpdateManyWithoutConsumedByNestedInput
@@ -3706,6 +4874,9 @@ export type UserUpdateWithoutCircleMembershipsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -3736,9 +4907,14 @@ export type UserUpdateWithoutCircleMembershipsInput = {
 
 export type UserUncheckedUpdateWithoutCircleMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3747,6 +4923,8 @@ export type UserUncheckedUpdateWithoutCircleMembershipsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
   invitesConsumed?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutConsumedByNestedInput
@@ -3762,6 +4940,9 @@ export type UserUncheckedUpdateWithoutCircleMembershipsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3792,9 +4973,14 @@ export type UserUncheckedUpdateWithoutCircleMembershipsInput = {
 
 export type UserCreateWithoutSignalsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -3803,6 +4989,8 @@ export type UserCreateWithoutSignalsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -3818,6 +5006,9 @@ export type UserCreateWithoutSignalsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -3848,9 +5039,14 @@ export type UserCreateWithoutSignalsInput = {
 
 export type UserUncheckedCreateWithoutSignalsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -3859,6 +5055,8 @@ export type UserUncheckedCreateWithoutSignalsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -3874,6 +5072,9 @@ export type UserUncheckedCreateWithoutSignalsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -3920,9 +5121,14 @@ export type UserUpdateToOneWithWhereWithoutSignalsInput = {
 
 export type UserUpdateWithoutSignalsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3931,6 +5137,8 @@ export type UserUpdateWithoutSignalsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -3946,6 +5154,9 @@ export type UserUpdateWithoutSignalsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -3976,9 +5187,14 @@ export type UserUpdateWithoutSignalsInput = {
 
 export type UserUncheckedUpdateWithoutSignalsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3987,6 +5203,8 @@ export type UserUncheckedUpdateWithoutSignalsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -4002,6 +5220,9 @@ export type UserUncheckedUpdateWithoutSignalsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4032,9 +5253,14 @@ export type UserUncheckedUpdateWithoutSignalsInput = {
 
 export type UserCreateWithoutJoinRequestsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -4043,6 +5269,8 @@ export type UserCreateWithoutJoinRequestsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -4058,6 +5286,9 @@ export type UserCreateWithoutJoinRequestsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -4088,9 +5319,14 @@ export type UserCreateWithoutJoinRequestsInput = {
 
 export type UserUncheckedCreateWithoutJoinRequestsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -4099,6 +5335,8 @@ export type UserUncheckedCreateWithoutJoinRequestsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -4114,6 +5352,9 @@ export type UserUncheckedCreateWithoutJoinRequestsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -4160,9 +5401,14 @@ export type UserUpdateToOneWithWhereWithoutJoinRequestsInput = {
 
 export type UserUpdateWithoutJoinRequestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4171,6 +5417,8 @@ export type UserUpdateWithoutJoinRequestsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -4186,6 +5434,9 @@ export type UserUpdateWithoutJoinRequestsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -4216,9 +5467,14 @@ export type UserUpdateWithoutJoinRequestsInput = {
 
 export type UserUncheckedUpdateWithoutJoinRequestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4227,6 +5483,8 @@ export type UserUncheckedUpdateWithoutJoinRequestsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -4242,6 +5500,9 @@ export type UserUncheckedUpdateWithoutJoinRequestsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4272,9 +5533,14 @@ export type UserUncheckedUpdateWithoutJoinRequestsInput = {
 
 export type UserCreateWithoutSignalParticipantsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -4283,6 +5549,8 @@ export type UserCreateWithoutSignalParticipantsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -4298,6 +5566,9 @@ export type UserCreateWithoutSignalParticipantsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -4328,9 +5599,14 @@ export type UserCreateWithoutSignalParticipantsInput = {
 
 export type UserUncheckedCreateWithoutSignalParticipantsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -4339,6 +5615,8 @@ export type UserUncheckedCreateWithoutSignalParticipantsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -4354,6 +5632,9 @@ export type UserUncheckedCreateWithoutSignalParticipantsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -4400,9 +5681,14 @@ export type UserUpdateToOneWithWhereWithoutSignalParticipantsInput = {
 
 export type UserUpdateWithoutSignalParticipantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4411,6 +5697,8 @@ export type UserUpdateWithoutSignalParticipantsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -4426,6 +5714,9 @@ export type UserUpdateWithoutSignalParticipantsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -4456,9 +5747,14 @@ export type UserUpdateWithoutSignalParticipantsInput = {
 
 export type UserUncheckedUpdateWithoutSignalParticipantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4467,6 +5763,8 @@ export type UserUncheckedUpdateWithoutSignalParticipantsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -4482,6 +5780,9 @@ export type UserUncheckedUpdateWithoutSignalParticipantsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4512,9 +5813,14 @@ export type UserUncheckedUpdateWithoutSignalParticipantsInput = {
 
 export type UserCreateWithoutRoomsOwnedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -4523,6 +5829,8 @@ export type UserCreateWithoutRoomsOwnedInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -4538,6 +5846,9 @@ export type UserCreateWithoutRoomsOwnedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -4568,9 +5879,14 @@ export type UserCreateWithoutRoomsOwnedInput = {
 
 export type UserUncheckedCreateWithoutRoomsOwnedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -4579,6 +5895,8 @@ export type UserUncheckedCreateWithoutRoomsOwnedInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -4594,6 +5912,9 @@ export type UserUncheckedCreateWithoutRoomsOwnedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -4640,9 +5961,14 @@ export type UserUpdateToOneWithWhereWithoutRoomsOwnedInput = {
 
 export type UserUpdateWithoutRoomsOwnedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4651,6 +5977,8 @@ export type UserUpdateWithoutRoomsOwnedInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -4666,6 +5994,9 @@ export type UserUpdateWithoutRoomsOwnedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -4696,9 +6027,14 @@ export type UserUpdateWithoutRoomsOwnedInput = {
 
 export type UserUncheckedUpdateWithoutRoomsOwnedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4707,6 +6043,8 @@ export type UserUncheckedUpdateWithoutRoomsOwnedInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -4722,6 +6060,9 @@ export type UserUncheckedUpdateWithoutRoomsOwnedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4752,9 +6093,14 @@ export type UserUncheckedUpdateWithoutRoomsOwnedInput = {
 
 export type UserCreateWithoutRoomMembershipsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -4763,6 +6109,8 @@ export type UserCreateWithoutRoomMembershipsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -4778,6 +6126,9 @@ export type UserCreateWithoutRoomMembershipsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -4808,9 +6159,14 @@ export type UserCreateWithoutRoomMembershipsInput = {
 
 export type UserUncheckedCreateWithoutRoomMembershipsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -4819,6 +6175,8 @@ export type UserUncheckedCreateWithoutRoomMembershipsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -4834,6 +6192,9 @@ export type UserUncheckedCreateWithoutRoomMembershipsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -4880,9 +6241,14 @@ export type UserUpdateToOneWithWhereWithoutRoomMembershipsInput = {
 
 export type UserUpdateWithoutRoomMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4891,6 +6257,8 @@ export type UserUpdateWithoutRoomMembershipsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -4906,6 +6274,9 @@ export type UserUpdateWithoutRoomMembershipsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -4936,9 +6307,14 @@ export type UserUpdateWithoutRoomMembershipsInput = {
 
 export type UserUncheckedUpdateWithoutRoomMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4947,6 +6323,8 @@ export type UserUncheckedUpdateWithoutRoomMembershipsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -4962,6 +6340,9 @@ export type UserUncheckedUpdateWithoutRoomMembershipsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4992,9 +6373,14 @@ export type UserUncheckedUpdateWithoutRoomMembershipsInput = {
 
 export type UserCreateWithoutMessagesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -5003,6 +6389,8 @@ export type UserCreateWithoutMessagesInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -5018,6 +6406,9 @@ export type UserCreateWithoutMessagesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -5048,9 +6439,14 @@ export type UserCreateWithoutMessagesInput = {
 
 export type UserUncheckedCreateWithoutMessagesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -5059,6 +6455,8 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -5074,6 +6472,9 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -5120,9 +6521,14 @@ export type UserUpdateToOneWithWhereWithoutMessagesInput = {
 
 export type UserUpdateWithoutMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5131,6 +6537,8 @@ export type UserUpdateWithoutMessagesInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -5146,6 +6554,9 @@ export type UserUpdateWithoutMessagesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -5176,9 +6587,14 @@ export type UserUpdateWithoutMessagesInput = {
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5187,6 +6603,8 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -5202,6 +6620,9 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -5232,9 +6653,14 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
 
 export type UserCreateWithoutReactionsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -5243,6 +6669,8 @@ export type UserCreateWithoutReactionsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -5258,6 +6686,9 @@ export type UserCreateWithoutReactionsInput = {
   messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -5288,9 +6719,14 @@ export type UserCreateWithoutReactionsInput = {
 
 export type UserUncheckedCreateWithoutReactionsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -5299,6 +6735,8 @@ export type UserUncheckedCreateWithoutReactionsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -5314,6 +6752,9 @@ export type UserUncheckedCreateWithoutReactionsInput = {
   messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -5360,9 +6801,14 @@ export type UserUpdateToOneWithWhereWithoutReactionsInput = {
 
 export type UserUpdateWithoutReactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5371,6 +6817,8 @@ export type UserUpdateWithoutReactionsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -5386,6 +6834,9 @@ export type UserUpdateWithoutReactionsInput = {
   messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -5416,9 +6867,14 @@ export type UserUpdateWithoutReactionsInput = {
 
 export type UserUncheckedUpdateWithoutReactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5427,6 +6883,8 @@ export type UserUncheckedUpdateWithoutReactionsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -5442,6 +6900,9 @@ export type UserUncheckedUpdateWithoutReactionsInput = {
   messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -5472,9 +6933,14 @@ export type UserUncheckedUpdateWithoutReactionsInput = {
 
 export type UserCreateWithoutPollVotesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -5483,6 +6949,8 @@ export type UserCreateWithoutPollVotesInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -5498,6 +6966,9 @@ export type UserCreateWithoutPollVotesInput = {
   messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -5528,9 +6999,14 @@ export type UserCreateWithoutPollVotesInput = {
 
 export type UserUncheckedCreateWithoutPollVotesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -5539,6 +7015,8 @@ export type UserUncheckedCreateWithoutPollVotesInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -5554,6 +7032,9 @@ export type UserUncheckedCreateWithoutPollVotesInput = {
   messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -5600,9 +7081,14 @@ export type UserUpdateToOneWithWhereWithoutPollVotesInput = {
 
 export type UserUpdateWithoutPollVotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5611,6 +7097,8 @@ export type UserUpdateWithoutPollVotesInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -5626,6 +7114,9 @@ export type UserUpdateWithoutPollVotesInput = {
   messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -5656,9 +7147,14 @@ export type UserUpdateWithoutPollVotesInput = {
 
 export type UserUncheckedUpdateWithoutPollVotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5667,6 +7163,8 @@ export type UserUncheckedUpdateWithoutPollVotesInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -5682,6 +7180,9 @@ export type UserUncheckedUpdateWithoutPollVotesInput = {
   messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -5712,9 +7213,14 @@ export type UserUncheckedUpdateWithoutPollVotesInput = {
 
 export type UserCreateWithoutLocationSharesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -5723,6 +7229,8 @@ export type UserCreateWithoutLocationSharesInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -5738,6 +7246,9 @@ export type UserCreateWithoutLocationSharesInput = {
   messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -5768,9 +7279,14 @@ export type UserCreateWithoutLocationSharesInput = {
 
 export type UserUncheckedCreateWithoutLocationSharesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -5779,6 +7295,8 @@ export type UserUncheckedCreateWithoutLocationSharesInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -5794,6 +7312,9 @@ export type UserUncheckedCreateWithoutLocationSharesInput = {
   messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -5840,9 +7361,14 @@ export type UserUpdateToOneWithWhereWithoutLocationSharesInput = {
 
 export type UserUpdateWithoutLocationSharesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5851,6 +7377,8 @@ export type UserUpdateWithoutLocationSharesInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -5866,6 +7394,9 @@ export type UserUpdateWithoutLocationSharesInput = {
   messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -5896,9 +7427,14 @@ export type UserUpdateWithoutLocationSharesInput = {
 
 export type UserUncheckedUpdateWithoutLocationSharesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5907,6 +7443,8 @@ export type UserUncheckedUpdateWithoutLocationSharesInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -5922,6 +7460,849 @@ export type UserUncheckedUpdateWithoutLocationSharesInput = {
   messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
+  memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUncheckedUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUncheckedUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+}
+
+export type UserCreateWithoutCurrentLocationInput = {
+  id?: string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
+  memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+}
+
+export type UserUncheckedCreateWithoutCurrentLocationInput = {
+  id?: string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalUncheckedCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
+  memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportUncheckedCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationUncheckedCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditUncheckedCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+}
+
+export type UserCreateOrConnectWithoutCurrentLocationInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCurrentLocationInput, Prisma.UserUncheckedCreateWithoutCurrentLocationInput>
+}
+
+export type UserUpsertWithoutCurrentLocationInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCurrentLocationInput, Prisma.UserUncheckedUpdateWithoutCurrentLocationInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCurrentLocationInput, Prisma.UserUncheckedCreateWithoutCurrentLocationInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCurrentLocationInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCurrentLocationInput, Prisma.UserUncheckedUpdateWithoutCurrentLocationInput>
+}
+
+export type UserUpdateWithoutCurrentLocationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
+  memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCurrentLocationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUncheckedUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUncheckedUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUncheckedUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
+  memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUncheckedUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUncheckedUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+}
+
+export type UserCreateWithoutGlobalLocationSharesOwnedInput = {
+  id?: string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
+  memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+}
+
+export type UserUncheckedCreateWithoutGlobalLocationSharesOwnedInput = {
+  id?: string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalUncheckedCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
+  memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportUncheckedCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationUncheckedCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditUncheckedCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+}
+
+export type UserCreateOrConnectWithoutGlobalLocationSharesOwnedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGlobalLocationSharesOwnedInput, Prisma.UserUncheckedCreateWithoutGlobalLocationSharesOwnedInput>
+}
+
+export type UserUpsertWithoutGlobalLocationSharesOwnedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGlobalLocationSharesOwnedInput, Prisma.UserUncheckedUpdateWithoutGlobalLocationSharesOwnedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGlobalLocationSharesOwnedInput, Prisma.UserUncheckedCreateWithoutGlobalLocationSharesOwnedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGlobalLocationSharesOwnedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGlobalLocationSharesOwnedInput, Prisma.UserUncheckedUpdateWithoutGlobalLocationSharesOwnedInput>
+}
+
+export type UserUpdateWithoutGlobalLocationSharesOwnedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
+  memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGlobalLocationSharesOwnedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUncheckedUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUncheckedUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUncheckedUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
+  memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUncheckedUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUncheckedUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUncheckedUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUncheckedUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedUpdateManyWithoutTargetNestedInput
+}
+
+export type UserCreateWithoutGlobalLocationShareRecipientsInput = {
+  id?: string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventCreateNestedManyWithoutTargetInput
+}
+
+export type UserUncheckedCreateWithoutGlobalLocationShareRecipientsInput = {
+  id?: string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
+  limitedMode?: boolean
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
+  circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutConsumedByInput
+  friendshipsA?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserAInput
+  friendshipsB?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserBInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequestedByInput
+  signals?: Prisma.SignalUncheckedCreateNestedManyWithoutAuthorInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedCreateNestedManyWithoutUserInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedCreateNestedManyWithoutOwnerInput
+  roomMemberships?: Prisma.RoomMemberUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.RoomMessageUncheckedCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
+  locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
+  memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
+  media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
+  blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  reportsCreated?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsReceived?: Prisma.ReportUncheckedCreateNestedManyWithoutReportedUserInput
+  notificationTokens?: Prisma.NotificationTokenUncheckedCreateNestedManyWithoutUserInput
+  consents?: Prisma.ConsentRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorUserInput
+  analyticsEvents?: Prisma.AnalyticsEventUncheckedCreateNestedManyWithoutUserInput
+  deletionReports?: Prisma.DeletionReportUncheckedCreateNestedManyWithoutUserInput
+  conversationsOwned?: Prisma.ConversationUncheckedCreateNestedManyWithoutOwnerInput
+  conversationMemberships?: Prisma.ConversationMemberUncheckedCreateNestedManyWithoutUserInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviterInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUncheckedCreateNestedManyWithoutInviteeInput
+  chatMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  messageEdits?: Prisma.MessageEditUncheckedCreateNestedManyWithoutEditorInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  messageDeliveries?: Prisma.MessageDeliveryUncheckedCreateNestedManyWithoutUserInput
+  pinnedMessages?: Prisma.PinnedMessageUncheckedCreateNestedManyWithoutPinnedByInput
+  conversationDrafts?: Prisma.ConversationDraftUncheckedCreateNestedManyWithoutUserInput
+  chatMutes?: Prisma.ChatMuteUncheckedCreateNestedManyWithoutUserInput
+  chatAuditEvents?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutActorInput
+  chatAuditTargets?: Prisma.ChatAuditEventUncheckedCreateNestedManyWithoutTargetInput
+}
+
+export type UserCreateOrConnectWithoutGlobalLocationShareRecipientsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGlobalLocationShareRecipientsInput, Prisma.UserUncheckedCreateWithoutGlobalLocationShareRecipientsInput>
+}
+
+export type UserUpsertWithoutGlobalLocationShareRecipientsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGlobalLocationShareRecipientsInput, Prisma.UserUncheckedUpdateWithoutGlobalLocationShareRecipientsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGlobalLocationShareRecipientsInput, Prisma.UserUncheckedCreateWithoutGlobalLocationShareRecipientsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGlobalLocationShareRecipientsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGlobalLocationShareRecipientsInput, Prisma.UserUncheckedUpdateWithoutGlobalLocationShareRecipientsInput>
+}
+
+export type UserUpdateWithoutGlobalLocationShareRecipientsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
+  memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
+  media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
+  blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  reportsCreated?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsReceived?: Prisma.ReportUpdateManyWithoutReportedUserNestedInput
+  notificationTokens?: Prisma.NotificationTokenUpdateManyWithoutUserNestedInput
+  consents?: Prisma.ConsentRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorUserNestedInput
+  analyticsEvents?: Prisma.AnalyticsEventUpdateManyWithoutUserNestedInput
+  deletionReports?: Prisma.DeletionReportUpdateManyWithoutUserNestedInput
+  conversationsOwned?: Prisma.ConversationUpdateManyWithoutOwnerNestedInput
+  conversationMemberships?: Prisma.ConversationMemberUpdateManyWithoutUserNestedInput
+  conversationInvitesCreated?: Prisma.ConversationInviteUpdateManyWithoutInviterNestedInput
+  conversationInvitesReceived?: Prisma.ConversationInviteUpdateManyWithoutInviteeNestedInput
+  chatMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  messageEdits?: Prisma.MessageEditUpdateManyWithoutEditorNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
+  messageReadReceipts?: Prisma.MessageReadReceiptUpdateManyWithoutUserNestedInput
+  messageDeliveries?: Prisma.MessageDeliveryUpdateManyWithoutUserNestedInput
+  pinnedMessages?: Prisma.PinnedMessageUpdateManyWithoutPinnedByNestedInput
+  conversationDrafts?: Prisma.ConversationDraftUpdateManyWithoutUserNestedInput
+  chatMutes?: Prisma.ChatMuteUpdateManyWithoutUserNestedInput
+  chatAuditEvents?: Prisma.ChatAuditEventUpdateManyWithoutActorNestedInput
+  chatAuditTargets?: Prisma.ChatAuditEventUpdateManyWithoutTargetNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGlobalLocationShareRecipientsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
+  circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
+  invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
+  invitesConsumed?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutConsumedByNestedInput
+  friendshipsA?: Prisma.FriendshipUncheckedUpdateManyWithoutUserANestedInput
+  friendshipsB?: Prisma.FriendshipUncheckedUpdateManyWithoutUserBNestedInput
+  friendshipsAsked?: Prisma.FriendshipUncheckedUpdateManyWithoutRequestedByNestedInput
+  signals?: Prisma.SignalUncheckedUpdateManyWithoutAuthorNestedInput
+  joinRequests?: Prisma.SignalJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  signalParticipants?: Prisma.SignalParticipantUncheckedUpdateManyWithoutUserNestedInput
+  roomsOwned?: Prisma.TemporaryRoomUncheckedUpdateManyWithoutOwnerNestedInput
+  roomMemberships?: Prisma.RoomMemberUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.RoomMessageUncheckedUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
+  pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
+  locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -5952,9 +8333,14 @@ export type UserUncheckedUpdateWithoutLocationSharesInput = {
 
 export type UserCreateWithoutConversationsOwnedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -5963,6 +8349,8 @@ export type UserCreateWithoutConversationsOwnedInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -5979,6 +8367,9 @@ export type UserCreateWithoutConversationsOwnedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -6008,9 +8399,14 @@ export type UserCreateWithoutConversationsOwnedInput = {
 
 export type UserUncheckedCreateWithoutConversationsOwnedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -6019,6 +8415,8 @@ export type UserUncheckedCreateWithoutConversationsOwnedInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -6035,6 +8433,9 @@ export type UserUncheckedCreateWithoutConversationsOwnedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -6080,9 +8481,14 @@ export type UserUpdateToOneWithWhereWithoutConversationsOwnedInput = {
 
 export type UserUpdateWithoutConversationsOwnedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6091,6 +8497,8 @@ export type UserUpdateWithoutConversationsOwnedInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -6107,6 +8515,9 @@ export type UserUpdateWithoutConversationsOwnedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -6136,9 +8547,14 @@ export type UserUpdateWithoutConversationsOwnedInput = {
 
 export type UserUncheckedUpdateWithoutConversationsOwnedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6147,6 +8563,8 @@ export type UserUncheckedUpdateWithoutConversationsOwnedInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -6163,6 +8581,9 @@ export type UserUncheckedUpdateWithoutConversationsOwnedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6192,9 +8613,14 @@ export type UserUncheckedUpdateWithoutConversationsOwnedInput = {
 
 export type UserCreateWithoutConversationMembershipsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -6203,6 +8629,8 @@ export type UserCreateWithoutConversationMembershipsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -6219,6 +8647,9 @@ export type UserCreateWithoutConversationMembershipsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -6248,9 +8679,14 @@ export type UserCreateWithoutConversationMembershipsInput = {
 
 export type UserUncheckedCreateWithoutConversationMembershipsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -6259,6 +8695,8 @@ export type UserUncheckedCreateWithoutConversationMembershipsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -6275,6 +8713,9 @@ export type UserUncheckedCreateWithoutConversationMembershipsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -6320,9 +8761,14 @@ export type UserUpdateToOneWithWhereWithoutConversationMembershipsInput = {
 
 export type UserUpdateWithoutConversationMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6331,6 +8777,8 @@ export type UserUpdateWithoutConversationMembershipsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -6347,6 +8795,9 @@ export type UserUpdateWithoutConversationMembershipsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -6376,9 +8827,14 @@ export type UserUpdateWithoutConversationMembershipsInput = {
 
 export type UserUncheckedUpdateWithoutConversationMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6387,6 +8843,8 @@ export type UserUncheckedUpdateWithoutConversationMembershipsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -6403,6 +8861,9 @@ export type UserUncheckedUpdateWithoutConversationMembershipsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6432,9 +8893,14 @@ export type UserUncheckedUpdateWithoutConversationMembershipsInput = {
 
 export type UserCreateWithoutConversationInvitesCreatedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -6443,6 +8909,8 @@ export type UserCreateWithoutConversationInvitesCreatedInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -6459,6 +8927,9 @@ export type UserCreateWithoutConversationInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -6488,9 +8959,14 @@ export type UserCreateWithoutConversationInvitesCreatedInput = {
 
 export type UserUncheckedCreateWithoutConversationInvitesCreatedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -6499,6 +8975,8 @@ export type UserUncheckedCreateWithoutConversationInvitesCreatedInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -6515,6 +8993,9 @@ export type UserUncheckedCreateWithoutConversationInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -6549,9 +9030,14 @@ export type UserCreateOrConnectWithoutConversationInvitesCreatedInput = {
 
 export type UserCreateWithoutConversationInvitesReceivedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -6560,6 +9046,8 @@ export type UserCreateWithoutConversationInvitesReceivedInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -6576,6 +9064,9 @@ export type UserCreateWithoutConversationInvitesReceivedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -6605,9 +9096,14 @@ export type UserCreateWithoutConversationInvitesReceivedInput = {
 
 export type UserUncheckedCreateWithoutConversationInvitesReceivedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -6616,6 +9112,8 @@ export type UserUncheckedCreateWithoutConversationInvitesReceivedInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -6632,6 +9130,9 @@ export type UserUncheckedCreateWithoutConversationInvitesReceivedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -6677,9 +9178,14 @@ export type UserUpdateToOneWithWhereWithoutConversationInvitesCreatedInput = {
 
 export type UserUpdateWithoutConversationInvitesCreatedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6688,6 +9194,8 @@ export type UserUpdateWithoutConversationInvitesCreatedInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -6704,6 +9212,9 @@ export type UserUpdateWithoutConversationInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -6733,9 +9244,14 @@ export type UserUpdateWithoutConversationInvitesCreatedInput = {
 
 export type UserUncheckedUpdateWithoutConversationInvitesCreatedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6744,6 +9260,8 @@ export type UserUncheckedUpdateWithoutConversationInvitesCreatedInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -6760,6 +9278,9 @@ export type UserUncheckedUpdateWithoutConversationInvitesCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6800,9 +9321,14 @@ export type UserUpdateToOneWithWhereWithoutConversationInvitesReceivedInput = {
 
 export type UserUpdateWithoutConversationInvitesReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6811,6 +9337,8 @@ export type UserUpdateWithoutConversationInvitesReceivedInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -6827,6 +9355,9 @@ export type UserUpdateWithoutConversationInvitesReceivedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -6856,9 +9387,14 @@ export type UserUpdateWithoutConversationInvitesReceivedInput = {
 
 export type UserUncheckedUpdateWithoutConversationInvitesReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6867,6 +9403,8 @@ export type UserUncheckedUpdateWithoutConversationInvitesReceivedInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -6883,6 +9421,9 @@ export type UserUncheckedUpdateWithoutConversationInvitesReceivedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -6912,9 +9453,14 @@ export type UserUncheckedUpdateWithoutConversationInvitesReceivedInput = {
 
 export type UserCreateWithoutChatMessagesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -6923,6 +9469,8 @@ export type UserCreateWithoutChatMessagesInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -6939,6 +9487,9 @@ export type UserCreateWithoutChatMessagesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -6968,9 +9519,14 @@ export type UserCreateWithoutChatMessagesInput = {
 
 export type UserUncheckedCreateWithoutChatMessagesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -6979,6 +9535,8 @@ export type UserUncheckedCreateWithoutChatMessagesInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -6995,6 +9553,9 @@ export type UserUncheckedCreateWithoutChatMessagesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -7040,9 +9601,14 @@ export type UserUpdateToOneWithWhereWithoutChatMessagesInput = {
 
 export type UserUpdateWithoutChatMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7051,6 +9617,8 @@ export type UserUpdateWithoutChatMessagesInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -7067,6 +9635,9 @@ export type UserUpdateWithoutChatMessagesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -7096,9 +9667,14 @@ export type UserUpdateWithoutChatMessagesInput = {
 
 export type UserUncheckedUpdateWithoutChatMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7107,6 +9683,8 @@ export type UserUncheckedUpdateWithoutChatMessagesInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -7123,6 +9701,9 @@ export type UserUncheckedUpdateWithoutChatMessagesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7152,9 +9733,14 @@ export type UserUncheckedUpdateWithoutChatMessagesInput = {
 
 export type UserCreateWithoutMessageEditsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -7163,6 +9749,8 @@ export type UserCreateWithoutMessageEditsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -7179,6 +9767,9 @@ export type UserCreateWithoutMessageEditsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -7208,9 +9799,14 @@ export type UserCreateWithoutMessageEditsInput = {
 
 export type UserUncheckedCreateWithoutMessageEditsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -7219,6 +9815,8 @@ export type UserUncheckedCreateWithoutMessageEditsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -7235,6 +9833,9 @@ export type UserUncheckedCreateWithoutMessageEditsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -7280,9 +9881,14 @@ export type UserUpdateToOneWithWhereWithoutMessageEditsInput = {
 
 export type UserUpdateWithoutMessageEditsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7291,6 +9897,8 @@ export type UserUpdateWithoutMessageEditsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -7307,6 +9915,9 @@ export type UserUpdateWithoutMessageEditsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -7336,9 +9947,14 @@ export type UserUpdateWithoutMessageEditsInput = {
 
 export type UserUncheckedUpdateWithoutMessageEditsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7347,6 +9963,8 @@ export type UserUncheckedUpdateWithoutMessageEditsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -7363,6 +9981,9 @@ export type UserUncheckedUpdateWithoutMessageEditsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7392,9 +10013,14 @@ export type UserUncheckedUpdateWithoutMessageEditsInput = {
 
 export type UserCreateWithoutMessageReactionsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -7403,6 +10029,8 @@ export type UserCreateWithoutMessageReactionsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -7419,6 +10047,9 @@ export type UserCreateWithoutMessageReactionsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -7448,9 +10079,14 @@ export type UserCreateWithoutMessageReactionsInput = {
 
 export type UserUncheckedCreateWithoutMessageReactionsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -7459,6 +10095,8 @@ export type UserUncheckedCreateWithoutMessageReactionsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -7475,6 +10113,9 @@ export type UserUncheckedCreateWithoutMessageReactionsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -7520,9 +10161,14 @@ export type UserUpdateToOneWithWhereWithoutMessageReactionsInput = {
 
 export type UserUpdateWithoutMessageReactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7531,6 +10177,8 @@ export type UserUpdateWithoutMessageReactionsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -7547,6 +10195,9 @@ export type UserUpdateWithoutMessageReactionsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -7576,9 +10227,14 @@ export type UserUpdateWithoutMessageReactionsInput = {
 
 export type UserUncheckedUpdateWithoutMessageReactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7587,6 +10243,8 @@ export type UserUncheckedUpdateWithoutMessageReactionsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -7603,6 +10261,9 @@ export type UserUncheckedUpdateWithoutMessageReactionsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7632,9 +10293,14 @@ export type UserUncheckedUpdateWithoutMessageReactionsInput = {
 
 export type UserCreateWithoutMessageReadReceiptsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -7643,6 +10309,8 @@ export type UserCreateWithoutMessageReadReceiptsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -7659,6 +10327,9 @@ export type UserCreateWithoutMessageReadReceiptsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -7688,9 +10359,14 @@ export type UserCreateWithoutMessageReadReceiptsInput = {
 
 export type UserUncheckedCreateWithoutMessageReadReceiptsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -7699,6 +10375,8 @@ export type UserUncheckedCreateWithoutMessageReadReceiptsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -7715,6 +10393,9 @@ export type UserUncheckedCreateWithoutMessageReadReceiptsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -7760,9 +10441,14 @@ export type UserUpdateToOneWithWhereWithoutMessageReadReceiptsInput = {
 
 export type UserUpdateWithoutMessageReadReceiptsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7771,6 +10457,8 @@ export type UserUpdateWithoutMessageReadReceiptsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -7787,6 +10475,9 @@ export type UserUpdateWithoutMessageReadReceiptsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -7816,9 +10507,14 @@ export type UserUpdateWithoutMessageReadReceiptsInput = {
 
 export type UserUncheckedUpdateWithoutMessageReadReceiptsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7827,6 +10523,8 @@ export type UserUncheckedUpdateWithoutMessageReadReceiptsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -7843,6 +10541,9 @@ export type UserUncheckedUpdateWithoutMessageReadReceiptsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -7872,9 +10573,14 @@ export type UserUncheckedUpdateWithoutMessageReadReceiptsInput = {
 
 export type UserCreateWithoutMessageDeliveriesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -7883,6 +10589,8 @@ export type UserCreateWithoutMessageDeliveriesInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -7899,6 +10607,9 @@ export type UserCreateWithoutMessageDeliveriesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -7928,9 +10639,14 @@ export type UserCreateWithoutMessageDeliveriesInput = {
 
 export type UserUncheckedCreateWithoutMessageDeliveriesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -7939,6 +10655,8 @@ export type UserUncheckedCreateWithoutMessageDeliveriesInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -7955,6 +10673,9 @@ export type UserUncheckedCreateWithoutMessageDeliveriesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -8000,9 +10721,14 @@ export type UserUpdateToOneWithWhereWithoutMessageDeliveriesInput = {
 
 export type UserUpdateWithoutMessageDeliveriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8011,6 +10737,8 @@ export type UserUpdateWithoutMessageDeliveriesInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -8027,6 +10755,9 @@ export type UserUpdateWithoutMessageDeliveriesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -8056,9 +10787,14 @@ export type UserUpdateWithoutMessageDeliveriesInput = {
 
 export type UserUncheckedUpdateWithoutMessageDeliveriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8067,6 +10803,8 @@ export type UserUncheckedUpdateWithoutMessageDeliveriesInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -8083,6 +10821,9 @@ export type UserUncheckedUpdateWithoutMessageDeliveriesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8112,9 +10853,14 @@ export type UserUncheckedUpdateWithoutMessageDeliveriesInput = {
 
 export type UserCreateWithoutPinnedMessagesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -8123,6 +10869,8 @@ export type UserCreateWithoutPinnedMessagesInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -8139,6 +10887,9 @@ export type UserCreateWithoutPinnedMessagesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -8168,9 +10919,14 @@ export type UserCreateWithoutPinnedMessagesInput = {
 
 export type UserUncheckedCreateWithoutPinnedMessagesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -8179,6 +10935,8 @@ export type UserUncheckedCreateWithoutPinnedMessagesInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -8195,6 +10953,9 @@ export type UserUncheckedCreateWithoutPinnedMessagesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -8240,9 +11001,14 @@ export type UserUpdateToOneWithWhereWithoutPinnedMessagesInput = {
 
 export type UserUpdateWithoutPinnedMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8251,6 +11017,8 @@ export type UserUpdateWithoutPinnedMessagesInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -8267,6 +11035,9 @@ export type UserUpdateWithoutPinnedMessagesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -8296,9 +11067,14 @@ export type UserUpdateWithoutPinnedMessagesInput = {
 
 export type UserUncheckedUpdateWithoutPinnedMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8307,6 +11083,8 @@ export type UserUncheckedUpdateWithoutPinnedMessagesInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -8323,6 +11101,9 @@ export type UserUncheckedUpdateWithoutPinnedMessagesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8352,9 +11133,14 @@ export type UserUncheckedUpdateWithoutPinnedMessagesInput = {
 
 export type UserCreateWithoutConversationDraftsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -8363,6 +11149,8 @@ export type UserCreateWithoutConversationDraftsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -8379,6 +11167,9 @@ export type UserCreateWithoutConversationDraftsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -8408,9 +11199,14 @@ export type UserCreateWithoutConversationDraftsInput = {
 
 export type UserUncheckedCreateWithoutConversationDraftsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -8419,6 +11215,8 @@ export type UserUncheckedCreateWithoutConversationDraftsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -8435,6 +11233,9 @@ export type UserUncheckedCreateWithoutConversationDraftsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -8480,9 +11281,14 @@ export type UserUpdateToOneWithWhereWithoutConversationDraftsInput = {
 
 export type UserUpdateWithoutConversationDraftsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8491,6 +11297,8 @@ export type UserUpdateWithoutConversationDraftsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -8507,6 +11315,9 @@ export type UserUpdateWithoutConversationDraftsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -8536,9 +11347,14 @@ export type UserUpdateWithoutConversationDraftsInput = {
 
 export type UserUncheckedUpdateWithoutConversationDraftsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8547,6 +11363,8 @@ export type UserUncheckedUpdateWithoutConversationDraftsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -8563,6 +11381,9 @@ export type UserUncheckedUpdateWithoutConversationDraftsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8592,9 +11413,14 @@ export type UserUncheckedUpdateWithoutConversationDraftsInput = {
 
 export type UserCreateWithoutChatMutesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -8603,6 +11429,8 @@ export type UserCreateWithoutChatMutesInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -8619,6 +11447,9 @@ export type UserCreateWithoutChatMutesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -8648,9 +11479,14 @@ export type UserCreateWithoutChatMutesInput = {
 
 export type UserUncheckedCreateWithoutChatMutesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -8659,6 +11495,8 @@ export type UserUncheckedCreateWithoutChatMutesInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -8675,6 +11513,9 @@ export type UserUncheckedCreateWithoutChatMutesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -8720,9 +11561,14 @@ export type UserUpdateToOneWithWhereWithoutChatMutesInput = {
 
 export type UserUpdateWithoutChatMutesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8731,6 +11577,8 @@ export type UserUpdateWithoutChatMutesInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -8747,6 +11595,9 @@ export type UserUpdateWithoutChatMutesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -8776,9 +11627,14 @@ export type UserUpdateWithoutChatMutesInput = {
 
 export type UserUncheckedUpdateWithoutChatMutesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8787,6 +11643,8 @@ export type UserUncheckedUpdateWithoutChatMutesInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -8803,6 +11661,9 @@ export type UserUncheckedUpdateWithoutChatMutesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -8832,9 +11693,14 @@ export type UserUncheckedUpdateWithoutChatMutesInput = {
 
 export type UserCreateWithoutChatAuditEventsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -8843,6 +11709,8 @@ export type UserCreateWithoutChatAuditEventsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -8859,6 +11727,9 @@ export type UserCreateWithoutChatAuditEventsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -8888,9 +11759,14 @@ export type UserCreateWithoutChatAuditEventsInput = {
 
 export type UserUncheckedCreateWithoutChatAuditEventsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -8899,6 +11775,8 @@ export type UserUncheckedCreateWithoutChatAuditEventsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -8915,6 +11793,9 @@ export type UserUncheckedCreateWithoutChatAuditEventsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -8949,9 +11830,14 @@ export type UserCreateOrConnectWithoutChatAuditEventsInput = {
 
 export type UserCreateWithoutChatAuditTargetsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -8960,6 +11846,8 @@ export type UserCreateWithoutChatAuditTargetsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -8976,6 +11864,9 @@ export type UserCreateWithoutChatAuditTargetsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -9005,9 +11896,14 @@ export type UserCreateWithoutChatAuditTargetsInput = {
 
 export type UserUncheckedCreateWithoutChatAuditTargetsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -9016,6 +11912,8 @@ export type UserUncheckedCreateWithoutChatAuditTargetsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -9032,6 +11930,9 @@ export type UserUncheckedCreateWithoutChatAuditTargetsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -9077,9 +11978,14 @@ export type UserUpdateToOneWithWhereWithoutChatAuditEventsInput = {
 
 export type UserUpdateWithoutChatAuditEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9088,6 +11994,8 @@ export type UserUpdateWithoutChatAuditEventsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -9104,6 +12012,9 @@ export type UserUpdateWithoutChatAuditEventsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -9133,9 +12044,14 @@ export type UserUpdateWithoutChatAuditEventsInput = {
 
 export type UserUncheckedUpdateWithoutChatAuditEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9144,6 +12060,8 @@ export type UserUncheckedUpdateWithoutChatAuditEventsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -9160,6 +12078,9 @@ export type UserUncheckedUpdateWithoutChatAuditEventsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -9200,9 +12121,14 @@ export type UserUpdateToOneWithWhereWithoutChatAuditTargetsInput = {
 
 export type UserUpdateWithoutChatAuditTargetsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9211,6 +12137,8 @@ export type UserUpdateWithoutChatAuditTargetsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -9227,6 +12155,9 @@ export type UserUpdateWithoutChatAuditTargetsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -9256,9 +12187,14 @@ export type UserUpdateWithoutChatAuditTargetsInput = {
 
 export type UserUncheckedUpdateWithoutChatAuditTargetsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9267,6 +12203,8 @@ export type UserUncheckedUpdateWithoutChatAuditTargetsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -9283,6 +12221,9 @@ export type UserUncheckedUpdateWithoutChatAuditTargetsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -9312,9 +12253,14 @@ export type UserUncheckedUpdateWithoutChatAuditTargetsInput = {
 
 export type UserCreateWithoutMemoriesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -9323,6 +12269,8 @@ export type UserCreateWithoutMemoriesInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -9339,6 +12287,9 @@ export type UserCreateWithoutMemoriesInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
   blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
@@ -9368,9 +12319,14 @@ export type UserCreateWithoutMemoriesInput = {
 
 export type UserUncheckedCreateWithoutMemoriesInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -9379,6 +12335,8 @@ export type UserUncheckedCreateWithoutMemoriesInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -9395,6 +12353,9 @@ export type UserUncheckedCreateWithoutMemoriesInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
   blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
@@ -9440,9 +12401,14 @@ export type UserUpdateToOneWithWhereWithoutMemoriesInput = {
 
 export type UserUpdateWithoutMemoriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9451,6 +12417,8 @@ export type UserUpdateWithoutMemoriesInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -9467,6 +12435,9 @@ export type UserUpdateWithoutMemoriesInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
   blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
@@ -9496,9 +12467,14 @@ export type UserUpdateWithoutMemoriesInput = {
 
 export type UserUncheckedUpdateWithoutMemoriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9507,6 +12483,8 @@ export type UserUncheckedUpdateWithoutMemoriesInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -9523,6 +12501,9 @@ export type UserUncheckedUpdateWithoutMemoriesInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
   blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
@@ -9552,9 +12533,14 @@ export type UserUncheckedUpdateWithoutMemoriesInput = {
 
 export type UserCreateWithoutMemoryParticipantsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -9563,6 +12549,8 @@ export type UserCreateWithoutMemoryParticipantsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -9579,6 +12567,9 @@ export type UserCreateWithoutMemoryParticipantsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
   blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
@@ -9608,9 +12599,14 @@ export type UserCreateWithoutMemoryParticipantsInput = {
 
 export type UserUncheckedCreateWithoutMemoryParticipantsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -9619,6 +12615,8 @@ export type UserUncheckedCreateWithoutMemoryParticipantsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -9635,6 +12633,9 @@ export type UserUncheckedCreateWithoutMemoryParticipantsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
   blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
@@ -9680,9 +12681,14 @@ export type UserUpdateToOneWithWhereWithoutMemoryParticipantsInput = {
 
 export type UserUpdateWithoutMemoryParticipantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9691,6 +12697,8 @@ export type UserUpdateWithoutMemoryParticipantsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -9707,6 +12715,9 @@ export type UserUpdateWithoutMemoryParticipantsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
   blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
@@ -9736,9 +12747,14 @@ export type UserUpdateWithoutMemoryParticipantsInput = {
 
 export type UserUncheckedUpdateWithoutMemoryParticipantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9747,6 +12763,8 @@ export type UserUncheckedUpdateWithoutMemoryParticipantsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -9763,6 +12781,9 @@ export type UserUncheckedUpdateWithoutMemoryParticipantsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
   blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
@@ -9792,9 +12813,14 @@ export type UserUncheckedUpdateWithoutMemoryParticipantsInput = {
 
 export type UserCreateWithoutMediaInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -9803,6 +12829,8 @@ export type UserCreateWithoutMediaInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -9819,6 +12847,9 @@ export type UserCreateWithoutMediaInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   blocksCreated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
@@ -9848,9 +12879,14 @@ export type UserCreateWithoutMediaInput = {
 
 export type UserUncheckedCreateWithoutMediaInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -9859,6 +12895,8 @@ export type UserUncheckedCreateWithoutMediaInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -9875,6 +12913,9 @@ export type UserUncheckedCreateWithoutMediaInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   blocksCreated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
@@ -9920,9 +12961,14 @@ export type UserUpdateToOneWithWhereWithoutMediaInput = {
 
 export type UserUpdateWithoutMediaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9931,6 +12977,8 @@ export type UserUpdateWithoutMediaInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -9947,6 +12995,9 @@ export type UserUpdateWithoutMediaInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   blocksCreated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
@@ -9976,9 +13027,14 @@ export type UserUpdateWithoutMediaInput = {
 
 export type UserUncheckedUpdateWithoutMediaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9987,6 +13043,8 @@ export type UserUncheckedUpdateWithoutMediaInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -10003,6 +13061,9 @@ export type UserUncheckedUpdateWithoutMediaInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   blocksCreated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
@@ -10032,9 +13093,14 @@ export type UserUncheckedUpdateWithoutMediaInput = {
 
 export type UserCreateWithoutBlocksCreatedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -10043,6 +13109,8 @@ export type UserCreateWithoutBlocksCreatedInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -10059,6 +13127,9 @@ export type UserCreateWithoutBlocksCreatedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -10088,9 +13159,14 @@ export type UserCreateWithoutBlocksCreatedInput = {
 
 export type UserUncheckedCreateWithoutBlocksCreatedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -10099,6 +13175,8 @@ export type UserUncheckedCreateWithoutBlocksCreatedInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -10115,6 +13193,9 @@ export type UserUncheckedCreateWithoutBlocksCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -10149,9 +13230,14 @@ export type UserCreateOrConnectWithoutBlocksCreatedInput = {
 
 export type UserCreateWithoutBlocksReceivedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -10160,6 +13246,8 @@ export type UserCreateWithoutBlocksReceivedInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -10176,6 +13264,9 @@ export type UserCreateWithoutBlocksReceivedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -10205,9 +13296,14 @@ export type UserCreateWithoutBlocksReceivedInput = {
 
 export type UserUncheckedCreateWithoutBlocksReceivedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -10216,6 +13312,8 @@ export type UserUncheckedCreateWithoutBlocksReceivedInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -10232,6 +13330,9 @@ export type UserUncheckedCreateWithoutBlocksReceivedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -10277,9 +13378,14 @@ export type UserUpdateToOneWithWhereWithoutBlocksCreatedInput = {
 
 export type UserUpdateWithoutBlocksCreatedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10288,6 +13394,8 @@ export type UserUpdateWithoutBlocksCreatedInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -10304,6 +13412,9 @@ export type UserUpdateWithoutBlocksCreatedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -10333,9 +13444,14 @@ export type UserUpdateWithoutBlocksCreatedInput = {
 
 export type UserUncheckedUpdateWithoutBlocksCreatedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10344,6 +13460,8 @@ export type UserUncheckedUpdateWithoutBlocksCreatedInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -10360,6 +13478,9 @@ export type UserUncheckedUpdateWithoutBlocksCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10400,9 +13521,14 @@ export type UserUpdateToOneWithWhereWithoutBlocksReceivedInput = {
 
 export type UserUpdateWithoutBlocksReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10411,6 +13537,8 @@ export type UserUpdateWithoutBlocksReceivedInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -10427,6 +13555,9 @@ export type UserUpdateWithoutBlocksReceivedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -10456,9 +13587,14 @@ export type UserUpdateWithoutBlocksReceivedInput = {
 
 export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10467,6 +13603,8 @@ export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -10483,6 +13621,9 @@ export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10512,9 +13653,14 @@ export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
 
 export type UserCreateWithoutReportsCreatedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -10523,6 +13669,8 @@ export type UserCreateWithoutReportsCreatedInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -10539,6 +13687,9 @@ export type UserCreateWithoutReportsCreatedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -10568,9 +13719,14 @@ export type UserCreateWithoutReportsCreatedInput = {
 
 export type UserUncheckedCreateWithoutReportsCreatedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -10579,6 +13735,8 @@ export type UserUncheckedCreateWithoutReportsCreatedInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -10595,6 +13753,9 @@ export type UserUncheckedCreateWithoutReportsCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -10629,9 +13790,14 @@ export type UserCreateOrConnectWithoutReportsCreatedInput = {
 
 export type UserCreateWithoutReportsReceivedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -10640,6 +13806,8 @@ export type UserCreateWithoutReportsReceivedInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -10656,6 +13824,9 @@ export type UserCreateWithoutReportsReceivedInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -10685,9 +13856,14 @@ export type UserCreateWithoutReportsReceivedInput = {
 
 export type UserUncheckedCreateWithoutReportsReceivedInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -10696,6 +13872,8 @@ export type UserUncheckedCreateWithoutReportsReceivedInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -10712,6 +13890,9 @@ export type UserUncheckedCreateWithoutReportsReceivedInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -10757,9 +13938,14 @@ export type UserUpdateToOneWithWhereWithoutReportsCreatedInput = {
 
 export type UserUpdateWithoutReportsCreatedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10768,6 +13954,8 @@ export type UserUpdateWithoutReportsCreatedInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -10784,6 +13972,9 @@ export type UserUpdateWithoutReportsCreatedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -10813,9 +14004,14 @@ export type UserUpdateWithoutReportsCreatedInput = {
 
 export type UserUncheckedUpdateWithoutReportsCreatedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10824,6 +14020,8 @@ export type UserUncheckedUpdateWithoutReportsCreatedInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -10840,6 +14038,9 @@ export type UserUncheckedUpdateWithoutReportsCreatedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10880,9 +14081,14 @@ export type UserUpdateToOneWithWhereWithoutReportsReceivedInput = {
 
 export type UserUpdateWithoutReportsReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10891,6 +14097,8 @@ export type UserUpdateWithoutReportsReceivedInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -10907,6 +14115,9 @@ export type UserUpdateWithoutReportsReceivedInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -10936,9 +14147,14 @@ export type UserUpdateWithoutReportsReceivedInput = {
 
 export type UserUncheckedUpdateWithoutReportsReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10947,6 +14163,8 @@ export type UserUncheckedUpdateWithoutReportsReceivedInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -10963,6 +14181,9 @@ export type UserUncheckedUpdateWithoutReportsReceivedInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -10992,9 +14213,14 @@ export type UserUncheckedUpdateWithoutReportsReceivedInput = {
 
 export type UserCreateWithoutNotificationTokensInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -11003,6 +14229,8 @@ export type UserCreateWithoutNotificationTokensInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -11019,6 +14247,9 @@ export type UserCreateWithoutNotificationTokensInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -11048,9 +14279,14 @@ export type UserCreateWithoutNotificationTokensInput = {
 
 export type UserUncheckedCreateWithoutNotificationTokensInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -11059,6 +14295,8 @@ export type UserUncheckedCreateWithoutNotificationTokensInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -11075,6 +14313,9 @@ export type UserUncheckedCreateWithoutNotificationTokensInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -11120,9 +14361,14 @@ export type UserUpdateToOneWithWhereWithoutNotificationTokensInput = {
 
 export type UserUpdateWithoutNotificationTokensInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11131,6 +14377,8 @@ export type UserUpdateWithoutNotificationTokensInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -11147,6 +14395,9 @@ export type UserUpdateWithoutNotificationTokensInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -11176,9 +14427,14 @@ export type UserUpdateWithoutNotificationTokensInput = {
 
 export type UserUncheckedUpdateWithoutNotificationTokensInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11187,6 +14443,8 @@ export type UserUncheckedUpdateWithoutNotificationTokensInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -11203,6 +14461,9 @@ export type UserUncheckedUpdateWithoutNotificationTokensInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11232,9 +14493,14 @@ export type UserUncheckedUpdateWithoutNotificationTokensInput = {
 
 export type UserCreateWithoutConsentsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -11243,6 +14509,8 @@ export type UserCreateWithoutConsentsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -11259,6 +14527,9 @@ export type UserCreateWithoutConsentsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -11288,9 +14559,14 @@ export type UserCreateWithoutConsentsInput = {
 
 export type UserUncheckedCreateWithoutConsentsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -11299,6 +14575,8 @@ export type UserUncheckedCreateWithoutConsentsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -11315,6 +14593,9 @@ export type UserUncheckedCreateWithoutConsentsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -11360,9 +14641,14 @@ export type UserUpdateToOneWithWhereWithoutConsentsInput = {
 
 export type UserUpdateWithoutConsentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11371,6 +14657,8 @@ export type UserUpdateWithoutConsentsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -11387,6 +14675,9 @@ export type UserUpdateWithoutConsentsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -11416,9 +14707,14 @@ export type UserUpdateWithoutConsentsInput = {
 
 export type UserUncheckedUpdateWithoutConsentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11427,6 +14723,8 @@ export type UserUncheckedUpdateWithoutConsentsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -11443,6 +14741,9 @@ export type UserUncheckedUpdateWithoutConsentsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11472,9 +14773,14 @@ export type UserUncheckedUpdateWithoutConsentsInput = {
 
 export type UserCreateWithoutAuditLogsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -11483,6 +14789,8 @@ export type UserCreateWithoutAuditLogsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -11499,6 +14807,9 @@ export type UserCreateWithoutAuditLogsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -11528,9 +14839,14 @@ export type UserCreateWithoutAuditLogsInput = {
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -11539,6 +14855,8 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -11555,6 +14873,9 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -11600,9 +14921,14 @@ export type UserUpdateToOneWithWhereWithoutAuditLogsInput = {
 
 export type UserUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11611,6 +14937,8 @@ export type UserUpdateWithoutAuditLogsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -11627,6 +14955,9 @@ export type UserUpdateWithoutAuditLogsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -11656,9 +14987,14 @@ export type UserUpdateWithoutAuditLogsInput = {
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11667,6 +15003,8 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -11683,6 +15021,9 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11712,9 +15053,14 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
 
 export type UserCreateWithoutAnalyticsEventsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -11723,6 +15069,8 @@ export type UserCreateWithoutAnalyticsEventsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -11739,6 +15087,9 @@ export type UserCreateWithoutAnalyticsEventsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -11768,9 +15119,14 @@ export type UserCreateWithoutAnalyticsEventsInput = {
 
 export type UserUncheckedCreateWithoutAnalyticsEventsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -11779,6 +15135,8 @@ export type UserUncheckedCreateWithoutAnalyticsEventsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -11795,6 +15153,9 @@ export type UserUncheckedCreateWithoutAnalyticsEventsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -11840,9 +15201,14 @@ export type UserUpdateToOneWithWhereWithoutAnalyticsEventsInput = {
 
 export type UserUpdateWithoutAnalyticsEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11851,6 +15217,8 @@ export type UserUpdateWithoutAnalyticsEventsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -11867,6 +15235,9 @@ export type UserUpdateWithoutAnalyticsEventsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -11896,9 +15267,14 @@ export type UserUpdateWithoutAnalyticsEventsInput = {
 
 export type UserUncheckedUpdateWithoutAnalyticsEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11907,6 +15283,8 @@ export type UserUncheckedUpdateWithoutAnalyticsEventsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -11923,6 +15301,9 @@ export type UserUncheckedUpdateWithoutAnalyticsEventsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -11952,9 +15333,14 @@ export type UserUncheckedUpdateWithoutAnalyticsEventsInput = {
 
 export type UserCreateWithoutDeletionReportsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -11963,6 +15349,8 @@ export type UserCreateWithoutDeletionReportsInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteCreateNestedManyWithoutCreatorInput
@@ -11979,6 +15367,9 @@ export type UserCreateWithoutDeletionReportsInput = {
   reactions?: Prisma.RoomReactionCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileCreateNestedManyWithoutOwnerInput
@@ -12008,9 +15399,14 @@ export type UserCreateWithoutDeletionReportsInput = {
 
 export type UserUncheckedCreateWithoutDeletionReportsInput = {
   id?: string
-  phoneHash: string
-  phoneCiphertext: string
-  birthDate: Date | string
+  phoneHash?: string | null
+  phoneCiphertext?: string | null
+  emailHash?: string | null
+  emailCiphertext?: string | null
+  emailVerifiedAt?: Date | string | null
+  username?: string | null
+  profileCompletedAt?: Date | string | null
+  birthDate?: Date | string | null
   limitedMode?: boolean
   status?: $Enums.UserStatus
   createdAt?: Date | string
@@ -12019,6 +15415,8 @@ export type UserUncheckedCreateWithoutDeletionReportsInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  identities?: Prisma.AuthIdentityUncheckedCreateNestedManyWithoutUserInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedCreateNestedManyWithoutUserInput
   circlesOwned?: Prisma.CircleUncheckedCreateNestedManyWithoutOwnerInput
   circleMemberships?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutUserInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedCreateNestedManyWithoutCreatorInput
@@ -12035,6 +15433,9 @@ export type UserUncheckedCreateWithoutDeletionReportsInput = {
   reactions?: Prisma.RoomReactionUncheckedCreateNestedManyWithoutUserInput
   pollVotes?: Prisma.RoomPollVoteUncheckedCreateNestedManyWithoutUserInput
   locationShares?: Prisma.LocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  currentLocation?: Prisma.UserLocationUncheckedCreateNestedOneWithoutOwnerInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedCreateNestedManyWithoutOwnerInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedCreateNestedManyWithoutRecipientInput
   memories?: Prisma.MemoryUncheckedCreateNestedManyWithoutOwnerInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedCreateNestedManyWithoutUserInput
   media?: Prisma.MediaFileUncheckedCreateNestedManyWithoutOwnerInput
@@ -12080,9 +15481,14 @@ export type UserUpdateToOneWithWhereWithoutDeletionReportsInput = {
 
 export type UserUpdateWithoutDeletionReportsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -12091,6 +15497,8 @@ export type UserUpdateWithoutDeletionReportsInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUpdateManyWithoutCreatorNestedInput
@@ -12107,6 +15515,9 @@ export type UserUpdateWithoutDeletionReportsInput = {
   reactions?: Prisma.RoomReactionUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUpdateManyWithoutOwnerNestedInput
@@ -12136,9 +15547,14 @@ export type UserUpdateWithoutDeletionReportsInput = {
 
 export type UserUncheckedUpdateWithoutDeletionReportsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneHash?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneCiphertext?: Prisma.StringFieldUpdateOperationsInput | string
-  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phoneHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailCiphertext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   limitedMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -12147,6 +15563,8 @@ export type UserUncheckedUpdateWithoutDeletionReportsInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  identities?: Prisma.AuthIdentityUncheckedUpdateManyWithoutUserNestedInput
+  emailLoginCodes?: Prisma.EmailLoginCodeUncheckedUpdateManyWithoutUserNestedInput
   circlesOwned?: Prisma.CircleUncheckedUpdateManyWithoutOwnerNestedInput
   circleMemberships?: Prisma.CircleMemberUncheckedUpdateManyWithoutUserNestedInput
   invitesCreated?: Prisma.FriendshipInviteUncheckedUpdateManyWithoutCreatorNestedInput
@@ -12163,6 +15581,9 @@ export type UserUncheckedUpdateWithoutDeletionReportsInput = {
   reactions?: Prisma.RoomReactionUncheckedUpdateManyWithoutUserNestedInput
   pollVotes?: Prisma.RoomPollVoteUncheckedUpdateManyWithoutUserNestedInput
   locationShares?: Prisma.LocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  currentLocation?: Prisma.UserLocationUncheckedUpdateOneWithoutOwnerNestedInput
+  globalLocationSharesOwned?: Prisma.GlobalLocationShareUncheckedUpdateManyWithoutOwnerNestedInput
+  globalLocationShareRecipients?: Prisma.GlobalLocationShareRecipientUncheckedUpdateManyWithoutRecipientNestedInput
   memories?: Prisma.MemoryUncheckedUpdateManyWithoutOwnerNestedInput
   memoryParticipants?: Prisma.MemoryParticipantUncheckedUpdateManyWithoutUserNestedInput
   media?: Prisma.MediaFileUncheckedUpdateManyWithoutOwnerNestedInput
@@ -12198,6 +15619,8 @@ export type UserUncheckedUpdateWithoutDeletionReportsInput = {
 export type UserCountOutputType = {
   devices: number
   sessions: number
+  identities: number
+  emailLoginCodes: number
   circlesOwned: number
   circleMemberships: number
   invitesCreated: number
@@ -12214,6 +15637,8 @@ export type UserCountOutputType = {
   reactions: number
   pollVotes: number
   locationShares: number
+  globalLocationSharesOwned: number
+  globalLocationShareRecipients: number
   memories: number
   memoryParticipants: number
   media: number
@@ -12245,6 +15670,8 @@ export type UserCountOutputType = {
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   devices?: boolean | UserCountOutputTypeCountDevicesArgs
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
+  identities?: boolean | UserCountOutputTypeCountIdentitiesArgs
+  emailLoginCodes?: boolean | UserCountOutputTypeCountEmailLoginCodesArgs
   circlesOwned?: boolean | UserCountOutputTypeCountCirclesOwnedArgs
   circleMemberships?: boolean | UserCountOutputTypeCountCircleMembershipsArgs
   invitesCreated?: boolean | UserCountOutputTypeCountInvitesCreatedArgs
@@ -12261,6 +15688,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   reactions?: boolean | UserCountOutputTypeCountReactionsArgs
   pollVotes?: boolean | UserCountOutputTypeCountPollVotesArgs
   locationShares?: boolean | UserCountOutputTypeCountLocationSharesArgs
+  globalLocationSharesOwned?: boolean | UserCountOutputTypeCountGlobalLocationSharesOwnedArgs
+  globalLocationShareRecipients?: boolean | UserCountOutputTypeCountGlobalLocationShareRecipientsArgs
   memories?: boolean | UserCountOutputTypeCountMemoriesArgs
   memoryParticipants?: boolean | UserCountOutputTypeCountMemoryParticipantsArgs
   media?: boolean | UserCountOutputTypeCountMediaArgs
@@ -12311,6 +15740,20 @@ export type UserCountOutputTypeCountDevicesArgs<ExtArgs extends runtime.Types.Ex
  */
 export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AuthSessionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountIdentitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuthIdentityWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountEmailLoginCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailLoginCodeWhereInput
 }
 
 /**
@@ -12423,6 +15866,20 @@ export type UserCountOutputTypeCountPollVotesArgs<ExtArgs extends runtime.Types.
  */
 export type UserCountOutputTypeCountLocationSharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.LocationShareWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountGlobalLocationSharesOwnedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GlobalLocationShareWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountGlobalLocationShareRecipientsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GlobalLocationShareRecipientWhereInput
 }
 
 /**
@@ -12612,6 +16069,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   phoneHash?: boolean
   phoneCiphertext?: boolean
+  emailHash?: boolean
+  emailCiphertext?: boolean
+  emailVerifiedAt?: boolean
+  username?: boolean
+  profileCompletedAt?: boolean
   birthDate?: boolean
   limitedMode?: boolean
   status?: boolean
@@ -12621,6 +16083,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   devices?: boolean | Prisma.User$devicesArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
+  identities?: boolean | Prisma.User$identitiesArgs<ExtArgs>
+  emailLoginCodes?: boolean | Prisma.User$emailLoginCodesArgs<ExtArgs>
   circlesOwned?: boolean | Prisma.User$circlesOwnedArgs<ExtArgs>
   circleMemberships?: boolean | Prisma.User$circleMembershipsArgs<ExtArgs>
   invitesCreated?: boolean | Prisma.User$invitesCreatedArgs<ExtArgs>
@@ -12637,6 +16101,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   reactions?: boolean | Prisma.User$reactionsArgs<ExtArgs>
   pollVotes?: boolean | Prisma.User$pollVotesArgs<ExtArgs>
   locationShares?: boolean | Prisma.User$locationSharesArgs<ExtArgs>
+  currentLocation?: boolean | Prisma.User$currentLocationArgs<ExtArgs>
+  globalLocationSharesOwned?: boolean | Prisma.User$globalLocationSharesOwnedArgs<ExtArgs>
+  globalLocationShareRecipients?: boolean | Prisma.User$globalLocationShareRecipientsArgs<ExtArgs>
   memories?: boolean | Prisma.User$memoriesArgs<ExtArgs>
   memoryParticipants?: boolean | Prisma.User$memoryParticipantsArgs<ExtArgs>
   media?: boolean | Prisma.User$mediaArgs<ExtArgs>
@@ -12670,6 +16137,11 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   phoneHash?: boolean
   phoneCiphertext?: boolean
+  emailHash?: boolean
+  emailCiphertext?: boolean
+  emailVerifiedAt?: boolean
+  username?: boolean
+  profileCompletedAt?: boolean
   birthDate?: boolean
   limitedMode?: boolean
   status?: boolean
@@ -12682,6 +16154,11 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   phoneHash?: boolean
   phoneCiphertext?: boolean
+  emailHash?: boolean
+  emailCiphertext?: boolean
+  emailVerifiedAt?: boolean
+  username?: boolean
+  profileCompletedAt?: boolean
   birthDate?: boolean
   limitedMode?: boolean
   status?: boolean
@@ -12694,6 +16171,11 @@ export type UserSelectScalar = {
   id?: boolean
   phoneHash?: boolean
   phoneCiphertext?: boolean
+  emailHash?: boolean
+  emailCiphertext?: boolean
+  emailVerifiedAt?: boolean
+  username?: boolean
+  profileCompletedAt?: boolean
   birthDate?: boolean
   limitedMode?: boolean
   status?: boolean
@@ -12702,11 +16184,13 @@ export type UserSelectScalar = {
   deletedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "phoneHash" | "phoneCiphertext" | "birthDate" | "limitedMode" | "status" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "phoneHash" | "phoneCiphertext" | "emailHash" | "emailCiphertext" | "emailVerifiedAt" | "username" | "profileCompletedAt" | "birthDate" | "limitedMode" | "status" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   devices?: boolean | Prisma.User$devicesArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
+  identities?: boolean | Prisma.User$identitiesArgs<ExtArgs>
+  emailLoginCodes?: boolean | Prisma.User$emailLoginCodesArgs<ExtArgs>
   circlesOwned?: boolean | Prisma.User$circlesOwnedArgs<ExtArgs>
   circleMemberships?: boolean | Prisma.User$circleMembershipsArgs<ExtArgs>
   invitesCreated?: boolean | Prisma.User$invitesCreatedArgs<ExtArgs>
@@ -12723,6 +16207,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   reactions?: boolean | Prisma.User$reactionsArgs<ExtArgs>
   pollVotes?: boolean | Prisma.User$pollVotesArgs<ExtArgs>
   locationShares?: boolean | Prisma.User$locationSharesArgs<ExtArgs>
+  currentLocation?: boolean | Prisma.User$currentLocationArgs<ExtArgs>
+  globalLocationSharesOwned?: boolean | Prisma.User$globalLocationSharesOwnedArgs<ExtArgs>
+  globalLocationShareRecipients?: boolean | Prisma.User$globalLocationShareRecipientsArgs<ExtArgs>
   memories?: boolean | Prisma.User$memoriesArgs<ExtArgs>
   memoryParticipants?: boolean | Prisma.User$memoryParticipantsArgs<ExtArgs>
   media?: boolean | Prisma.User$mediaArgs<ExtArgs>
@@ -12760,6 +16247,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     profile: Prisma.$UserProfilePayload<ExtArgs> | null
     devices: Prisma.$DevicePayload<ExtArgs>[]
     sessions: Prisma.$AuthSessionPayload<ExtArgs>[]
+    identities: Prisma.$AuthIdentityPayload<ExtArgs>[]
+    emailLoginCodes: Prisma.$EmailLoginCodePayload<ExtArgs>[]
     circlesOwned: Prisma.$CirclePayload<ExtArgs>[]
     circleMemberships: Prisma.$CircleMemberPayload<ExtArgs>[]
     invitesCreated: Prisma.$FriendshipInvitePayload<ExtArgs>[]
@@ -12776,6 +16265,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     reactions: Prisma.$RoomReactionPayload<ExtArgs>[]
     pollVotes: Prisma.$RoomPollVotePayload<ExtArgs>[]
     locationShares: Prisma.$LocationSharePayload<ExtArgs>[]
+    currentLocation: Prisma.$UserLocationPayload<ExtArgs> | null
+    globalLocationSharesOwned: Prisma.$GlobalLocationSharePayload<ExtArgs>[]
+    globalLocationShareRecipients: Prisma.$GlobalLocationShareRecipientPayload<ExtArgs>[]
     memories: Prisma.$MemoryPayload<ExtArgs>[]
     memoryParticipants: Prisma.$MemoryParticipantPayload<ExtArgs>[]
     media: Prisma.$MediaFilePayload<ExtArgs>[]
@@ -12805,9 +16297,14 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    phoneHash: string
-    phoneCiphertext: string
-    birthDate: Date
+    phoneHash: string | null
+    phoneCiphertext: string | null
+    emailHash: string | null
+    emailCiphertext: string | null
+    emailVerifiedAt: Date | null
+    username: string | null
+    profileCompletedAt: Date | null
+    birthDate: Date | null
     limitedMode: boolean
     status: $Enums.UserStatus
     createdAt: Date
@@ -13210,6 +16707,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   profile<T extends Prisma.User$profileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileArgs<ExtArgs>>): Prisma.Prisma__UserProfileClient<runtime.Types.Result.GetResult<Prisma.$UserProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   devices<T extends Prisma.User$devicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$devicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuthSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  identities<T extends Prisma.User$identitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$identitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuthIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  emailLoginCodes<T extends Prisma.User$emailLoginCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$emailLoginCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailLoginCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   circlesOwned<T extends Prisma.User$circlesOwnedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$circlesOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CirclePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   circleMemberships<T extends Prisma.User$circleMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$circleMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CircleMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invitesCreated<T extends Prisma.User$invitesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$invitesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendshipInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13226,6 +16725,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   reactions<T extends Prisma.User$reactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoomReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pollVotes<T extends Prisma.User$pollVotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pollVotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoomPollVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   locationShares<T extends Prisma.User$locationSharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$locationSharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LocationSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  currentLocation<T extends Prisma.User$currentLocationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$currentLocationArgs<ExtArgs>>): Prisma.Prisma__UserLocationClient<runtime.Types.Result.GetResult<Prisma.$UserLocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  globalLocationSharesOwned<T extends Prisma.User$globalLocationSharesOwnedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$globalLocationSharesOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GlobalLocationSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  globalLocationShareRecipients<T extends Prisma.User$globalLocationShareRecipientsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$globalLocationShareRecipientsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GlobalLocationShareRecipientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   memories<T extends Prisma.User$memoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$memoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   memoryParticipants<T extends Prisma.User$memoryParticipantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$memoryParticipantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemoryParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   media<T extends Prisma.User$mediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13284,6 +16786,11 @@ export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly phoneHash: Prisma.FieldRef<"User", 'String'>
   readonly phoneCiphertext: Prisma.FieldRef<"User", 'String'>
+  readonly emailHash: Prisma.FieldRef<"User", 'String'>
+  readonly emailCiphertext: Prisma.FieldRef<"User", 'String'>
+  readonly emailVerifiedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly username: Prisma.FieldRef<"User", 'String'>
+  readonly profileCompletedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly birthDate: Prisma.FieldRef<"User", 'DateTime'>
   readonly limitedMode: Prisma.FieldRef<"User", 'Boolean'>
   readonly status: Prisma.FieldRef<"User", 'UserStatus'>
@@ -13750,6 +17257,54 @@ export type User$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
+ * User.identities
+ */
+export type User$identitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuthIdentity
+   */
+  select?: Prisma.AuthIdentitySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuthIdentity
+   */
+  omit?: Prisma.AuthIdentityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuthIdentityInclude<ExtArgs> | null
+  where?: Prisma.AuthIdentityWhereInput
+  orderBy?: Prisma.AuthIdentityOrderByWithRelationInput | Prisma.AuthIdentityOrderByWithRelationInput[]
+  cursor?: Prisma.AuthIdentityWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuthIdentityScalarFieldEnum | Prisma.AuthIdentityScalarFieldEnum[]
+}
+
+/**
+ * User.emailLoginCodes
+ */
+export type User$emailLoginCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailLoginCode
+   */
+  select?: Prisma.EmailLoginCodeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmailLoginCode
+   */
+  omit?: Prisma.EmailLoginCodeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmailLoginCodeInclude<ExtArgs> | null
+  where?: Prisma.EmailLoginCodeWhereInput
+  orderBy?: Prisma.EmailLoginCodeOrderByWithRelationInput | Prisma.EmailLoginCodeOrderByWithRelationInput[]
+  cursor?: Prisma.EmailLoginCodeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmailLoginCodeScalarFieldEnum | Prisma.EmailLoginCodeScalarFieldEnum[]
+}
+
+/**
  * User.circlesOwned
  */
 export type User$circlesOwnedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -14131,6 +17686,73 @@ export type User$locationSharesArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.LocationShareScalarFieldEnum | Prisma.LocationShareScalarFieldEnum[]
+}
+
+/**
+ * User.currentLocation
+ */
+export type User$currentLocationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserLocation
+   */
+  select?: Prisma.UserLocationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserLocation
+   */
+  omit?: Prisma.UserLocationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserLocationInclude<ExtArgs> | null
+  where?: Prisma.UserLocationWhereInput
+}
+
+/**
+ * User.globalLocationSharesOwned
+ */
+export type User$globalLocationSharesOwnedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GlobalLocationShare
+   */
+  select?: Prisma.GlobalLocationShareSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GlobalLocationShare
+   */
+  omit?: Prisma.GlobalLocationShareOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GlobalLocationShareInclude<ExtArgs> | null
+  where?: Prisma.GlobalLocationShareWhereInput
+  orderBy?: Prisma.GlobalLocationShareOrderByWithRelationInput | Prisma.GlobalLocationShareOrderByWithRelationInput[]
+  cursor?: Prisma.GlobalLocationShareWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GlobalLocationShareScalarFieldEnum | Prisma.GlobalLocationShareScalarFieldEnum[]
+}
+
+/**
+ * User.globalLocationShareRecipients
+ */
+export type User$globalLocationShareRecipientsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GlobalLocationShareRecipient
+   */
+  select?: Prisma.GlobalLocationShareRecipientSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GlobalLocationShareRecipient
+   */
+  omit?: Prisma.GlobalLocationShareRecipientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GlobalLocationShareRecipientInclude<ExtArgs> | null
+  where?: Prisma.GlobalLocationShareRecipientWhereInput
+  orderBy?: Prisma.GlobalLocationShareRecipientOrderByWithRelationInput | Prisma.GlobalLocationShareRecipientOrderByWithRelationInput[]
+  cursor?: Prisma.GlobalLocationShareRecipientWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GlobalLocationShareRecipientScalarFieldEnum | Prisma.GlobalLocationShareRecipientScalarFieldEnum[]
 }
 
 /**

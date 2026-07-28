@@ -5,8 +5,17 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
+const GEOCODER_TIMEOUT_MS = 4_000;
+const GEOCODER_CACHE_TTL_MS = 30_000;
+const GEOCODER_CACHE_MAX_ENTRIES = 200;
+
 @Injectable()
 export class MapsService {
+  private readonly geocoderCache = new Map<
+    string,
+    { expiresAt: number; value: unknown }
+  >();
+
   constructor(private readonly config: ConfigService) {}
 
   style() {
@@ -99,9 +108,7 @@ export class MapsService {
     url.searchParams.set("addressdetails", "1");
     const countryCodes = this.config.get<string>("SEARCH_COUNTRY_CODES");
     if (countryCodes) url.searchParams.set("countrycodes", countryCodes);
-    const response = await fetch(url, {
-      headers: { "user-agent": "seychas-private-geocoder/1.0" },
-    });
+    const response = await this.geocoderFetch(url);
     if (!response.ok)
       throw new BadGatewayException("Search service unavailable");
     const rows = (await response.json()) as Array<Record<string, unknown>>;
@@ -122,9 +129,7 @@ export class MapsService {
     url.searchParams.set("lat", String(latitude));
     url.searchParams.set("lon", String(longitude));
     url.searchParams.set("format", "jsonv2");
-    const response = await fetch(url, {
-      headers: { "user-agent": "seychas-private-geocoder/1.0" },
-    });
+    const response = await this.geocoderFetch(url);
     if (!response.ok)
       throw new BadGatewayException("Reverse search unavailable");
     const row = (await response.json()) as Record<string, unknown>;
@@ -141,5 +146,33 @@ export class MapsService {
       radiusMeters: 1800,
       precision: "reduced",
     };
+  }
+
+  private async geocoderFetch(url: URL) {
+    const key = url.toString();
+    const cached = this.geocoderCache.get(key);
+    if (cached && cached.expiresAt > Date.now()) {
+      return (cached.value as Response).clone();
+    }
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        headers: { "user-agent": "seychas-private-geocoder/1.0" },
+        signal: AbortSignal.timeout(GEOCODER_TIMEOUT_MS),
+      });
+    } catch {
+      throw new BadGatewayException("Map search service unavailable");
+    }
+    if (response.ok) {
+      if (this.geocoderCache.size >= GEOCODER_CACHE_MAX_ENTRIES) {
+        const oldestKey = this.geocoderCache.keys().next().value;
+        if (oldestKey) this.geocoderCache.delete(oldestKey);
+      }
+      this.geocoderCache.set(key, {
+        expiresAt: Date.now() + GEOCODER_CACHE_TTL_MS,
+        value: response.clone(),
+      });
+    }
+    return response;
   }
 }

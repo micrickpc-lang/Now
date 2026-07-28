@@ -41,9 +41,9 @@ class AppShell extends ConsumerWidget {
             label: 'Чаты',
           ),
           NavigationDestination(
-            icon: Icon(Icons.radio_button_unchecked_rounded),
-            selectedIcon: Icon(Icons.adjust_rounded),
-            label: 'Сейчас',
+            icon: Icon(Icons.map_outlined),
+            selectedIcon: Icon(Icons.map),
+            label: 'Карта',
           ),
           NavigationDestination(
             icon: Icon(Icons.add_circle_outline_rounded),
@@ -51,9 +51,9 @@ class AppShell extends ConsumerWidget {
             label: 'Создать',
           ),
           NavigationDestination(
-            icon: Icon(Icons.timelapse_rounded),
-            selectedIcon: Icon(Icons.donut_large_rounded),
-            label: 'Истории',
+            icon: Icon(Icons.radio_button_unchecked_rounded),
+            selectedIcon: Icon(Icons.adjust_rounded),
+            label: 'Сейчас',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline_rounded),
@@ -132,7 +132,7 @@ class AppShell extends ConsumerWidget {
             emoji: friend.emoji,
           );
       ref.invalidate(chatsProvider);
-      if (context.mounted) context.push('/chats/${conversation.id}');
+      if (context.mounted) context.push('/app/chats/${conversation.id}');
     } catch (error) {
       if (context.mounted) _showCreateError(context, error);
     }
@@ -163,7 +163,7 @@ class AppShell extends ConsumerWidget {
             ],
           );
       ref.invalidate(chatsProvider);
-      if (context.mounted) context.push('/chats/${conversation.id}');
+      if (context.mounted) context.push('/app/chats/${conversation.id}');
     } catch (error) {
       if (context.mounted) _showCreateError(context, error);
     }

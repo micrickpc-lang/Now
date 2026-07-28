@@ -1,15 +1,16 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../../core/config/app_config.dart';
-import '../../../core/widgets/app_widgets.dart';
 import '../data/auth_repository.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
+
   @override
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
@@ -18,67 +19,35 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future<void>.delayed(const Duration(milliseconds: 700), () async {
+    Future<void>.delayed(const Duration(milliseconds: 450), () async {
       final active = await ref.read(sessionProvider.future);
-      if (mounted) context.go(active ? '/chats' : '/onboarding');
+      final profileComplete = active
+          ? await ref.read(authRepositoryProvider).profileComplete()
+          : false;
+      if (!mounted) return;
+      context.go(
+        active
+            ? profileComplete
+                  ? '/app/chats'
+                  : '/auth/profile-setup'
+            : '/auth',
+      );
     });
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: RadialGradient(
-          center: Alignment(.3, -.4),
-          radius: 1.2,
-          colors: [Color(0xFF3A326F), AppColors.ink],
-        ),
-      ),
-      child: Center(
-        child: Semantics(
-          label: 'Сейчас',
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 88,
-                height: 88,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  gradient: const LinearGradient(
-                    colors: [AppColors.violet, AppColors.coral],
-                  ),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x668B7CFF),
-                      blurRadius: 38,
-                      offset: Offset(0, 14),
-                    ),
-                  ],
-                ),
-                child: const Text(
-                  'С',
-                  style: TextStyle(
-                    fontSize: 44,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 22),
-              const Text(
-                'Сейчас',
-                style: TextStyle(
-                  fontSize: 34,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
-                  letterSpacing: -1,
-                ),
-              ),
-            ],
+  Widget build(BuildContext context) => const Scaffold(
+    body: Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.bolt_rounded, size: 42, color: AppColors.violet),
+          SizedBox(height: 12),
+          Text(
+            'Seychas',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
           ),
-        ),
+        ],
       ),
     ),
   );
@@ -86,270 +55,331 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
+
   @override
   ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
-  final _page = PageController();
-  final _phone = TextEditingController();
-  final _otp = TextEditingController();
-  final _name = TextEditingController();
-  int _step = 0;
+  final _email = TextEditingController();
+  final _code = TextEditingController();
+  bool _codeSent = false;
   bool _busy = false;
   String? _error;
-  DateTime? _birthDate;
 
   @override
   void dispose() {
-    _page.dispose();
-    _phone.dispose();
-    _otp.dispose();
-    _name.dispose();
+    _email.dispose();
+    _code.dispose();
     super.dispose();
   }
 
-  Future<void> _next() async {
+  Future<void> _sendCode({bool resend = false}) async {
+    final email = _email.text.trim();
+    if (!email.contains('@')) {
+      setState(() => _error = 'Enter a valid email address');
+      return;
+    }
     setState(() {
-      _error = null;
       _busy = true;
+      _error = null;
     });
     try {
-      if (_step == 0) {
-        if (_phone.text.trim().length < 10)
-          throw const FormatException('Введите номер телефона');
-        await ref.read(authRepositoryProvider).requestOtp(_phone.text.trim());
+      final auth = ref.read(authRepositoryProvider);
+      if (resend) {
+        await auth.resendEmailCode(email);
+      } else {
+        await auth.requestEmailCode(email);
       }
-      if (_step == 2 && _birthDate == null)
-        throw const FormatException('Выберите дату рождения');
-      if (_step == 3 && _name.text.trim().length < 2)
-        throw const FormatException('Введите имя');
-      if (_step == 5) {
-        if (_otp.text.length != 6)
-          throw const FormatException('Введите шестизначный код');
-        await ref
-            .read(authRepositoryProvider)
-            .verify(
-              phone: _phone.text.trim(),
-              code: _otp.text,
-              birthDate: _birthDate!,
-              displayName: _name.text.trim(),
-            );
-        await ref.read(sessionProvider.notifier).signedIn();
-        if (mounted) context.go('/chats');
-        return;
-      }
-      _step += 1;
-      if (_step == 5 && ref.read(appConfigProvider).demoMode) {
-        _otp.text = '123456';
-      }
-      await _page.animateToPage(
-        _step,
-        duration: AppDuration.normal,
-        curve: Curves.easeOutCubic,
-      );
-    } on DioException catch (error) {
-      final data = error.response?.data;
-      setState(
-        () => _error = data is Map && data['message'] != null
-            ? data['message'].toString()
-            : 'Не удалось связаться с сервером',
-      );
-    } on FormatException catch (error) {
-      setState(() => _error = error.message);
+      if (mounted) setState(() => _codeSent = true);
+    } catch (error) {
+      _showError(error);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
   }
 
+  Future<void> _verifyEmail() async {
+    if (_code.text.trim().length != 6) {
+      setState(() => _error = 'Enter the six-digit code');
+      return;
+    }
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      final profileComplete = await ref
+          .read(authRepositoryProvider)
+          .verifyEmailCode(email: _email.text.trim(), code: _code.text.trim());
+      await ref.read(sessionProvider.notifier).signedIn();
+      if (mounted)
+        context.go(profileComplete ? '/app/chats' : '/auth/profile-setup');
+    } catch (error) {
+      _showError(error);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _google() async {
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      final profileComplete = await ref
+          .read(authRepositoryProvider)
+          .signInWithGoogle();
+      await ref.read(sessionProvider.notifier).signedIn();
+      if (mounted)
+        context.go(profileComplete ? '/app/chats' : '/auth/profile-setup');
+    } catch (error) {
+      _showError(error);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  void _showError(Object error) {
+    if (!mounted) return;
+    if (error is DioException) {
+      final data = error.response?.data;
+      setState(
+        () => _error = data is Map && data['message'] != null
+            ? data['message'].toString()
+            : 'Unable to continue. Check your connection and try again.',
+      );
+      return;
+    }
+    setState(() => _error = 'Unable to continue. Please try again.');
+  }
+
   @override
-  Widget build(BuildContext context) {
-    final config = ref.watch(appConfigProvider);
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  if (_step > 0)
-                    IconButton(
-                      onPressed: _busy
-                          ? null
-                          : () {
-                              _step -= 1;
-                              _page.animateToPage(
-                                _step,
-                                duration: AppDuration.normal,
-                                curve: Curves.easeOut,
-                              );
-                              setState(() {});
-                            },
-                      icon: const Icon(Icons.arrow_back_rounded),
-                      tooltip: 'Назад',
-                    )
-                  else
-                    const SizedBox(width: 48),
-                  Expanded(
-                    child: LinearProgressIndicator(
-                      value: (_step + 1) / 6,
-                      borderRadius: BorderRadius.circular(20),
-                      minHeight: 5,
+  Widget build(BuildContext context) => Scaffold(
+    body: SafeArea(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.bolt_rounded,
+                  size: 42,
+                  color: AppColors.violet,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  _codeSent ? 'Check your email' : 'Sign in to Seychas',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _codeSent
+                      ? 'Enter the six-digit code sent to ${_email.text.trim()}.'
+                      : 'Use your email or Google account to continue.',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 28),
+                if (!_codeSent) ...[
+                  TextField(
+                    controller: _email,
+                    keyboardType: TextInputType.emailAddress,
+                    autofillHints: const [AutofillHints.email],
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _sendCode(),
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      hintText: 'you@example.com',
                     ),
                   ),
-                  const SizedBox(width: 48),
+                  const SizedBox(height: 12),
+                  FilledButton(
+                    onPressed: _busy ? null : _sendCode,
+                    child: _busy
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Continue with email'),
+                  ),
+                  const SizedBox(height: 14),
+                  OutlinedButton.icon(
+                    onPressed: _busy ? null : _google,
+                    icon: const Icon(Icons.account_circle_outlined),
+                    label: const Text('Continue with Google'),
+                  ),
+                ] else ...[
+                  TextField(
+                    controller: _code,
+                    keyboardType: TextInputType.number,
+                    autofillHints: const [AutofillHints.oneTimeCode],
+                    maxLength: 6,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    onSubmitted: (_) => _verifyEmail(),
+                    decoration: const InputDecoration(
+                      labelText: 'Verification code',
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  FilledButton(
+                    onPressed: _busy ? null : _verifyEmail,
+                    child: _busy
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Verify and continue'),
+                  ),
+                  TextButton(
+                    onPressed: _busy ? null : () => _sendCode(resend: true),
+                    child: const Text('Resend code'),
+                  ),
+                  TextButton(
+                    onPressed: _busy
+                        ? null
+                        : () => setState(() => _codeSent = false),
+                    child: const Text('Use a different email'),
+                  ),
                 ],
-              ),
-              Expanded(
-                child: PageView(
-                  controller: _page,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    _Step(
-                      icon: Icons.waving_hand_rounded,
-                      title: 'Ближе — прямо сейчас',
-                      text:
-                          'Только друзья, которых ты знаешь. Без публичной ленты и случайных людей.',
-                      child: Column(
-                        children: [
-                          TextField(
-                            controller: _phone,
-                            keyboardType: TextInputType.phone,
-                            autofillHints: const [
-                              AutofillHints.telephoneNumber,
-                            ],
-                            decoration: const InputDecoration(
-                              labelText: 'Номер телефона',
-                              hintText: '+7 900 000-00-00',
-                            ),
-                          ),
-                          if (config.environment !=
-                              AppEnvironment.production) ...[
-                            const SizedBox(height: 12),
-                            if (config.demoMode)
-                              Column(
-                                children: [
-                                  const ListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: Icon(
-                                      Icons.offline_bolt_rounded,
-                                      color: AppColors.mint,
-                                    ),
-                                    title: Text('Демо работает без сервера'),
-                                    subtitle: Text(
-                                      'Режим и история чатов сохранятся после перезапуска',
-                                    ),
-                                  ),
-                                  TextButton.icon(
-                                    onPressed: () async {
-                                      await ref
-                                          .read(demoModeProvider.notifier)
-                                          .setEnabled(false);
-                                      _phone.clear();
-                                    },
-                                    icon: const Icon(Icons.cloud_outlined),
-                                    label: const Text(
-                                      'Перейти к обычному входу',
-                                    ),
-                                  ),
-                                ],
-                              )
-                            else
-                              OutlinedButton.icon(
-                                onPressed: () async {
-                                  await ref
-                                      .read(demoModeProvider.notifier)
-                                      .setEnabled(true);
-                                  _phone.text = '+7 999 000-00-00';
-                                },
-                                icon: const Icon(Icons.offline_bolt_outlined),
-                                label: const Text(
-                                  'Использовать демо без сервера',
-                                ),
-                              ),
-                          ],
-                        ],
-                      ),
+                if (_error != null) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    _error!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
                     ),
-                    const _Step(
-                      icon: Icons.lock_outline_rounded,
-                      title: 'Твоё пространство закрыто',
-                      text:
-                          'Сигналы видят только взаимные друзья и выбранные закрытые круги. Номер никому не показываем.',
-                      child: _PrivacyBullets(),
-                    ),
-                    _Step(
-                      icon: Icons.cake_outlined,
-                      title: 'Сколько тебе лет?',
-                      text:
-                          'Минимальный возраст — 14 лет. Для пользователей младше 18 включается усиленный режим приватности.',
-                      child: OutlinedButton.icon(
-                        onPressed: () async {
-                          final value = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(1900),
-                            lastDate: DateTime.now().subtract(
-                              const Duration(days: 14 * 365),
-                            ),
-                            initialDate: DateTime(2006),
-                          );
-                          if (value != null) setState(() => _birthDate = value);
-                        },
-                        icon: const Icon(Icons.calendar_month_rounded),
-                        label: Text(
-                          _birthDate == null
-                              ? 'Выбрать дату рождения'
-                              : '${_birthDate!.day}.${_birthDate!.month}.${_birthDate!.year}',
-                        ),
-                      ),
-                    ),
-                    _Step(
-                      icon: Icons.auto_awesome_rounded,
-                      title: 'Как тебя зовут?',
-                      text:
-                          'Имя увидят только твои друзья. Публичного профиля здесь нет.',
-                      child: TextField(
-                        controller: _name,
-                        textCapitalization: TextCapitalization.words,
-                        maxLength: 40,
-                        decoration: const InputDecoration(labelText: 'Имя'),
-                      ),
-                    ),
-                    const _Step(
-                      icon: Icons.tune_rounded,
-                      title: 'Разрешения — по делу',
-                      text:
-                          'Контакты нужны только для поиска уже знакомых людей и остаются необязательными. Геолокацию запросим один раз при выборе места — фонового доступа нет.',
-                      child: _PermissionCards(),
-                    ),
-                    _Step(
-                      icon: Icons.sms_outlined,
-                      title: 'Последний шаг',
-                      text:
-                          'Введи код из SMS. В development используется код из локальной конфигурации.',
-                      child: TextField(
-                        controller: _otp,
-                        keyboardType: TextInputType.number,
-                        autofillHints: const [AutofillHints.oneTimeCode],
-                        maxLength: 6,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 30,
-                          letterSpacing: 12,
-                          fontWeight: FontWeight.w800,
-                        ),
-                        decoration: const InputDecoration(labelText: 'Код'),
-                      ),
-                    ),
-                  ],
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+class ProfileSetupScreen extends ConsumerStatefulWidget {
+  const ProfileSetupScreen({super.key});
+
+  @override
+  ConsumerState<ProfileSetupScreen> createState() => _ProfileSetupScreenState();
+}
+
+class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
+  final _name = TextEditingController();
+  final _username = TextEditingController();
+  bool _busy = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _username.dispose();
+    super.dispose();
+  }
+
+  Future<void> _complete() async {
+    final name = _name.text.trim();
+    final username = _username.text.trim().toLowerCase();
+    if (name.length < 2 || !RegExp(r'^[a-z0-9_]{3,32}$').hasMatch(username)) {
+      setState(
+        () => _error = 'Enter a name and a username using a-z, 0-9, or _.',
+      );
+      return;
+    }
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      await ref
+          .read(authRepositoryProvider)
+          .completeProfile(displayName: name, username: username);
+      if (mounted) context.go('/app/chats');
+    } catch (error) {
+      _showProfileSaveError(error);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  void _showProfileSaveError(Object error) {
+    if (!mounted) return;
+    if (error is TimeoutException ||
+        (error is DioException &&
+            (error.type == DioExceptionType.connectionTimeout ||
+                error.type == DioExceptionType.sendTimeout ||
+                error.type == DioExceptionType.receiveTimeout ||
+                error.type == DioExceptionType.connectionError))) {
+      setState(
+        () => _error =
+            'Cannot reach the server. Check the API address and try again.',
+      );
+      return;
+    }
+    if (error is DioException) {
+      final data = error.response?.data;
+      setState(
+        () => _error = data is Map && data['message'] != null
+            ? data['message'].toString()
+            : 'Unable to save the profile. Please try again.',
+      );
+      return;
+    }
+    setState(() => _error = 'Unable to save the profile. Please try again.');
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Finish your profile')),
+    body: SafeArea(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'How should friends see you?',
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
-              ),
-              if (_error != null)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Semantics(
-                    liveRegion: true,
+                const SizedBox(height: 24),
+                TextField(
+                  controller: _name,
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.words,
+                  maxLength: 40,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _username,
+                  maxLength: 32,
+                  autocorrect: false,
+                  textCapitalization: TextCapitalization.none,
+                  decoration: const InputDecoration(labelText: 'Username'),
+                ),
+                const Spacer(),
+                if (_error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
                     child: Text(
                       _error!,
                       style: TextStyle(
@@ -357,123 +387,21 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       ),
                     ),
                   ),
+                FilledButton(
+                  onPressed: _busy ? null : _complete,
+                  child: _busy
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Complete profile'),
                 ),
-              FilledButton(
-                onPressed: _busy ? null : _next,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Center(
-                    child: _busy
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : Text(_step == 5 ? 'Войти в свой круг' : 'Продолжить'),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Step extends StatelessWidget {
-  const _Step({
-    required this.icon,
-    required this.title,
-    required this.text,
-    required this.child,
-  });
-  final IconData icon;
-  final String title;
-  final String text;
-  final Widget child;
-  @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(22),
-              gradient: const LinearGradient(
-                colors: [AppColors.violet, AppColors.coral],
-              ),
-            ),
-            child: Icon(icon, color: Colors.white, size: 32),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          Text(title, style: Theme.of(context).textTheme.displaySmall),
-          const SizedBox(height: 14),
-          Text(
-            text,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              height: 1.5,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ],
             ),
           ),
-          const SizedBox(height: AppSpacing.xl),
-          child,
-        ],
+        ),
       ),
     ),
-  );
-}
-
-class _PrivacyBullets extends StatelessWidget {
-  const _PrivacyBullets();
-  @override
-  Widget build(BuildContext context) => const GlassPanel(
-    child: Column(
-      children: [
-        ListTile(
-          leading: Icon(Icons.location_off_rounded),
-          title: Text('Без фоновой геолокации'),
-        ),
-        ListTile(
-          leading: Icon(Icons.group_outlined),
-          title: Text('Только взаимные друзья'),
-        ),
-        ListTile(
-          leading: Icon(Icons.timer_outlined),
-          title: Text('Сигналы исчезают по сроку'),
-        ),
-      ],
-    ),
-  );
-}
-
-class _PermissionCards extends StatelessWidget {
-  const _PermissionCards();
-  @override
-  Widget build(BuildContext context) => const Column(
-    children: [
-      Card(
-        child: ListTile(
-          minVerticalPadding: 16,
-          leading: Icon(Icons.contacts_outlined),
-          title: Text('Контакты'),
-          subtitle: Text('Необязательно · приложение работает без них'),
-          trailing: Icon(Icons.chevron_right),
-        ),
-      ),
-      Card(
-        child: ListTile(
-          minVerticalPadding: 16,
-          leading: Icon(Icons.near_me_outlined),
-          title: Text('Местоположение'),
-          subtitle: Text('Только при явном выборе места'),
-          trailing: Icon(Icons.chevron_right),
-        ),
-      ),
-    ],
   );
 }

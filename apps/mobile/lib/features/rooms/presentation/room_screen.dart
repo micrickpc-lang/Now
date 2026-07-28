@@ -67,7 +67,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   }
 
   Future<void> _shareLocation() async {
-    final result = await context.push<Map<String, double>>('/map');
+    final result = await context.push<Map<String, double>>('/map/pick');
     if (result == null || !mounted) return;
     final confirmed = await showDialog<bool>(
       context: context,
@@ -123,7 +123,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
           onSelected: (value) async {
             if (value == 'leave') {
               await ref.read(roomsRepositoryProvider).leave(widget.roomId);
-              if (context.mounted) context.go('/now');
+              if (context.mounted) context.go('/app/now');
             } else if (value == 'report') {
               context.push('/report');
             }

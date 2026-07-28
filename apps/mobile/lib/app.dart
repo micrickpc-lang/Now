@@ -11,6 +11,7 @@ import 'features/auth/presentation/onboarding_screen.dart';
 import 'features/chats/presentation/chat_screen.dart';
 import 'features/chats/presentation/chats_screen.dart';
 import 'features/home/presentation/home_screen.dart';
+import 'features/map/presentation/global_map_screen.dart';
 import 'features/map/presentation/place_picker_screen.dart';
 import 'features/memories/presentation/memories_screen.dart';
 import 'features/navigation/presentation/app_shell.dart';
@@ -22,8 +23,8 @@ import 'features/stories/presentation/stories_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _chatsNavigatorKey = GlobalKey<NavigatorState>();
+final _mapNavigatorKey = GlobalKey<NavigatorState>();
 final _nowNavigatorKey = GlobalKey<NavigatorState>();
-final _storiesNavigatorKey = GlobalKey<NavigatorState>();
 final _profileNavigatorKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -34,19 +35,24 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (_, state) {
       final path = state.uri.path;
       final onSplash = path == '/splash';
-      final onOnboarding = path == '/onboarding';
+      final onAuth = path.startsWith('/auth');
       if (session.isLoading) return onSplash ? null : '/splash';
       final authenticated = session.value == true;
-      if (!authenticated) return onOnboarding ? null : '/onboarding';
-      if (onSplash || onOnboarding) return '/chats';
+      if (!authenticated) return onSplash || onAuth ? null : '/auth';
+      if (onSplash) return null;
+      if (path == '/auth') return '/app/chats';
       return null;
     },
     routes: [
-      GoRoute(path: '/', redirect: (_, __) => '/chats'),
+      GoRoute(path: '/', redirect: (_, __) => '/app/chats'),
+      GoRoute(path: '/chats', redirect: (_, __) => '/app/chats'),
+      GoRoute(path: '/now', redirect: (_, __) => '/app/now'),
+      GoRoute(path: '/profile', redirect: (_, __) => '/app/profile'),
       GoRoute(path: '/splash', builder: (_, __) => const SplashScreen()),
+      GoRoute(path: '/auth', builder: (_, __) => const OnboardingScreen()),
       GoRoute(
-        path: '/onboarding',
-        builder: (_, __) => const OnboardingScreen(),
+        path: '/auth/profile-setup',
+        builder: (_, __) => const ProfileSetupScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (_, __, navigationShell) =>
@@ -56,7 +62,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             navigatorKey: _chatsNavigatorKey,
             routes: [
               GoRoute(
-                path: '/chats',
+                path: '/app/chats',
                 builder: (_, __) => const ChatsScreen(),
                 routes: [
                   GoRoute(
@@ -70,25 +76,25 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _nowNavigatorKey,
+            navigatorKey: _mapNavigatorKey,
             routes: [
-              GoRoute(path: '/now', builder: (_, __) => const HomeScreen()),
+              GoRoute(
+                path: '/app/map',
+                builder: (_, __) => const GlobalMapScreen(),
+              ),
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _storiesNavigatorKey,
+            navigatorKey: _nowNavigatorKey,
             routes: [
-              GoRoute(
-                path: '/stories',
-                builder: (_, __) => const StoriesScreen(),
-              ),
+              GoRoute(path: '/app/now', builder: (_, __) => const HomeScreen()),
             ],
           ),
           StatefulShellBranch(
             navigatorKey: _profileNavigatorKey,
             routes: [
               GoRoute(
-                path: '/profile',
+                path: '/app/profile',
                 builder: (_, __) => const ProfileScreen(),
               ),
             ],
@@ -105,7 +111,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/rooms/:id',
         builder: (_, state) => RoomScreen(roomId: state.pathParameters['id']!),
       ),
-      GoRoute(path: '/map', builder: (_, __) => const PlacePickerScreen()),
+      GoRoute(path: '/map/pick', builder: (_, __) => const PlacePickerScreen()),
+      GoRoute(path: '/stories', builder: (_, __) => const StoriesScreen()),
       GoRoute(path: '/circles', builder: (_, __) => const CirclesScreen()),
       GoRoute(path: '/memories', builder: (_, __) => const MemoriesScreen()),
       GoRoute(

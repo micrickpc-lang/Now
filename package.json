@@ -36,15 +36,15 @@
   },
   "overrides": {
     "next": {
-      "postcss": "8.5.10",
+      "postcss": "8.5.24",
       "sharp": "0.35.3"
     }
   },
   "allowScripts": {
     "@scarf/scarf@1.4.0": false,
     "argon2@0.44.0": true,
-    "prisma@7.9.0": true,
-    "@prisma/engines@7.9.0": true,
+    "prisma@7.9.1": true,
+    "@prisma/engines@7.9.1": true,
     "esbuild@0.25.12": true,
     "sharp@0.34.5": true,
     "sharp@0.35.3": true,

@@ -1,10 +1,33 @@
 import type { LoggerService } from "@nestjs/common";
 
-const redact = (value: unknown): unknown => {
-  if (typeof value !== "string") return value;
-  return value
-    .replace(/Bearer\s+[A-Za-z0-9._-]+/gu, "Bearer [REDACTED]")
-    .replace(/\+?\d[\d\s()-]{7,}/gu, "[PHONE_REDACTED]");
+const sensitiveKey =
+  /^(accessToken|refreshToken|token|authorization|password|code|email|phone|latitude|longitude|location|message|body|text|payload|ciphertext)$/iu;
+
+export const redactForLogs = (value: unknown, key?: string): unknown => {
+  if (key && sensitiveKey.test(key)) return "[REDACTED]";
+  if (typeof value === "string") {
+    return value
+      .replace(/Bearer\s+[A-Za-z0-9._-]+/gu, "Bearer [REDACTED]")
+      .replace(
+        /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/giu,
+        "[EMAIL_REDACTED]",
+      )
+      .replace(/\+?\d[\d\s()-]{7,}/gu, "[PHONE_REDACTED]")
+      .replace(
+        /\b(latitude|longitude|lat|lon|code|token|password|message|body|text)\s*[:=]\s*[^\s,;]+/giu,
+        "$1=[REDACTED]",
+      );
+  }
+  if (Array.isArray(value)) return value.map((entry) => redactForLogs(entry));
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([entryKey, entryValue]) => [
+        entryKey,
+        redactForLogs(entryValue, entryKey),
+      ]),
+    );
+  }
+  return value;
 };
 
 export class JsonLogger implements LoggerService {
@@ -34,8 +57,8 @@ export class JsonLogger implements LoggerService {
       level,
       time: new Date().toISOString(),
       context,
-      message: redact(message),
-      ...(trace && { trace }),
+      message: redactForLogs(message),
+      ...(trace && { trace: redactForLogs(trace) }),
     });
     if (level === "error") process.stderr.write(`${entry}\n`);
     else process.stdout.write(`${entry}\n`);

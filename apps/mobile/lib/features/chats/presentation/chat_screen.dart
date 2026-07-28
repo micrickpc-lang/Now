@@ -202,7 +202,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         _MessageBubble(
                           message: message,
                           outgoing: message.senderId == userId,
-                          onOpenSignal: () => context.go('/now'),
+                          onOpenSignal: () => context.go('/app/now'),
                           onRetry: () => ref
                               .read(
                                 chatMessagesProvider(

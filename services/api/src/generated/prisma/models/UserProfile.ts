@@ -444,10 +444,6 @@ export type UserProfileUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserProfileUpdateToOneWithWhereWithoutUserInput, Prisma.UserProfileUpdateWithoutUserInput>, Prisma.UserProfileUncheckedUpdateWithoutUserInput>
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type UserProfileCreateNestedOneWithoutAvatarInput = {
   create?: Prisma.XOR<Prisma.UserProfileCreateWithoutAvatarInput, Prisma.UserProfileUncheckedCreateWithoutAvatarInput>
   connectOrCreate?: Prisma.UserProfileCreateOrConnectWithoutAvatarInput

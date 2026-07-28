@@ -18,6 +18,22 @@ export const UserStatus = {
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 
 
+export const AuthIdentityProvider = {
+  EMAIL: 'EMAIL',
+  GOOGLE: 'GOOGLE'
+} as const
+
+export type AuthIdentityProvider = (typeof AuthIdentityProvider)[keyof typeof AuthIdentityProvider]
+
+
+export const EmailLoginCodePurpose = {
+  LOGIN: 'LOGIN',
+  LINK_IDENTITY: 'LINK_IDENTITY'
+} as const
+
+export type EmailLoginCodePurpose = (typeof EmailLoginCodePurpose)[keyof typeof EmailLoginCodePurpose]
+
+
 export const FriendshipStatus = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
@@ -65,6 +81,22 @@ export const LocationMode = {
 } as const
 
 export type LocationMode = (typeof LocationMode)[keyof typeof LocationMode]
+
+
+export const GlobalLocationShareAudience = {
+  FRIENDS: 'FRIENDS',
+  SELECTED: 'SELECTED'
+} as const
+
+export type GlobalLocationShareAudience = (typeof GlobalLocationShareAudience)[keyof typeof GlobalLocationShareAudience]
+
+
+export const GlobalLocationPrecision = {
+  APPROXIMATE: 'APPROXIMATE',
+  EXACT: 'EXACT'
+} as const
+
+export type GlobalLocationPrecision = (typeof GlobalLocationPrecision)[keyof typeof GlobalLocationPrecision]
 
 
 export const JoinRequestState = {

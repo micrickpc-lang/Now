@@ -1,6 +1,8 @@
 import { randomUUID } from "node:crypto";
 import type { PrismaService } from "../common/prisma.service";
 import type { TokenService } from "../features/auth/token.service";
+import type { ConversationsService } from "../features/conversations/conversations.service";
+import type { RoomsService } from "../features/rooms/rooms.service";
 import { RealtimeGateway } from "./realtime.gateway";
 
 describe("RealtimeGateway authorization", () => {
@@ -16,9 +18,21 @@ describe("RealtimeGateway authorization", () => {
     block: { count: jest.fn() },
     friendship: { findFirst: jest.fn() },
   };
+  const conversationsMock = {
+    createMessage: jest.fn(),
+    editMessage: jest.fn(),
+    deleteMessage: jest.fn(),
+    addReaction: jest.fn(),
+    removeReaction: jest.fn(),
+    markRead: jest.fn(),
+    typing: jest.fn(),
+  };
+  const roomsMock = { shareLocation: jest.fn(), revokeLocation: jest.fn() };
   const gateway = new RealtimeGateway(
     tokensMock as unknown as TokenService,
     prismaMock as unknown as PrismaService,
+    conversationsMock as unknown as ConversationsService,
+    roomsMock as unknown as RoomsService,
   );
 
   function socket(token = "access") {
@@ -136,6 +150,53 @@ describe("RealtimeGateway authorization", () => {
 
     expect(inRoom).toHaveBeenCalledWith(`user:${userId}`);
     expect(socketsLeave).toHaveBeenCalledWith(`conversation:${conversationId}`);
+  });
+
+  it("evicts every socket of a removed user from a temporary room", () => {
+    const socketsLeave = jest.fn();
+    const inRoom = jest.fn().mockReturnValue({ socketsLeave });
+    gateway.server = { in: inRoom } as never;
+    const roomId = randomUUID();
+
+    gateway.evictUserFromRoom(userId, roomId);
+
+    expect(inRoom).toHaveBeenCalledWith(`user:${userId}`);
+    expect(socketsLeave).toHaveBeenCalledWith(`room:${roomId}`);
+  });
+
+  it("forwards a valid message command only after socket authentication", async () => {
+    const client = socket();
+    Object.assign(client.data, { userId, sessionId, authenticated: true });
+    conversationsMock.createMessage.mockResolvedValue({ id: randomUUID() });
+
+    const response = await gateway.sendMessage(client as never, {
+      conversationId,
+      clientMessageId: randomUUID(),
+      type: "TEXT",
+      text: "hello",
+    });
+    expect(response).toMatchObject({ ok: true });
+    expect(conversationsMock.createMessage).toHaveBeenCalledWith(
+      userId,
+      conversationId,
+      expect.objectContaining({ type: "TEXT", text: "hello" }),
+    );
+  });
+
+  it("rejects malformed realtime commands without invoking a service", async () => {
+    const client = socket();
+    Object.assign(client.data, { userId, sessionId, authenticated: true });
+
+    await expect(
+      gateway.shareRoomLocation(client as never, {
+        roomId: randomUUID(),
+        latitude: 100,
+        longitude: 0,
+        ttlMinutes: 30,
+        explicitConsent: true,
+      }),
+    ).resolves.toEqual({ ok: false });
+    expect(roomsMock.shareLocation).not.toHaveBeenCalled();
   });
 
   it("periodically disconnects a socket after its session is revoked", async () => {

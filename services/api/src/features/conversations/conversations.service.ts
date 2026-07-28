@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   ForbiddenException,
+  forwardRef,
   Inject,
   Injectable,
   NotFoundException,
@@ -75,6 +76,7 @@ export class ConversationsService {
     private readonly prisma: PrismaService,
     private readonly content: ContentPolicyService,
     private readonly audit: AuditService,
+    @Inject(forwardRef(() => RealtimeGateway))
     private readonly realtime: RealtimeGateway,
     private readonly typingState: TypingStateService,
     @Inject(MESSAGE_ENCRYPTION_PROVIDER)

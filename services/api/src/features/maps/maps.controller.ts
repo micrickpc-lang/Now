@@ -9,9 +9,14 @@ import {
   Res,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Throttle } from "@nestjs/throttler";
 import type { Response } from "express";
 import { Public } from "../../common/http";
-import { ApproximateLocationDto } from "./maps.dto";
+import {
+  ApproximateLocationDto,
+  MapReverseDto,
+  MapSearchDto,
+} from "./maps.dto";
 import { MapsService } from "./maps.service";
 
 @ApiTags("maps")
@@ -44,13 +49,15 @@ export class MapsController {
   }
 
   @Get("search")
-  search(@Query("q") query: string) {
-    return this.maps.search(query ?? "");
+  @Throttle({ default: { limit: 20, ttl: 60_000 } })
+  search(@Query() query: MapSearchDto) {
+    return this.maps.search(query.q);
   }
 
   @Get("reverse")
-  reverse(@Query("lat") lat: string, @Query("lon") lon: string) {
-    return this.maps.reverse(Number(lat), Number(lon));
+  @Throttle({ default: { limit: 20, ttl: 60_000 } })
+  reverse(@Query() query: MapReverseDto) {
+    return this.maps.reverse(query.lat, query.lon);
   }
 
   @Post("approximate-location")
