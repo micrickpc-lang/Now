@@ -70,7 +70,7 @@ jobs:
       - name: Generate production SBOM
         run: npm sbom --omit=dev --sbom-format cyclonedx > sbom.cyclonedx.json
       - name: Upload SBOM
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: production-sbom
           path: sbom.cyclonedx.json
