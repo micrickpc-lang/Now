@@ -21,6 +21,6 @@
     "test": "npm run build && node --test test/*.test.mjs"
   },
   "devDependencies": {
-    "typescript": "5.9.2"
+    "typescript": "7.0.2"
   }
 }

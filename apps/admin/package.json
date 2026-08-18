@@ -11,17 +11,17 @@
     "test": "node --test"
   },
   "dependencies": {
-    "next": "16.2.12",
+    "next": "16.3.1",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
   "devDependencies": {
-    "@eslint/js": "9.36.0",
-    "@types/node": "24.5.2",
-    "@types/react": "19.1.14",
-    "@types/react-dom": "19.1.9",
-    "eslint": "9.36.0",
-    "eslint-config-next": "16.2.12",
-    "typescript": "5.9.2"
+    "@eslint/js": "10.0.1",
+    "@types/node": "26.2.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "eslint": "10.8.1",
+    "eslint-config-next": "16.3.1",
+    "typescript": "7.0.2"
   }
 }
