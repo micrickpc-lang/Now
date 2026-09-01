@@ -11,17 +11,17 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "bullmq": "5.80.10",
-    "pg": "8.16.3"
+    "bullmq": "6.3.2",
+    "pg": "8.23.0"
   },
   "devDependencies": {
-    "@eslint/js": "9.36.0",
-    "@types/node": "24.5.2",
-    "@types/pg": "8.15.5",
-    "eslint": "9.36.0",
-    "jest": "30.4.2",
-    "tsx": "4.20.5",
-    "typescript": "5.9.2",
-    "typescript-eslint": "8.44.1"
+    "@eslint/js": "10.0.1",
+    "@types/node": "26.4.0",
+    "@types/pg": "8.23.1",
+    "eslint": "10.9.1",
+    "jest": "30.5.0",
+    "tsx": "4.23.12",
+    "typescript": "7.0.2",
+    "typescript-eslint": "8.68.0"
   }
 }
